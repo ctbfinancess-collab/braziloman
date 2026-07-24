@@ -31,8 +31,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // Build otimizado para container (AWS ECS/App Runner). Railway também funciona.
-  output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
