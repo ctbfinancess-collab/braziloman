@@ -1,0 +1,47 @@
+// Câmara de Comércio Brasil–Omã (CTB) — database schema
+// Prisma 7 · PostgreSQL (Railway / AWS RDS)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Mensagens enviadas pelo formulário de contato do site.
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  message   String
+  locale    String   @default("pt")
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+/// Pedidos de associação (base para o sistema de membros futuro).
+model MembershipApplication {
+  id        String            @id @default(cuid())
+  name      String
+  email     String
+  company   String
+  country   String?
+  phone     String?
+  message   String?
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+
+  @@index([status])
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
