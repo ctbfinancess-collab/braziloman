@@ -102,11 +102,11 @@ Modelos: `ContactMessage` (mensagens do formulário) e `MembershipApplication`
 
 ### AWS (escala futura)
 
-- `Dockerfile` pronto (saída _standalone_ do Next.js) para **ECS** ou **App Runner**.
+- `Dockerfile.aws` pronto (Debian slim + saída _standalone_ do Next.js) para **ECS** ou **App Runner**.
 - Banco em **RDS PostgreSQL**; vídeo/estáticos em **S3 + CloudFront**.
 
 ```bash
-docker build -t braziloman .
+docker build -f Dockerfile.aws -t braziloman .
 docker run -p 3000:3000 -e DATABASE_URL="..." braziloman
 ```
 

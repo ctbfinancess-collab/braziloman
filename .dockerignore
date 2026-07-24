@@ -4,7 +4,7 @@ node_modules
 .env*
 !.env.example
 npm-debug.log
-Dockerfile
+Dockerfile.aws
 .dockerignore
 README.md
 public/*.mp4
