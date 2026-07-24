@@ -1,0 +1,5 @@
+# Configuração do build no Railway (Nixpacks).
+# Usa `npm install` em vez de `npm ci`: mais tolerante a pequenas diferenças
+# de lockfile entre ambientes, evitando falhas de validação no deploy.
+[phases.install]
+cmds = ["npm install --no-audit --no-fund"]
