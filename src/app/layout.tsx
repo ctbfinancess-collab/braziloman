@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     "Mascate",
     "São Paulo",
   ],
-  icons: { icon: "/icon.png", apple: "/icon.png" },
+  icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   openGraph: {
     title: "CTB — Câmara de Comércio Brasil–Omã",
     description: "Conectando potências complementares. União e Prosperidade.",
