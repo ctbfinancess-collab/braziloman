@@ -174,19 +174,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   position: absolute; inset: 0; z-index: 1; /* alinhado ao topo do hero */
   clip-path: polygon(calc(55% - 42px) 0, 100% 0, 100% 100%, 45% 100%);
   /* ônix polido: base #080808 + luz difusa dourada atrás do brasão */
+  /* fundo do globo: mapa-múndi dourado visível (imagem original) + luz difusa */
   background:
-    radial-gradient(circle at 73% 42%,
-      rgba(255, 215, 120, 0.08) 0%,
-      rgba(255, 215, 120, 0.04) 22%,
-      rgba(255, 215, 120, 0.015) 42%,
-      rgba(0, 0, 0, 0) 70%),
+    radial-gradient(circle at 70% 44%, rgba(255, 215, 120, 0.06) 0%, transparent 52%),
+    url("/hero-map.jpg") center/cover no-repeat,
     #080808;
-  box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.45); /* vinheta: bordas mais escuras */
 }
 .hero-right::after {
   content: ""; position: absolute; inset: 0;
-  /* mapa-múndi apenas como textura (~10-12%) */
-  background: url("/hero-map-dots.png") center/cover no-repeat;
+  /* vinheta suave nas bordas — centro (mapa) permanece visível */
+  background: radial-gradient(ellipse 108% 102% at 64% 48%, transparent 54%, rgba(0, 0, 0, 0.5) 100%);
 }
 /* placa branca inclinada — divisor (elemento de identidade) */
 /* corte diagonal direto (off-white -> preto), só uma linha dourada fina na junção */
