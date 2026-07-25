@@ -200,11 +200,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   transform: translate(-50%, -50%) translate(25px, 8px); /* +25px dir, desce (mais baixo) */
   width: clamp(400px, 31vw, 580px); height: auto; max-width: 78%; /* um pouco menor */
   opacity: 1; mix-blend-mode: normal;
-  /* profundidade + iluminação de museu, proporcional ao tamanho do brasão */
-  filter: contrast(1.06) saturate(1.03)
-          drop-shadow(0 12px 30px rgba(0,0,0,0.48))
-          drop-shadow(0 0 16px rgba(205,170,80,0.18))
-          drop-shadow(0 0 42px rgba(205,170,80,0.09));
+  /* profundidade discreta: sombra justa e suave + halo dourado leve */
+  filter: contrast(1.05) saturate(1.02)
+          drop-shadow(0 7px 16px rgba(0,0,0,0.30))
+          drop-shadow(0 0 12px rgba(205,170,80,0.12));
 }
 
 /* ---------- propósito (5 pilares) ---------- */
