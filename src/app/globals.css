@@ -147,7 +147,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   position: relative; display: flex; align-items: center;
   min-height: 720px; height: calc(100vh - 76px); max-height: 860px;
   background: var(--bg); overflow: hidden;
-  border-bottom: 1px solid rgba(200, 168, 91, 0.32); /* linha inferior contínua */
+  border-bottom: 1px solid rgba(200, 168, 91, 0.28); /* linha inferior contínua */
 }
 .hero-left {
   position: relative; z-index: 5; width: 100%;
@@ -172,7 +172,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* área preta ~54% com borda esquerda diagonal (~9°) e gradiente vertical */
 .hero-right {
   position: absolute; inset: 0; z-index: 1;
-  clip-path: polygon(52% 0, 100% 0, 100% 100%, 42% 100%);
+  clip-path: polygon(calc(52% - 22px) 0, 100% 0, 100% 100%, 42% 100%);
   /* ônix polido: base #080808 + luz difusa dourada atrás do brasão */
   background:
     radial-gradient(circle at 73% 42%,
@@ -192,8 +192,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* corte diagonal direto (off-white -> preto), só uma linha dourada fina na junção */
 .hero-goldline {
   position: absolute; inset: 0; z-index: 3;
-  clip-path: polygon(calc(52% - 1px) 0, 52% 0, 42% 100%, calc(42% - 1px) 100%);
-  background: rgba(200, 168, 91, 0.70); /* #C8A85B @70%, 1px sobre a diagonal */
+  clip-path: polygon(calc(52% - 23px) 0, calc(52% - 22px) 0, 42% 100%, calc(42% - 1px) 100%);
+  background: rgba(200, 168, 91, 0.65); /* filete 1px, sem glow/sombra */
 }
 /* selo dominante, nítido (100%), centralizado na área preta */
 .hero-emblem {
