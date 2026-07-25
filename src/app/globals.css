@@ -178,9 +178,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 }
 .hero-right::after {
   content: ""; position: absolute; inset: 0;
-  background: #0a0a0b url("/hero-map.jpg") center/cover no-repeat;
   clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
   transform: translateX(3px);
+  background:
+    radial-gradient(ellipse 82% 82% at 57% 47%, transparent 46%, rgba(3,3,3,0.74) 100%),
+    url("/hero-map-dots.png") center/cover no-repeat,
+    radial-gradient(circle at 57% 42%, rgba(255,215,150,0.06) 0%, transparent 44%),
+    radial-gradient(circle at 55% 47%, #141414 0%, #0a0a0a 46%, #060606 100%);
+  background-blend-mode: normal;
 }
 .hero-emblem {
   position: relative; z-index: 2;
