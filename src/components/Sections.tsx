@@ -32,10 +32,10 @@ export function Hero() {
       <div className="hero-right" aria-hidden="true">
         <Image
           className="hero-emblem"
-          src="/logo-ctb-transparent.png"
+          src="/hero-seal.png"
           alt="Selo da Câmara de Comércio Brasil–Omã"
-          width={900}
-          height={900}
+          width={700}
+          height={700}
           priority
         />
       </div>
