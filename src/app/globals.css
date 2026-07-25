@@ -178,7 +178,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   background:
     radial-gradient(circle at 70% 44%, rgba(255, 215, 120, 0.06) 0%, transparent 52%),
     linear-gradient(rgba(8, 8, 8, 0.34), rgba(8, 8, 8, 0.34)), /* mapa um pouco mais discreto */
-    url("/hero-map.jpg") center/cover no-repeat,
+    url("/hero-map.jpg") right center / 58% no-repeat, /* mapa inteiro na área preta */
     #080808;
 }
 .hero-right::after {
@@ -197,8 +197,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .hero-emblem {
   position: absolute; z-index: 4;
   top: 50%; left: 73%;
-  transform: translate(-50%, -50%) translate(25px, -65px); /* +25px dir, sobe ~15px */
-  width: clamp(430px, 33vw, 620px); height: auto; max-width: 80%; /* ~-10% */
+  transform: translate(-50%, -50%) translate(25px, 8px); /* +25px dir, desce (mais baixo) */
+  width: clamp(400px, 31vw, 580px); height: auto; max-width: 78%; /* um pouco menor */
   opacity: 1; mix-blend-mode: normal;
   /* iluminação de museu: halo dourado muito discreto atrás do brasão */
   filter: contrast(1.05)
