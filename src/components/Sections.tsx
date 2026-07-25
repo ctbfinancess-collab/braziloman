@@ -39,7 +39,6 @@ export function Hero() {
           priority
         />
       </div>
-      <div className="hero-divider" aria-hidden="true" />
       <div className="hero-goldline" aria-hidden="true" />
     </section>
   );

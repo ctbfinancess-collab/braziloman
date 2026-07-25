@@ -6,11 +6,11 @@
    ============================================================ */
 
 :root {
-  /* Tema claro (off-white neutro) */
-  --bg: #f8f8f6;
-  --bg-2: #f2f2f0;
-  --bg-3: #ebebea;
-  --surface: #fefefe;
+  /* Tema claro (off-white #F5F2EB — sem branco puro) */
+  --bg: #f5f2eb;
+  --bg-2: #efece3;
+  --bg-3: #e8e4d9;
+  --surface: #fbf9f3;
   --border: rgba(150, 116, 52, 0.22);
   --border-strong: rgba(150, 116, 52, 0.42);
 
@@ -116,7 +116,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* ---------- header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(248,248,246,0.88); backdrop-filter: blur(12px);
+  background: rgba(245,242,235,0.90); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
@@ -181,23 +181,18 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     radial-gradient(circle at 63% 46%, rgba(255,215,150,0.05) 0%, transparent 42%);
 }
 /* placa branca inclinada — divisor (elemento de identidade) */
-.hero-divider {
-  position: absolute; inset: 0; z-index: 2;
-  clip-path: polygon(calc(50% - 110px) 0, 50% 0, 42% 100%, calc(42% - 110px) 100%);
-  background: #ffffff;
-  filter: drop-shadow(6px 0 18px rgba(0,0,0,0.22));
-}
-/* filete dourado (2px, #B8913F @70%) na borda direita do divisor */
+/* corte diagonal direto (off-white -> preto), só uma linha dourada fina na junção */
 .hero-goldline {
   position: absolute; inset: 0; z-index: 3;
   clip-path: polygon(calc(50% - 2px) 0, 50% 0, 42% 100%, calc(42% - 2px) 100%);
-  background: rgba(184, 145, 63, 0.70);
+  background: rgba(200, 168, 91, 0.70); /* #C8A85B @70% */
 }
 /* selo dominante, nítido (100%), centralizado na área preta */
 .hero-emblem {
   position: absolute; z-index: 4;
-  top: 50%; left: 73%; transform: translate(-50%, -50%);
-  width: clamp(440px, 34vw, 640px); height: auto; max-width: 82%;
+  top: 50%; left: 73%;
+  transform: translate(-50%, -50%) translate(25px, -50px); /* +25px dir, -50px sobe */
+  width: clamp(475px, 37vw, 690px); height: auto; max-width: 86%; /* ~+8% */
   opacity: 1; mix-blend-mode: normal;
   filter: contrast(1.05)
           drop-shadow(0 16px 40px rgba(0,0,0,0.38))
@@ -345,7 +340,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   .hero-left { position: relative; padding: 56px 24px 40px; max-width: none; }
   .hero-right { position: relative; inset: auto; clip-path: none; background: #0a0a0b; min-height: 320px; }
   .hero-emblem { position: relative; left: auto; top: auto; transform: none; margin: 0 auto; width: min(72vw, 330px); display: block; }
-  .hero-divider, .hero-goldline { display: none; }
+  .hero-goldline { display: none; }
   /* propósito e tarja */
   .purpose-grid { grid-template-columns: 1fr 1fr; gap: 28px 8px; }
   .purpose-item + .purpose-item::before { display: none; }
