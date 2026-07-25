@@ -31,7 +31,7 @@ export default function Footer() {
                 <p>{d.footer.tagline}</p>
               </div>
             </div>
-            <p style={{ color: "var(--fg-dim)", fontSize: "0.88rem", marginTop: 18, maxWidth: 320 }}>
+            <p style={{ color: "var(--footer-muted)", fontSize: "0.88rem", marginTop: 18, maxWidth: 320 }}>
               {d.footer.about}
             </p>
           </div>

@@ -3,29 +3,31 @@
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 
-// URL do vídeo institucional. Em produção, apontar para um CDN/S3
-// via NEXT_PUBLIC_HERO_VIDEO; em dev usa o arquivo local em /public.
-const HERO_VIDEO = process.env.NEXT_PUBLIC_HERO_VIDEO || "/institucional.mp4";
+// URL do vídeo institucional de fundo do hero. Só é exibido quando
+// NEXT_PUBLIC_HERO_VIDEO estiver definido (CDN/S3 em produção, ou o
+// caminho local /institucional.mp4 em desenvolvimento). Vazio = sem vídeo.
+const HERO_VIDEO = process.env.NEXT_PUBLIC_HERO_VIDEO || "";
 
 export function Hero() {
   const { d } = useI18n();
   return (
     <section className="hero" id="top">
       {HERO_VIDEO ? (
-        <video
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/logo-ctb.png"
-          aria-hidden="true"
-        >
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
+        <>
+          <video
+            className="hero-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          >
+            <source src={HERO_VIDEO} type="video/mp4" />
+          </video>
+          <div className="hero-overlay" aria-hidden="true" />
+        </>
       ) : null}
-      <div className="hero-overlay" aria-hidden="true" />
       <Image
         className="hero-seal"
         src="/logo-ctb-transparent.png"
