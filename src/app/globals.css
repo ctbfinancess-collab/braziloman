@@ -170,7 +170,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* área preta ~54% com borda esquerda diagonal (~9°) e gradiente vertical */
 .hero-right {
   position: absolute; inset: 0; z-index: 1;
-  clip-path: polygon(50% 0, 100% 0, 100% 100%, 42% 100%);
+  clip-path: polygon(49% 0, 100% 0, 100% 100%, 43% 100%);
   background: linear-gradient(180deg, #111111 0%, #090909 45%, #050505 100%);
 }
 .hero-right::after {
@@ -184,7 +184,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* corte diagonal direto (off-white -> preto), só uma linha dourada fina na junção */
 .hero-goldline {
   position: absolute; inset: 0; z-index: 3;
-  clip-path: polygon(calc(50% - 2px) 0, 50% 0, 42% 100%, calc(42% - 2px) 100%);
+  clip-path: polygon(calc(49% - 2px) 0, 49% 0, 43% 100%, calc(43% - 2px) 100%);
   background: rgba(200, 168, 91, 0.70); /* #C8A85B @70% */
 }
 /* selo dominante, nítido (100%), centralizado na área preta */
