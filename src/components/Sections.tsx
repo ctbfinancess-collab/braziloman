@@ -34,7 +34,7 @@ export function Hero() {
         alt=""
         aria-hidden="true"
         width={620}
-        height={625}
+        height={620}
         priority
       />
       <div className="container hero-inner">
