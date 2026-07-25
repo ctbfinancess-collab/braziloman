@@ -187,11 +187,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
     radial-gradient(circle at 55% 47%, #141414 0%, #0a0a0a 46%, #060606 100%);
   background-blend-mode: normal;
 }
+/* selo como marca d'água elegante: grande, cortado à direita, sutil (soft-light) */
 .hero-emblem {
-  position: relative; z-index: 2;
-  width: clamp(380px, 46vw, 660px); height: auto;
-  margin-left: 9%;
-  filter: drop-shadow(0 0 44px rgba(201,162,90,0.32));
+  position: absolute; z-index: 2;
+  top: 50%; left: 60%; transform: translate(-50%, -50%);
+  width: 106%; height: auto; max-width: none;
+  opacity: 0.16; mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
 /* ---------- propósito (5 pilares) ---------- */
