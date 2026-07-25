@@ -2,62 +2,85 @@
 
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
-
-// URL do vídeo institucional de fundo do hero. Só é exibido quando
-// NEXT_PUBLIC_HERO_VIDEO estiver definido (CDN/S3 em produção, ou o
-// caminho local /institucional.mp4 em desenvolvimento). Vazio = sem vídeo.
-const HERO_VIDEO = process.env.NEXT_PUBLIC_HERO_VIDEO || "";
+import { Icon } from "./Icons";
 
 export function Hero() {
   const { d } = useI18n();
+  const h = d.heroBridge;
   return (
-    <section className="hero" id="top">
-      {HERO_VIDEO ? (
-        <>
-          <video
-            className="hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          >
-            <source src={HERO_VIDEO} type="video/mp4" />
-          </video>
-          <div className="hero-overlay" aria-hidden="true" />
-        </>
-      ) : null}
-      <Image
-        className="hero-seal"
-        src="/logo-ctb-transparent.png"
-        alt=""
-        aria-hidden="true"
-        width={620}
-        height={620}
-        priority
-      />
-      <div className="container hero-inner">
-        <p className="eyebrow">{d.hero.eyebrow}</p>
+    <section className="hero-split" id="top">
+      <div className="hero-left">
+        <p className="eyebrow">{h.eyebrow}</p>
         <h1>
-          {d.hero.titleA}
-          <span className="accent">{d.hero.titleAccent}</span>
-          {d.hero.titleB}
+          {h.titleA}
+          <span className="accent">{h.titleAccent}</span>
+          {h.titleB}
         </h1>
-        <p className="hero-lead">{d.hero.lead}</p>
+        <p className="hero-lead">{h.lead}</p>
         <div className="hero-actions">
-          <a href="#associacao" className="btn btn-primary">{d.hero.ctaJoin}</a>
-          <a href="#contato" className="btn btn-ghost">{d.hero.ctaContact}</a>
+          <a href="#associacao" className="btn btn-primary">{h.ctaJoin}</a>
+          <a href="#sobre" className="btn btn-ghost">{h.ctaLearn}</a>
         </div>
-        <p className="hero-motto">{d.hero.motto}</p>
-        <dl className="hero-stats">
-          {d.hero.stats.map((s) => (
-            <div key={s.l}>
-              <dt>{s.n}</dt>
-              <dd>{s.l}</dd>
+        <div className="hero-motto2">
+          <span className="motto-laurel"><Icon name="laurel" /></span>
+          <div>
+            <strong>{h.mottoMain}</strong>
+            <small>{h.mottoSub}</small>
+          </div>
+        </div>
+      </div>
+      <div className="hero-right" aria-hidden="true">
+        <Image
+          className="hero-emblem"
+          src="/logo-ctb-transparent.png"
+          alt="Selo da Câmara de Comércio Brasil–Omã"
+          width={560}
+          height={560}
+          priority
+        />
+      </div>
+    </section>
+  );
+}
+
+export function Purpose() {
+  const { d } = useI18n();
+  return (
+    <section className="section purpose" id="proposito">
+      <div className="container reveal">
+        <p className="section-eyebrow center">{d.purpose.eyebrow}</p>
+        <h2 className="purpose-title">
+          {d.purpose.titleA}
+          <span className="accent">{d.purpose.titleAccent}</span>
+        </h2>
+        <div className="purpose-grid">
+          {d.purpose.items.map((it) => (
+            <div className="purpose-item" key={it.h}>
+              <span className="purpose-icon"><Icon name={it.icon} /></span>
+              <h3>{it.h}</h3>
+              <p>{it.p}</p>
             </div>
           ))}
-        </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function StatsStrip() {
+  const { d } = useI18n();
+  return (
+    <section className="stats-strip">
+      <div className="container stats-strip-inner">
+        {d.strip.map((s) => (
+          <div className="strip-item" key={s.h}>
+            <span className="strip-icon"><Icon name={s.icon} /></span>
+            <div>
+              <strong>{s.h}</strong>
+              <small>{s.p}</small>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

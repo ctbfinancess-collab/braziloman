@@ -6,8 +6,9 @@ import Footer from "@/components/Footer";
 import Contact from "@/components/Contact";
 import {
   Hero,
+  Purpose,
+  StatsStrip,
   About,
-  Moment,
   Countries,
   Partnership,
   Services,
@@ -40,8 +41,9 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <Purpose />
+        <StatsStrip />
         <About />
-        <Moment />
         <Countries />
         <Partnership />
         <Services />
