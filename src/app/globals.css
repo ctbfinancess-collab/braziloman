@@ -171,7 +171,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 
 /* área preta ~54% com borda esquerda diagonal (~9°) e gradiente vertical */
 .hero-right {
-  position: absolute; inset: 10px 0 0 0; z-index: 1; /* desce ~10px do menu */
+  position: absolute; inset: 0; z-index: 1; /* alinhado ao topo do hero */
   clip-path: polygon(calc(55% - 42px) 0, 100% 0, 100% 100%, 45% 100%);
   /* ônix polido: base #080808 + luz difusa dourada atrás do brasão */
   background:
@@ -191,7 +191,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* placa branca inclinada — divisor (elemento de identidade) */
 /* corte diagonal direto (off-white -> preto), só uma linha dourada fina na junção */
 .hero-goldline {
-  position: absolute; inset: 10px 0 0 0; z-index: 3;
+  position: absolute; inset: 0; z-index: 3;
   clip-path: polygon(calc(55% - 43px) 0, calc(55% - 42px) 0, 45% 100%, calc(45% - 1px) 100%);
   background: rgba(200, 168, 91, 0.65); /* filete 1px, sem glow/sombra */
 }
