@@ -129,34 +129,38 @@ export function About() {
           </div>
         </div>
 
-        <h3 className="mp-subtitle mp-subtitle-tight">{a.principles.title}</h3>
-        <p className="partnership-block-lead">{a.principles.p1}</p>
-        <p className="partnership-block-lead">{a.principles.p2}</p>
-        <p className="cp-chips-label">{a.principles.listTitle}</p>
-        <ul className="why-list about-why-list">
-          {a.principles.items.map((it) => (
-            <li key={it}>{it}</li>
-          ))}
-        </ul>
-
-        <div className="corridor-block">
-          <span className="corridor-icon"><Icon name="bank" /></span>
-          <div>
-            <h3 className="mp-subtitle mp-subtitle-tight">{a.governance.title}</h3>
-            <p>{a.governance.p1}</p>
-            <p>{a.governance.p2}</p>
-            <p>{a.governance.p3}</p>
-          </div>
+        <div className="about-section-card">
+          <span className="corridor-icon"><Icon name="scale" /></span>
+          <h3 className="mp-subtitle mp-subtitle-tight">{a.principles.title}</h3>
+          <p className="partnership-block-lead">{a.principles.p1}</p>
+          <p className="partnership-block-lead">{a.principles.p2}</p>
+          <p className="cp-chips-label">{a.principles.listTitle}</p>
+          <ul className="why-list about-why-list">
+            {a.principles.items.map((it) => (
+              <li key={it}>{it}</li>
+            ))}
+          </ul>
         </div>
 
-        <h3 className="mp-subtitle mp-subtitle-tight">{a.role.title}</h3>
-        <p className="partnership-block-lead">{a.role.p1}</p>
-        <p className="partnership-block-lead">{a.role.p2}</p>
-        <ul className="flow-items about-role-list">
-          {a.role.items.map((it) => (
-            <li key={it}>{it}</li>
-          ))}
-        </ul>
+        <div className="about-section-card">
+          <span className="corridor-icon"><Icon name="bank" /></span>
+          <h3 className="mp-subtitle mp-subtitle-tight">{a.governance.title}</h3>
+          <p>{a.governance.p1}</p>
+          <p>{a.governance.p2}</p>
+          <p>{a.governance.p3}</p>
+        </div>
+
+        <div className="about-section-card">
+          <span className="corridor-icon"><Icon name="network" /></span>
+          <h3 className="mp-subtitle mp-subtitle-tight">{a.role.title}</h3>
+          <p className="partnership-block-lead">{a.role.p1}</p>
+          <p className="partnership-block-lead">{a.role.p2}</p>
+          <ul className="flow-items about-role-list">
+            {a.role.items.map((it) => (
+              <li key={it}>{it}</li>
+            ))}
+          </ul>
+        </div>
 
         <div className="mp-closing about-commitment">
           <h3 className="section-title center">{a.commitment.title}</h3>
