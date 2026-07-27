@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 
@@ -18,8 +19,8 @@ export function Hero() {
         </h1>
         <p className="hero-lead">{h.lead}</p>
         <div className="hero-actions">
-          <a href="#associacao" className="btn btn-primary">{h.ctaJoin}</a>
-          <a href="#sobre" className="btn btn-ghost">{h.ctaLearn}</a>
+          <Link href="/associe-se" className="btn btn-primary">{h.ctaJoin}</Link>
+          <Link href="/a-camara" className="btn btn-ghost">{h.ctaLearn}</Link>
         </div>
         <div className="hero-motto2">
           <span className="motto-laurel"><Icon name="laurel" /></span>
@@ -51,9 +52,12 @@ export function Purpose() {
       <div className="container reveal">
         <p className="section-eyebrow center">{d.purpose.eyebrow}</p>
         <h2 className="purpose-title">
-          {d.purpose.titleA}
-          <span className="accent">{d.purpose.titleAccent}</span>
+          <span className="purpose-title-line">{d.purpose.titleLine1}</span>
+          <span className="purpose-title-line">{d.purpose.titleLine2}</span>
+          <span className="purpose-title-line accent">{d.purpose.titleAccent}</span>
         </h2>
+        <p className="purpose-lead">{d.purpose.lead}</p>
+        <p className="section-eyebrow center purpose-pillars-eyebrow">{d.purpose.pillarsEyebrow}</p>
         <div className="purpose-grid">
           {d.purpose.items.map((it) => (
             <div className="purpose-item" key={it.h}>
@@ -90,11 +94,16 @@ export function StatsStrip() {
 export function About() {
   const { d } = useI18n();
   return (
-    <section className="section" id="sobre">
+    <section className="section about-section" id="sobre">
+      <img className="about-watermark" src="/hero-seal.png" alt="" aria-hidden="true" />
       <div className="container reveal">
         <p className="section-eyebrow">{d.about.eyebrow}</p>
-        <h2 className="section-title">{d.about.title}</h2>
-        <hr className="gold-rule" />
+        <h2 className="about-title">
+          <span className="about-title-line">{d.about.titleLine1}</span>
+          <span className="about-title-line accent">{d.about.titleAccent}</span>
+          <span className="about-title-line">{d.about.titleLine3}</span>
+        </h2>
+        <span className="about-flourish" aria-hidden="true" />
         <div className="about-grid">
           <div className="about-text">
             <p>{d.about.p1}</p>
@@ -103,8 +112,12 @@ export function About() {
           <div className="pillars">
             {d.about.pillars.map((p) => (
               <div className="pillar" key={p.h}>
-                <h3>{p.h}</h3>
-                <p>{p.p}</p>
+                <span className="pillar-dot" />
+                <span className="pillar-icon"><Icon name={p.icon} /></span>
+                <div className="pillar-body">
+                  <h3>{p.h}</h3>
+                  <p>{p.p}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -142,24 +155,30 @@ export function Countries() {
   return (
     <section className="section" id="paises">
       <div className="container reveal">
-        <p className="section-eyebrow">{d.countries.eyebrow}</p>
-        <h2 className="section-title">{d.countries.title}</h2>
-        <hr className="gold-rule" />
-        <div className="grid grid-2">
-          {[brazil, oman].map((c) => (
-            <div className="country" key={c.name}>
-              <div className="country-flag">{c.flag}</div>
-              <h3>{c.name}</h3>
-              <p className="sub">{c.sub}</p>
-              <ul>
-                {c.items.map((it) => (
-                  <li key={it.b}>
-                    <b>{it.b}</b> {it.t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <p className="section-eyebrow center">{d.countries.eyebrow}</p>
+        <h2 className="section-title countries-title">{d.countries.title}</h2>
+        <span className="about-flourish countries-flourish" aria-hidden="true" />
+        <p className="countries-lead">{d.countries.lead}</p>
+        <div className="countries-grid-wrap">
+          <div className="grid grid-2">
+            {[brazil, oman].map((c) => (
+              <div className="country" key={c.name}>
+                <div className="country-flag">{c.flag}</div>
+                <h3>{c.name}</h3>
+                <p className="sub">{c.sub}</p>
+                <ul>
+                  {c.items.map((it) => (
+                    <li key={it.b}>
+                      <b>{it.b}</b> {it.t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="countries-connector" aria-hidden="true">
+            <span className="connector-badge"><Icon name="globe" /></span>
+          </div>
         </div>
       </div>
     </section>
@@ -170,23 +189,65 @@ export function Partnership() {
   const { d } = useI18n();
   const p = d.partnership;
   return (
-    <section className="section section-alt" id="parceria">
+    <section className="section section-alt partnership-section" id="parceria">
+      <img className="partnership-map" src="/hero-map-dots.png" alt="" aria-hidden="true" />
       <div className="container reveal">
         <p className="section-eyebrow">{p.eyebrow}</p>
-        <h2 className="section-title">{p.title}</h2>
+        <span className="mini-rule" aria-hidden="true" />
+        <h2 className="section-title">
+          <span className="section-title-line">{p.titleLine1}</span>
+          <span className="section-title-line accent">{p.titleAccent}</span>
+        </h2>
+        <span className="about-flourish" aria-hidden="true" />
         <p className="section-lead">{p.lead}</p>
-        <div className="flow">
-          <div className="flow-box">
-            <h4>{p.flowFrom.h}</h4>
-            <p>{p.flowFrom.p}</p>
-          </div>
-          <div className="flow-arrow">⇄</div>
-          <div className="flow-box">
-            <h4>{p.flowTo.h}</h4>
-            <p>{p.flowTo.p}</p>
+
+        <div className="flow-wrap">
+          <span className="flow-end-dot dot-left" />
+          <span className="flow-end-dot dot-right" />
+          <div className="flow">
+            <div className="flow-box">
+              <span className="flow-flag">{p.flowFrom.flag}</span>
+              <div>
+                <h4>{p.flowFrom.h}</h4>
+                <p>{p.flowFrom.p}</p>
+              </div>
+            </div>
+            <span className="flow-badge"><Icon name="swap" /></span>
+            <div className="flow-box">
+              <span className="flow-flag">{p.flowTo.flag}</span>
+              <div>
+                <h4>{p.flowTo.h}</h4>
+                <p>{p.flowTo.p}</p>
+              </div>
+            </div>
           </div>
         </div>
-        <p className="section-lead" style={{ marginTop: 32 }}>{p.example}</p>
+
+        <div className="example-callout">
+          <span className="example-icon"><Icon name="ship" /></span>
+          <p><b>{p.exampleLabel}</b> {p.exampleText}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function InstitutionalVideo() {
+  const { d } = useI18n();
+  const v = d.video;
+  const src = process.env.NEXT_PUBLIC_INSTITUTIONAL_VIDEO || "/institucional.mp4";
+  return (
+    <section className="section video-section" id="video">
+      <div className="container reveal">
+        <p className="section-eyebrow center">{v.eyebrow}</p>
+        <h2 className="section-title center">{v.title}</h2>
+        <span className="about-flourish video-flourish" aria-hidden="true" />
+        <p className="section-lead center">{v.lead}</p>
+        <div className="video-frame">
+          <video controls preload="none" playsInline poster="/hero-seal.png">
+            <source src={src} type="video/mp4" />
+          </video>
+        </div>
       </div>
     </section>
   );
@@ -195,15 +256,19 @@ export function Partnership() {
 export function Services() {
   const { d } = useI18n();
   return (
-    <section className="section" id="servicos">
+    <section className="section services-section" id="servicos">
+      <img className="services-map" src="/hero-map-dots.png" alt="" aria-hidden="true" />
       <div className="container reveal">
-        <p className="section-eyebrow">{d.services.eyebrow}</p>
-        <h2 className="section-title">{d.services.title}</h2>
+        <p className="section-eyebrow eyebrow-arrow">{d.services.eyebrow}</p>
+        <h2 className="section-title">
+          <span className="section-title-line">{d.services.titleLine1}</span>
+          <span className="section-title-line accent">{d.services.titleAccent}</span>
+        </h2>
         <p className="section-lead">{d.services.lead}</p>
         <div className="grid grid-3">
           {d.services.cards.map((c) => (
-            <article className="card" key={c.h}>
-              <div className="card-icon">{c.icon}</div>
+            <article className={`card${c.featured ? " card-featured" : ""}`} key={c.h}>
+              <div className="card-icon"><Icon name={c.icon} /></div>
               <h3>{c.h}</h3>
               <p>{c.p}</p>
             </article>
@@ -217,17 +282,32 @@ export function Services() {
 export function Ecosystem() {
   const { d } = useI18n();
   return (
-    <section className="section section-alt" id="ecossistema">
+    <section className="section section-alt ecosystem-section" id="ecossistema">
+      <img className="ecosystem-map" src="/hero-map-dots.png" alt="" aria-hidden="true" />
       <div className="container reveal">
         <p className="section-eyebrow">{d.ecosystem.eyebrow}</p>
-        <h2 className="section-title">{d.ecosystem.title}</h2>
+        <span className="mini-rule" aria-hidden="true" />
+        <h2 className="section-title">
+          {d.ecosystem.titleLine1}{" "}
+          <span className="accent">{d.ecosystem.titleAccent}</span>
+        </h2>
+        <span className="diamond-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
         <p className="section-lead eco-lead">{d.ecosystem.lead}</p>
         <div className="eco-grid">
           {d.ecosystem.cards.map((c) => (
             <article className="eco-card" key={c.h}>
-              <span className="tag">{c.tag}</span>
-              <h3>{c.h}</h3>
-              <p>{c.p}</p>
+              {c.logo ? (
+                <img className="eco-logo" src={c.logo} alt="" />
+              ) : (
+                <span className="eco-logo eco-logo-placeholder"><Icon name="network" /></span>
+              )}
+              <div className="eco-card-body">
+                <span className="tag">{c.tag}</span>
+                <h3>{c.h}</h3>
+                <p>{c.p}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -244,14 +324,46 @@ export function Membership() {
   return (
     <section className="section" id="associacao">
       <div className="container reveal">
-        <p className="section-eyebrow">{d.membership.eyebrow}</p>
-        <h2 className="section-title">{d.membership.title}</h2>
-        <p className="section-lead">{d.membership.lead}</p>
-        <div className="benefits">
-          <ul>{col1.map((b) => <li key={b}>{b}</li>)}</ul>
-          <ul>{col2.map((b) => <li key={b}>{b}</li>)}</ul>
+        <div className="membership-top">
+          <div>
+            <p className="section-eyebrow">{d.membership.eyebrow}</p>
+            <h2 className="section-title">
+              <span className="section-title-line">{d.membership.titleLine1}</span>
+              <span className="section-title-line accent">{d.membership.titleAccentLine1}</span>
+              <span className="section-title-line accent">{d.membership.titleAccentLine2}</span>
+            </h2>
+            <span className="about-flourish" aria-hidden="true" />
+            <p className="section-lead">{d.membership.lead}</p>
+          </div>
+          <div className="membership-map" aria-hidden="true">
+            <img src="/membership-map.png" alt="" />
+            <svg viewBox="0 0 500 300" className="membership-arcs">
+              <path d="M140,225 Q225,75 310,135" />
+              <path d="M140,225 Q235,95 320,150" />
+              <circle cx="140" cy="225" r="4.5" className="arc-dot" />
+              <circle cx="310" cy="135" r="4.5" className="arc-dot" />
+            </svg>
+          </div>
         </div>
-        <a href="#contato" className="btn btn-primary">{d.membership.cta}</a>
+        <div className="benefits">
+          <ul>
+            {col1.map((b) => (
+              <li key={b.text}>
+                <span className="benefit-icon"><Icon name={b.icon} /></span>
+                <span>{b.text}</span>
+              </li>
+            ))}
+          </ul>
+          <ul>
+            {col2.map((b) => (
+              <li key={b.text}>
+                <span className="benefit-icon"><Icon name={b.icon} /></span>
+                <span>{b.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <a href="#solicitar" className="btn btn-primary">{d.membership.cta}</a>
       </div>
     </section>
   );
@@ -260,21 +372,43 @@ export function Membership() {
 export function News() {
   const { d } = useI18n();
   return (
-    <section className="section section-alt" id="noticias">
+    <section className="section section-alt news-section" id="noticias">
+      <img className="news-seal" src="/hero-seal.png" alt="" aria-hidden="true" />
       <div className="container reveal">
         <p className="section-eyebrow">{d.news.eyebrow}</p>
         <h2 className="section-title">{d.news.title}</h2>
-        <hr className="gold-rule" />
+        <span className="diamond-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
+        <p className="section-lead">{d.news.lead}</p>
         <div className="grid grid-3">
-          {d.news.items.map((n) => (
-            <article className="news-card" key={n.h}>
-              <span className="news-tag">{n.tag}</span>
-              <time>{n.date}</time>
-              <h3>{n.h}</h3>
-              <p>{n.p}</p>
-            </article>
-          ))}
+          {d.news.items.map((n) => {
+            const body = (
+              <>
+                <div className="news-card-top">
+                  <span className="news-icon"><Icon name={n.icon} /></span>
+                  <span className="news-tag">{n.tag}</span>
+                </div>
+                <time>{n.date}</time>
+                <h3>{n.h}</h3>
+                <p>{n.p}</p>
+                <span className="news-arrow" aria-hidden="true">→</span>
+              </>
+            );
+            return n.link ? (
+              <Link href={n.link} className="news-card" key={n.h}>
+                {body}
+              </Link>
+            ) : (
+              <article className="news-card" key={n.h}>
+                {body}
+              </article>
+            );
+          })}
         </div>
+        <span className="diamond-flourish news-bottom-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
       </div>
     </section>
   );

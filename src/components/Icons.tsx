@@ -33,6 +33,51 @@ export const IconPin = (p: P) => (
 export const IconNetwork = (p: P) => (
   <svg {...base} {...p}><circle cx="6" cy="7" r="2" /><circle cx="18" cy="7" r="2" /><circle cx="12" cy="18" r="2" /><path d="M8 8l3 8M16 8l-3 8M8 7h8" /></svg>
 );
+export const IconBank = (p: P) => (
+  <svg {...base} {...p}><path d="M3 10l9-6 9 6" /><path d="M4 10h16v1H4z" /><path d="M5 11v8M9.5 11v8M14.5 11v8M19 11v8" /><path d="M3 21h18" /></svg>
+);
+export const IconSwap = (p: P) => (
+  <svg {...base} {...p}><path d="M4 8h13l-3-3M17 16H4l3 3" /></svg>
+);
+export const IconShip = (p: P) => (
+  <svg {...base} {...p}><path d="M5 11V5h6l2 3h4v3" /><path d="M3 14h18l-2 5H5l-2-5z" /><path d="M9 5V3M9 8h2" /></svg>
+);
+export const IconTrending = (p: P) => (
+  <svg {...base} {...p}><path d="M4 20V10M9 20V13M14 20V7M19 20V4" /><path d="M13 5l6-1.5.5 6" /></svg>
+);
+export const IconGlobeTech = (p: P) => (
+  <svg {...base} {...p}><circle cx="10" cy="11" r="7" /><path d="M3 11h14M10 4c2 2 3 4.3 3 7s-1 5-3 7c-2-2-3-4.3-3-7s1-5 3-7z" /><circle cx="18" cy="18" r="3.2" /><path d="M18 15.3v.9M18 19.8v.9M20.7 18h-.9M15.9 18h-.9M20 16l-.6.6M16.6 19.4l-.6.6M20 20l-.6-.6M16.6 16.6l-.6-.6" /></svg>
+);
+export const IconCertificate = (p: P) => (
+  <svg {...base} {...p}><path d="M6 3h9l3 3v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" /><path d="M8 8h6M8 11h6" /><circle cx="9.5" cy="17.5" r="2.5" /><path d="M8 19.5L7 22l2.5-1 2.5 1-1-2.5" /></svg>
+);
+export const IconCalendar = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M8 14h2M14 14h2M8 17h2M14 17h2" /></svg>
+);
+export const IconPlane = (p: P) => (
+  <svg {...base} {...p}><path d="M10.5 20.5l1.5-4.5 6-3.5-1-2-6.5 1.5L7 9 4.5 10l2.5 3.5-1 4 1.5-.5 1-2.5 2 2z" /></svg>
+);
+export const IconMonitor = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M8 20h8M12 16v4" /></svg>
+);
+export const IconMail = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M4 6.5l8 6 8-6" /></svg>
+);
+export const IconBriefcase = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="8" width="18" height="12" rx="2" /><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M3 13h18" /></svg>
+);
+export const IconPeople = (p: P) => (
+  <svg {...base} {...p}><circle cx="8.5" cy="8" r="3" /><path d="M2.5 20c0-3.3 2.7-6 6-6s6 2.7 6 6" /><circle cx="17" cy="8.5" r="2.4" /><path d="M15.2 14.3c2.6.4 4.6 2.6 4.6 5.7" /></svg>
+);
+export const IconMegaphone = (p: P) => (
+  <svg {...base} {...p}><path d="M3 10v4h3l6 4V6l-6 4H3z" /><path d="M14 9a3 3 0 0 1 0 6M17 6a6 6 0 0 1 0 12" /></svg>
+);
+export const IconSeal = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="9" r="6" /><path d="M9 14.5L7.5 21l4.5-2 4.5 2-1.5-6.5" /><path d="M9.5 9l1.7 1.7L14.5 7" /></svg>
+);
+export const IconIdCard = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="8.5" cy="11" r="2" /><path d="M6 16.5c.4-1.5 1.3-2.3 2.5-2.3s2.1.8 2.5 2.3" /><path d="M14 10h4M14 13h4" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -42,6 +87,21 @@ const map = {
   laurel: IconLaurel,
   pin: IconPin,
   network: IconNetwork,
+  bank: IconBank,
+  swap: IconSwap,
+  ship: IconShip,
+  trending: IconTrending,
+  globetech: IconGlobeTech,
+  certificate: IconCertificate,
+  calendar: IconCalendar,
+  plane: IconPlane,
+  monitor: IconMonitor,
+  mail: IconMail,
+  briefcase: IconBriefcase,
+  people: IconPeople,
+  megaphone: IconMegaphone,
+  seal: IconSeal,
+  idcard: IconIdCard,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

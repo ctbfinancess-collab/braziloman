@@ -31,6 +31,8 @@ model MembershipApplication {
   name      String
   email     String
   company   String
+  role      String?
+  sector    String?
   country   String?
   phone     String?
   message   String?

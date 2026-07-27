@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
 export default function Header() {
@@ -10,19 +11,19 @@ export default function Header() {
   const close = () => setOpen(false);
 
   const links = [
-    { href: "#sobre", label: d.nav.about },
-    { href: "#paises", label: d.nav.countries },
-    { href: "#servicos", label: d.nav.services },
-    { href: "#ecossistema", label: d.nav.ecosystem },
-    { href: "#associacao", label: d.nav.membership },
-    { href: "#noticias", label: d.nav.news },
-    { href: "#contato", label: d.nav.contact },
+    { href: "/a-camara", label: d.nav.about },
+    { href: "/brasil-oma", label: d.nav.countries },
+    { href: "/atuacao", label: d.nav.services },
+    { href: "/ecossistema", label: d.nav.ecosystem },
+    { href: "/associe-se", label: d.nav.membership },
+    { href: "/noticias", label: d.nav.news },
+    { href: "/contato", label: d.nav.contact },
   ];
 
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <a href="#top" className="brand" onClick={close} aria-label="CTB">
+        <Link href="/" className="brand" onClick={close} aria-label="CTB">
           <Image
             className="brand-logo"
             src="/logo-ctb-transparent.png"
@@ -35,13 +36,13 @@ export default function Header() {
             <strong>CTB</strong>
             <small>{d.brand.tagline}</small>
           </span>
-        </a>
+        </Link>
 
         <nav className={`nav ${open ? "open" : ""}`} aria-label="Menu principal">
           {links.map((l) => (
-            <a key={l.href} href={l.href} onClick={close}>
+            <Link key={l.href} href={l.href} onClick={close}>
               {l.label}
-            </a>
+            </Link>
           ))}
           <button
             className="lang-toggle"

@@ -1,17 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
 export default function Footer() {
   const { d } = useI18n();
   const links = [
-    { href: "#sobre", label: d.nav.about },
-    { href: "#paises", label: d.nav.countries },
-    { href: "#servicos", label: d.nav.services },
-    { href: "#ecossistema", label: d.nav.ecosystem },
-    { href: "#associacao", label: d.nav.membership },
-    { href: "#noticias", label: d.nav.news },
+    { href: "/a-camara", label: d.nav.about },
+    { href: "/brasil-oma", label: d.nav.countries },
+    { href: "/atuacao", label: d.nav.services },
+    { href: "/ecossistema", label: d.nav.ecosystem },
+    { href: "/associe-se", label: d.nav.membership },
+    { href: "/noticias", label: d.nav.news },
   ];
 
   return (
@@ -39,14 +40,14 @@ export default function Footer() {
           <div className="footer-col">
             <h4>{d.footer.navTitle}</h4>
             {links.map((l) => (
-              <a key={l.href} href={l.href}>{l.label}</a>
+              <Link key={l.href} href={l.href}>{l.label}</Link>
             ))}
           </div>
 
           <div className="footer-col">
             <h4>{d.footer.contactTitle}</h4>
-            <a href="mailto:contato@braziloman.org">contato@braziloman.org</a>
-            <p>São Paulo, Brasil</p>
+            <a href="mailto:contact@brasilomanchamber.org">contact@brasilomanchamber.org</a>
+            <p>Brasília, Brasil</p>
             <p>Mascate, Omã</p>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { Icon } from "./Icons";
 
 type Status = "idle" | "sending" | "ok" | "err";
 
@@ -30,40 +31,58 @@ export default function Contact() {
   }
 
   return (
-    <section className="section" id="contato">
+    <section className="section contact-section" id="contato">
       <div className="container contact-grid reveal">
         <div>
           <p className="section-eyebrow">{d.contact.eyebrow}</p>
+          <span className="diamond-flourish contact-eyebrow-flourish" aria-hidden="true">
+            <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+          </span>
           <h2 className="section-title">{d.contact.title}</h2>
+          <span className="contact-title-rule" aria-hidden="true" />
           <p className="section-lead">{d.contact.lead}</p>
           <ul className="contact-info">
             <li>
-              <span aria-hidden="true">✉️</span>
-              <a href="mailto:contato@braziloman.org">contato@braziloman.org</a>
+              <span className="contact-icon"><Icon name="mail" /></span>
+              <div>
+                <strong>{d.contact.emailLabel}</strong>
+                <a href="mailto:contact@brasilomanchamber.org">contact@brasilomanchamber.org</a>
+              </div>
             </li>
             <li>
-              <span aria-hidden="true">📍</span>
-              <span>{d.contact.address}</span>
+              <span className="contact-icon"><Icon name="pin" /></span>
+              <div>
+                <strong>{d.contact.locationLabel}</strong>
+                <span>{d.contact.address}</span>
+              </div>
             </li>
           </ul>
+          <span className="diamond-flourish contact-quote-flourish" aria-hidden="true">
+            <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+          </span>
+          <span className="contact-quote-icon" aria-hidden="true"><Icon name="handshake" /></span>
+          <p className="contact-quote">{d.contact.quote}</p>
         </div>
 
         <form className="contact-form" onSubmit={onSubmit} noValidate>
+          <span className="diamond-flourish contact-form-flourish" aria-hidden="true">
+            <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+          </span>
           <label>
             {f.name}
-            <input type="text" name="name" required autoComplete="name" maxLength={120} />
+            <input type="text" name="name" placeholder={f.namePh} required autoComplete="name" maxLength={120} />
           </label>
           <label>
             {f.email}
-            <input type="email" name="email" required autoComplete="email" maxLength={160} />
+            <input type="email" name="email" placeholder={f.emailPh} required autoComplete="email" maxLength={160} />
           </label>
           <label>
             {f.company}
-            <input type="text" name="company" autoComplete="organization" maxLength={160} />
+            <input type="text" name="company" placeholder={f.companyPh} autoComplete="organization" maxLength={160} />
           </label>
           <label>
             {f.message}
-            <textarea name="message" rows={4} required maxLength={4000} />
+            <textarea name="message" placeholder={f.messagePh} rows={4} required maxLength={4000} />
           </label>
           {/* honeypot anti-spam field (hidden from users) */}
           <input
@@ -75,6 +94,7 @@ export default function Contact() {
             style={{ position: "absolute", left: "-9999px", width: 1, height: 1 }}
           />
           <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+            <Icon name="mail" />
             {status === "sending" ? f.sending : f.submit}
           </button>
           <p
@@ -86,6 +106,9 @@ export default function Contact() {
           </p>
         </form>
       </div>
+      <span className="diamond-flourish contact-bottom-flourish" aria-hidden="true">
+        <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+      </span>
     </section>
   );
 }
