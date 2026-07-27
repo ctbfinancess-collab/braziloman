@@ -151,6 +151,9 @@ export function MembershipHero() {
           <MembershipForm />
         </div>
       </div>
+      <span className="diamond-flourish" aria-hidden="true">
+        <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+      </span>
     </section>
   );
 }

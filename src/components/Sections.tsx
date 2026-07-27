@@ -446,7 +446,9 @@ export function Ecosystem() {
             </article>
           ))}
         </div>
+      </div>
 
+      <div className="container reveal">
         <p className="section-eyebrow center eco-section-label">{e.solutionsEyebrow}</p>
         <div className="eco-solutions-wrap">
           <div className="eco-solutions">
@@ -483,14 +485,8 @@ export function Membership() {
             <span className="about-flourish" aria-hidden="true" />
             <p className="section-lead">{d.membership.lead}</p>
           </div>
-          <div className="membership-map" aria-hidden="true">
-            <img src="/membership-map.png" alt="" />
-            <svg viewBox="0 0 500 300" className="membership-arcs">
-              <path d="M140,225 Q225,75 310,135" />
-              <path d="M140,225 Q235,95 320,150" />
-              <circle cx="140" cy="225" r="4.5" className="arc-dot" />
-              <circle cx="310" cy="135" r="4.5" className="arc-dot" />
-            </svg>
+          <div className="membership-map">
+            <img src="/associe-se/mapa.png" alt="Executivos brasileiros e omanitas em reunião, com mapa-múndi de conexões ao fundo" />
           </div>
         </div>
         <div className="benefits">
@@ -512,6 +508,9 @@ export function Membership() {
           </ul>
         </div>
         <a href="#solicitar" className="btn btn-primary">{d.membership.cta}</a>
+        <span className="diamond-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
       </div>
     </section>
   );

@@ -20,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://braziloman.org"),
+  metadataBase: new URL("https://www.brasilomanchamber.org"),
   title: {
     default: "CTB — Câmara de Comércio Brasil–Omã",
     template: "%s | CTB",
