@@ -334,6 +334,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; position: relative; z-index: 1; }
 .about-text p { color: var(--fg-muted); font-size: 1.05rem; margin: 0 0 18px; }
 
+/* missão/visão, princípios, papel, encerramento */
+.about-mv-grid { margin-bottom: 48px; }
+.about-mv-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 30px; }
+.about-mv-card .corridor-icon { margin-bottom: 16px; }
+.about-mv-card p { color: var(--fg-muted); font-size: 0.96rem; line-height: 1.6; margin: 0 0 10px; }
+.about-mv-card p:last-child { margin-bottom: 0; }
+.about-why-list { margin-top: 18px; }
+.about-role-list { max-width: 720px; margin-bottom: 48px; }
+.about-commitment { margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--border); }
+
 /* pilares como linha do tempo vertical */
 .pillars { position: relative; padding-left: 10px; }
 .pillars::before {

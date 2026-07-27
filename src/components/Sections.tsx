@@ -93,34 +93,76 @@ export function StatsStrip() {
 
 export function About() {
   const { d } = useI18n();
+  const a = d.about;
   return (
     <section className="section about-section" id="sobre">
       <img className="about-watermark" src="/hero-seal.png" alt="" aria-hidden="true" />
       <div className="container reveal">
-        <p className="section-eyebrow">{d.about.eyebrow}</p>
+        <p className="section-eyebrow">{a.eyebrow}</p>
         <h2 className="about-title">
-          <span className="about-title-line">{d.about.titleLine1}</span>
-          <span className="about-title-line accent">{d.about.titleAccent}</span>
-          <span className="about-title-line">{d.about.titleLine3}</span>
+          <span className="about-title-line">{a.titleLine1}</span>
+          <span className="about-title-line accent">{a.titleAccent}</span>
         </h2>
+        <p className="section-lead">{a.tagline}</p>
         <span className="about-flourish" aria-hidden="true" />
-        <div className="about-grid">
-          <div className="about-text">
-            <p>{d.about.p1}</p>
-            <p>{d.about.p2}</p>
+
+        <img className="partnership-photo" src={a.photo} alt="Brasil e Omã, uma parceria institucional" />
+
+        <div className="partnership-lead">
+          {a.intro.map((t) => (
+            <p key={t}>{t}</p>
+          ))}
+        </div>
+
+        <div className="mp-grid mp-grid-2 about-mv-grid">
+          <div className="about-mv-card">
+            <span className="corridor-icon"><Icon name="globe" /></span>
+            <h3 className="mp-subtitle mp-subtitle-tight">{a.mission.title}</h3>
+            <p>{a.mission.p1}</p>
+            <p>{a.mission.p2}</p>
           </div>
-          <div className="pillars">
-            {d.about.pillars.map((p) => (
-              <div className="pillar" key={p.h}>
-                <span className="pillar-dot" />
-                <span className="pillar-icon"><Icon name={p.icon} /></span>
-                <div className="pillar-body">
-                  <h3>{p.h}</h3>
-                  <p>{p.p}</p>
-                </div>
-              </div>
-            ))}
+          <div className="about-mv-card">
+            <span className="corridor-icon"><Icon name="laurel" /></span>
+            <h3 className="mp-subtitle mp-subtitle-tight">{a.vision.title}</h3>
+            <p>{a.vision.p1}</p>
+            <p>{a.vision.p2}</p>
           </div>
+        </div>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{a.principles.title}</h3>
+        <p className="partnership-block-lead">{a.principles.p1}</p>
+        <p className="partnership-block-lead">{a.principles.p2}</p>
+        <p className="cp-chips-label">{a.principles.listTitle}</p>
+        <ul className="why-list about-why-list">
+          {a.principles.items.map((it) => (
+            <li key={it}>{it}</li>
+          ))}
+        </ul>
+
+        <div className="corridor-block">
+          <span className="corridor-icon"><Icon name="bank" /></span>
+          <div>
+            <h3 className="mp-subtitle mp-subtitle-tight">{a.governance.title}</h3>
+            <p>{a.governance.p1}</p>
+            <p>{a.governance.p2}</p>
+            <p>{a.governance.p3}</p>
+          </div>
+        </div>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{a.role.title}</h3>
+        <p className="partnership-block-lead">{a.role.p1}</p>
+        <p className="partnership-block-lead">{a.role.p2}</p>
+        <ul className="flow-items about-role-list">
+          {a.role.items.map((it) => (
+            <li key={it}>{it}</li>
+          ))}
+        </ul>
+
+        <div className="mp-closing about-commitment">
+          <h3 className="section-title center">{a.commitment.title}</h3>
+          <p className="section-lead mp-lead-center">{a.commitment.p1}</p>
+          <p className="section-lead mp-lead-center">{a.commitment.p2}</p>
+          <p className="mp-closing-quote">{a.commitment.quote}</p>
         </div>
       </div>
     </section>
