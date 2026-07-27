@@ -199,33 +199,95 @@ export function Partnership() {
           <span className="section-title-line accent">{p.titleAccent}</span>
         </h2>
         <span className="about-flourish" aria-hidden="true" />
-        <p className="section-lead">{p.lead}</p>
 
+        <img className="partnership-photo" src={p.photo} alt="Brasil e Omã, uma parceria de mãos dadas" />
+
+        <div className="partnership-lead">
+          {p.leadParagraphs.map((t) => (
+            <p key={t}>{t}</p>
+          ))}
+        </div>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{p.flowTitle}</h3>
         <div className="flow-wrap">
           <span className="flow-end-dot dot-left" />
           <span className="flow-end-dot dot-right" />
-          <div className="flow">
-            <div className="flow-box">
-              <span className="flow-flag">{p.flowFrom.flag}</span>
-              <div>
-                <h4>{p.flowFrom.h}</h4>
-                <p>{p.flowFrom.p}</p>
+          <div className="flow flow-detailed">
+            <div className="flow-box flow-box-detailed">
+              <div className="flow-box-head">
+                <span className="flow-flag">{p.flowFrom.flag}</span>
+                <div>
+                  <h4>{p.flowFrom.h}</h4>
+                  <span className="flow-subtitle">{p.flowFrom.subtitle}</span>
+                </div>
               </div>
+              <ul className="flow-items">
+                {p.flowFrom.items.map((it) => (
+                  <li key={it}>{it}</li>
+                ))}
+              </ul>
+              <p className="flow-note">{p.flowFrom.note}</p>
             </div>
             <span className="flow-badge"><Icon name="swap" /></span>
-            <div className="flow-box">
-              <span className="flow-flag">{p.flowTo.flag}</span>
-              <div>
-                <h4>{p.flowTo.h}</h4>
-                <p>{p.flowTo.p}</p>
+            <div className="flow-box flow-box-detailed">
+              <div className="flow-box-head">
+                <span className="flow-flag">{p.flowTo.flag}</span>
+                <div>
+                  <h4>{p.flowTo.h}</h4>
+                  <span className="flow-subtitle">{p.flowTo.subtitle}</span>
+                </div>
               </div>
+              <ul className="flow-items">
+                {p.flowTo.items.map((it) => (
+                  <li key={it}>{it}</li>
+                ))}
+              </ul>
+              <p className="flow-note">{p.flowTo.note}</p>
             </div>
           </div>
         </div>
 
-        <div className="example-callout">
-          <span className="example-icon"><Icon name="ship" /></span>
-          <p><b>{p.exampleLabel}</b> {p.exampleText}</p>
+        <div className="corridor-block">
+          <span className="corridor-icon"><Icon name="ship" /></span>
+          <div>
+            <h3 className="mp-subtitle mp-subtitle-tight">{p.corridor.title}</h3>
+            <p>{p.corridor.p1}</p>
+            <p>{p.corridor.p2}</p>
+            <p>{p.corridor.p3}</p>
+          </div>
+        </div>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{p.investments.title}</h3>
+        <p className="partnership-block-lead">{p.investments.lead}</p>
+        <div className="cp-chips">
+          {p.investments.items.map((it) => (
+            <span className="cp-chip" key={it}>{it}</span>
+          ))}
+        </div>
+
+        <div className="spotlight-card">
+          <p className="section-eyebrow">{p.spotlight.eyebrow}</p>
+          <h3 className="mp-subtitle mp-subtitle-tight">{p.spotlight.title}</h3>
+          <p>{p.spotlight.p1}</p>
+          <p>{p.spotlight.p2}</p>
+        </div>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{p.whyOman.title}</h3>
+        <ul className="why-list">
+          {p.whyOman.items.map((it) => (
+            <li key={it}>{it}</li>
+          ))}
+        </ul>
+
+        <h3 className="mp-subtitle mp-subtitle-tight">{p.stats.title}</h3>
+        <div className="stats-table">
+          {p.stats.rows.map((r) => (
+            <div className="stats-row" key={r.label}>
+              <span className="stats-label">{r.label}</span>
+              <span className="stats-value">🇧🇷 {r.brazil}</span>
+              <span className="stats-value">🇴🇲 {r.oman}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

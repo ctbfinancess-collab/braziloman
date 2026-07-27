@@ -28,8 +28,8 @@ export default function Header() {
             className="brand-logo"
             src="/logo-ctb-transparent.png"
             alt="Selo da Câmara de Comércio Brasil–Omã"
-            width={46}
-            height={46}
+            width={69}
+            height={69}
             priority
           />
           <span className="brand-text">
