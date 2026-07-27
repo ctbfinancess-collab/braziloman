@@ -390,35 +390,66 @@ export function Services() {
 
 export function Ecosystem() {
   const { d } = useI18n();
+  const e = d.ecosystem;
   return (
-    <section className="section section-alt ecosystem-section" id="ecossistema">
-      <img className="ecosystem-map" src="/hero-map-dots.png" alt="" aria-hidden="true" />
+    <section className="ecosystem-section" id="ecossistema">
+      <div className="eco-hero">
+        <div className="eco-hero-content">
+          <p className="section-eyebrow">{e.eyebrow}</p>
+          <h1 className="section-title">
+            {e.titleLines.map((l) => (
+              <span className="section-title-line" key={l.text}>
+                {l.text}
+                <span className="accent">{l.accent}</span>
+              </span>
+            ))}
+          </h1>
+          <p className="section-lead">{e.lead}</p>
+          <div className="eco-highlights">
+            {e.highlights.map((h) => (
+              <div className="eco-highlight" key={h.h}>
+                <span className="eco-highlight-icon"><Icon name={h.icon} /></span>
+                <h4>{h.h}</h4>
+                <p>{h.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="eco-hero-photo">
+          <img src={e.photo} alt="Escritório com globo, representando alcance global" />
+        </div>
+      </div>
+
       <div className="container reveal">
-        <p className="section-eyebrow">{d.ecosystem.eyebrow}</p>
-        <span className="mini-rule" aria-hidden="true" />
-        <h2 className="section-title">
-          {d.ecosystem.titleLine1}{" "}
-          <span className="accent">{d.ecosystem.titleAccent}</span>
-        </h2>
+        <p className="section-eyebrow center eco-section-label">{e.companiesEyebrow}</p>
         <span className="diamond-flourish" aria-hidden="true">
           <span className="df-line" /><span className="df-dot" /><span className="df-line" />
         </span>
-        <p className="section-lead eco-lead">{d.ecosystem.lead}</p>
         <div className="eco-grid">
-          {d.ecosystem.cards.map((c) => (
+          {e.companies.map((c) => (
             <article className="eco-card" key={c.h}>
-              {c.logo ? (
-                <img className="eco-logo" src={c.logo} alt="" />
-              ) : (
-                <span className="eco-logo eco-logo-placeholder"><Icon name="network" /></span>
-              )}
+              <img className="eco-logo" src={c.logo} alt="" />
               <div className="eco-card-body">
                 <span className="tag">{c.tag}</span>
                 <h3>{c.h}</h3>
                 <p>{c.p}</p>
+                <span className="eco-cta">{c.cta} <Icon name="swap" /></span>
               </div>
             </article>
           ))}
+        </div>
+
+        <p className="section-eyebrow center eco-section-label">{e.solutionsEyebrow}</p>
+        <div className="eco-solutions-wrap">
+          <div className="eco-solutions">
+            {e.solutions.map((s) => (
+              <div className="eco-solution" key={s.h}>
+                <span className="eco-solution-icon"><Icon name={s.icon} /></span>
+                <h4>{s.h}</h4>
+                <p>{s.p}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

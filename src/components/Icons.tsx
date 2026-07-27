@@ -78,6 +78,12 @@ export const IconSeal = (p: P) => (
 export const IconIdCard = (p: P) => (
   <svg {...base} {...p}><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="8.5" cy="11" r="2" /><path d="M6 16.5c.4-1.5 1.3-2.3 2.5-2.3s2.1.8 2.5 2.3" /><path d="M14 10h4M14 13h4" /></svg>
 );
+export const IconShieldCheck = (p: P) => (
+  <svg {...base} {...p}><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /><path d="M9 12l2 2 4-4" /></svg>
+);
+export const IconLeaf = (p: P) => (
+  <svg {...base} {...p}><path d="M5 19c-1-6 2-13 14-14-1 12-8 15-14 14z" /><path d="M5 19c2-5 5-8 10-10" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -102,6 +108,8 @@ const map = {
   megaphone: IconMegaphone,
   seal: IconSeal,
   idcard: IconIdCard,
+  shieldcheck: IconShieldCheck,
+  leaf: IconLeaf,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
