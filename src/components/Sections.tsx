@@ -327,6 +327,7 @@ export function Services() {
           <span className="section-title-line accent">{d.services.titleAccent}</span>
         </h2>
         <p className="section-lead">{d.services.lead}</p>
+        <img className="partnership-photo" src={d.services.photo} alt="Reunião institucional da Câmara de Comércio Brasil–Omã" />
         <div className="grid grid-3">
           {d.services.cards.map((c) => (
             <article className={`card${c.featured ? " card-featured" : ""}`} key={c.h}>
