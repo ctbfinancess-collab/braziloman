@@ -90,6 +90,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .mp-hero { padding-top: 48px; padding-bottom: 48px; }
 .mp-closing { padding-top: 48px; }
 
+/* brasil-oma: mesma correção — três seções empilhadas com padding duplicado nas transições */
+#paises { padding-bottom: 48px; }
+.partnership-section { padding-top: 48px; padding-bottom: 48px; }
+.video-section { padding-top: 48px; }
+
 .eyebrow, .section-eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.28em;
@@ -735,6 +740,7 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 
 .mp-hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
 .mp-hero .section-lead { margin-bottom: 18px; }
+.mp-hero-photo { display: block; width: 78%; height: auto; border-radius: 8px; border: 1px solid var(--border); margin: 28px auto 0; }
 .mp-form { position: relative; }
 .mp-form-title { font-family: var(--font-display); color: var(--gold-light); font-size: 1.15rem; margin: 0 0 6px; }
 

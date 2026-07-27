@@ -146,6 +146,7 @@ export function MembershipHero() {
           <p className="section-lead">{h.p1}</p>
           <p className="section-lead">{h.p2}</p>
           <a href="#mp-form" className="btn btn-primary">{h.cta}</a>
+          <img className="mp-hero-photo" src="/associe-se/comunidade.jpg" alt="Crianças omanitas sorridentes, de mãos dadas em círculo" />
         </div>
         <div id="mp-form">
           <MembershipForm />
