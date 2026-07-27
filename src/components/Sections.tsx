@@ -433,7 +433,15 @@ export function Ecosystem() {
                 <span className="tag">{c.tag}</span>
                 <h3>{c.h}</h3>
                 <p>{c.p}</p>
-                <span className="eco-cta">{c.cta} <Icon name="swap" /></span>
+                {c.url ? (
+                  c.url.startsWith("/") ? (
+                    <Link href={c.url} className="eco-cta">{c.cta} <Icon name="swap" /></Link>
+                  ) : (
+                    <a href={c.url} target="_blank" rel="noopener noreferrer" className="eco-cta">{c.cta} <Icon name="swap" /></a>
+                  )
+                ) : (
+                  <span className="eco-cta eco-cta-disabled">{c.cta} <Icon name="swap" /></span>
+                )}
               </div>
             </article>
           ))}

@@ -276,10 +276,10 @@ export const content = {
       ],
       companiesEyebrow: "Nossas empresas e instituições",
       companies: [
-        { logo: "/ecosystem/ctb-holdings.png", tag: "Londres", h: "CTB Holdings Ltd", p: "Holding internacional responsável pela governança corporativa e estruturação de investimentos estratégicos.", cta: "Saiba mais" },
+        { logo: "/ecosystem/ctb-holdings.png", tag: "Londres", h: "CTB Holdings Ltd", p: "Holding internacional responsável pela governança corporativa e estruturação de investimentos estratégicos.", cta: "Saiba mais", url: "https://ctbholdings.uk/" },
         { logo: "/ecosystem/ctb-venture.png", tag: "Brasil", h: "CTBX Venture Investments S.A.", p: "Empresa brasileira focada em participações estratégicas, investimentos e desenvolvimento de negócios.", cta: "Saiba mais" },
-        { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brasil", h: "Fundação Wahibi", p: "Organização sem fins lucrativos dedicada a projetos de educação, inovação, saúde, sustentabilidade e desenvolvimento humano.", cta: "Saiba mais" },
-        { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brasil", h: "CTB Câmara de Comércio Brasil–Omã", p: "Entidade que promove e fortalece as relações comerciais, econômicas e institucionais entre o Brasil e o Sultanato de Omã.", cta: "Saiba mais" },
+        { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brasil", h: "Fundação Wahibi", p: "Organização sem fins lucrativos dedicada a projetos de educação, inovação, saúde, sustentabilidade e desenvolvimento humano.", cta: "Saiba mais", url: "https://fundacaowahibi.org/" },
+        { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brasil", h: "CTB Câmara de Comércio Brasil–Omã", p: "Entidade que promove e fortalece as relações comerciais, econômicas e institucionais entre o Brasil e o Sultanato de Omã.", cta: "Saiba mais", url: "/a-camara" },
       ],
       solutionsEyebrow: "Soluções que entregamos",
       solutions: [
@@ -898,10 +898,10 @@ export const content = {
       ],
       companiesEyebrow: "Our companies and institutions",
       companies: [
-        { logo: "/ecosystem/ctb-holdings.png", tag: "London", h: "CTB Holdings Ltd", p: "International holding responsible for corporate governance and structuring of strategic investments.", cta: "Learn more" },
+        { logo: "/ecosystem/ctb-holdings.png", tag: "London", h: "CTB Holdings Ltd", p: "International holding responsible for corporate governance and structuring of strategic investments.", cta: "Learn more", url: "https://ctbholdings.uk/" },
         { logo: "/ecosystem/ctb-venture.png", tag: "Brazil", h: "CTBX Venture Investments S.A.", p: "Brazilian company focused on strategic holdings, investment and business development.", cta: "Learn more" },
-        { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brazil", h: "Wahibi Foundation", p: "Non-profit organization dedicated to education, innovation, health, sustainability and human development projects.", cta: "Learn more" },
-        { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brazil", h: "CTB Brazil–Oman Chamber of Commerce", p: "Entity that promotes and strengthens commercial, economic and institutional relations between Brazil and the Sultanate of Oman.", cta: "Learn more" },
+        { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brazil", h: "Wahibi Foundation", p: "Non-profit organization dedicated to education, innovation, health, sustainability and human development projects.", cta: "Learn more", url: "https://fundacaowahibi.org/" },
+        { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brazil", h: "CTB Brazil–Oman Chamber of Commerce", p: "Entity that promotes and strengthens commercial, economic and institutional relations between Brazil and the Sultanate of Oman.", cta: "Learn more", url: "/a-camara" },
       ],
       solutionsEyebrow: "Solutions we deliver",
       solutions: [
