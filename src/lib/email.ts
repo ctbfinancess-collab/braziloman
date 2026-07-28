@@ -130,6 +130,24 @@ export async function sendNewApplicationAdminEmail(data: {
   });
 }
 
+/** E-mail: redefinição de senha, enviado a pedido do associado. */
+export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string) {
+  if (!resend) return;
+  const html = layout(
+    "Redefinição de senha — Área do Membro CTB.",
+    `${heading(`Olá, ${name}!`)}
+     ${paragraph("Recebemos um pedido para redefinir a senha da sua conta na Área do Membro. Clique no botão abaixo para criar uma nova senha.")}
+     ${button("Redefinir minha senha", resetUrl)}
+     ${paragraph("Se você não pediu essa redefinição, pode ignorar este e-mail com segurança — sua senha atual continua válida. Este link expira em 1 hora.")}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Redefinição de senha — CTB",
+    html,
+  });
+}
+
 /** E-mail 3: boas-vindas, enviado quando o admin aprova o pedido. */
 export async function sendWelcomeEmail(to: string, name: string) {
   if (!resend) return;

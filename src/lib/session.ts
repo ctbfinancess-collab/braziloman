@@ -23,6 +23,9 @@ function getSecretKey(): Uint8Array {
 
 export type MemberSessionPayload = { type: "member"; sub: string };
 export type AdminSessionPayload = { type: "admin" };
+export type PasswordResetPayload = { type: "password-reset"; sub: string };
+
+const PASSWORD_RESET_MAX_AGE = 60 * 60; // 1 hora
 
 export async function signMemberSession(applicationId: string): Promise<string> {
   return new SignJWT({ type: "member" } satisfies Omit<MemberSessionPayload, "sub">)
@@ -39,6 +42,25 @@ export async function signAdminSession(): Promise<string> {
     .setIssuedAt()
     .setExpirationTime(`${ADMIN_MAX_AGE}s`)
     .sign(getSecretKey());
+}
+
+export async function signPasswordResetToken(applicationId: string): Promise<string> {
+  return new SignJWT({ type: "password-reset" } satisfies Omit<PasswordResetPayload, "sub">)
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(applicationId)
+    .setIssuedAt()
+    .setExpirationTime(`${PASSWORD_RESET_MAX_AGE}s`)
+    .sign(getSecretKey());
+}
+
+export async function verifyPasswordResetToken(token: string): Promise<PasswordResetPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, getSecretKey());
+    if (payload.type !== "password-reset" || typeof payload.sub !== "string") return null;
+    return { type: "password-reset", sub: payload.sub };
+  } catch {
+    return null;
+  }
 }
 
 export async function verifyMemberSession(token: string): Promise<MemberSessionPayload | null> {

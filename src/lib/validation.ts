@@ -47,3 +47,20 @@ export const memberLoginSchema = z.object({
 export const adminLoginSchema = z.object({
   password: z.string().min(1, "Informe a senha").max(200),
 });
+
+/** Schema de validação do pedido de "esqueci minha senha". */
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email("E-mail inválido").max(160),
+});
+
+/** Schema de validação da redefinição de senha. */
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1),
+    password: z.string().min(8, "A senha precisa ter no mínimo 8 caracteres").max(72),
+    confirmPassword: z.string().min(8).max(72),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });

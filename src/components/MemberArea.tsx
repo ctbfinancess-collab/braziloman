@@ -63,9 +63,163 @@ export function MemberLoginForm() {
           )}
         </form>
 
-        <p className="mp-lead-center" style={{ marginTop: 24, fontSize: "0.9rem" }}>
+        <p className="mp-lead-center" style={{ marginTop: 14, fontSize: "0.9rem" }}>
+          <Link href="/membro/esqueci-senha" className="launch-back" style={{ display: "inline" }}>{t.forgotLink}</Link>
+        </p>
+        <p className="mp-lead-center" style={{ marginTop: 10, fontSize: "0.9rem" }}>
           {t.noAccount} <Link href="/associe-se#mp-form" className="launch-back" style={{ display: "inline" }}>{t.applyLink}</Link>
         </p>
+      </div>
+    </section>
+  );
+}
+
+export function ForgotPasswordForm() {
+  const { d } = useI18n();
+  const t = d.memberArea.forgotPassword;
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    setStatus("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/member/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        setError(json?.error || t.genericError);
+        setStatus("err");
+        return;
+      }
+      setStatus("ok");
+    } catch {
+      setError(t.genericError);
+      setStatus("err");
+    }
+  }
+
+  return (
+    <section className="section">
+      <div className="container reveal" style={{ maxWidth: 420 }}>
+        <p className="section-eyebrow center">{t.eyebrow}</p>
+        <h1 className="section-title center">{t.title}</h1>
+        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+        <p className="section-lead mp-lead-center">{t.lead}</p>
+
+        {status === "ok" ? (
+          <p className="form-note" role="status" aria-live="polite">{t.success}</p>
+        ) : (
+          <form className="contact-form mp-form" onSubmit={onSubmit} noValidate>
+            <label>
+              {t.email}
+              <input type="email" name="email" required autoComplete="email" maxLength={160} />
+            </label>
+            <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+              {status === "sending" ? t.submitting : t.submit}
+            </button>
+            {status === "err" && (
+              <p className="form-note err" role="status" aria-live="polite">{error}</p>
+            )}
+          </form>
+        )}
+
+        <p className="mp-lead-center" style={{ marginTop: 24, fontSize: "0.9rem" }}>
+          <Link href="/membro/login" className="launch-back" style={{ display: "inline" }}>{t.backToLogin}</Link>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export function ResetPasswordForm({ token }: { token: string | null }) {
+  const { d } = useI18n();
+  const t = d.memberArea.resetPassword;
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    setStatus("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/member/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, token }),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok) {
+        const firstIssue = json?.issues && Object.values(json.issues as Record<string, string[]>)[0]?.[0];
+        setError(firstIssue || json?.error || t.genericError);
+        setStatus("err");
+        return;
+      }
+      setStatus("ok");
+      form.reset();
+    } catch {
+      setError(t.genericError);
+      setStatus("err");
+    }
+  }
+
+  if (!token) {
+    return (
+      <section className="section">
+        <div className="container reveal" style={{ maxWidth: 420 }}>
+          <p className="section-eyebrow center">{t.eyebrow}</p>
+          <h1 className="section-title center">{t.title}</h1>
+          <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+          <p className="form-note err" style={{ textAlign: "center" }}>{t.invalidToken}</p>
+          <p className="mp-lead-center" style={{ marginTop: 24, fontSize: "0.9rem" }}>
+            <Link href="/membro/esqueci-senha" className="launch-back" style={{ display: "inline" }}>{t.requestNewLink}</Link>
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section">
+      <div className="container reveal" style={{ maxWidth: 420 }}>
+        <p className="section-eyebrow center">{t.eyebrow}</p>
+        <h1 className="section-title center">{t.title}</h1>
+        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+        <p className="section-lead mp-lead-center">{t.lead}</p>
+
+        {status === "ok" ? (
+          <>
+            <p className="form-note" role="status" aria-live="polite">{t.success}</p>
+            <p className="mp-lead-center" style={{ marginTop: 24, fontSize: "0.9rem" }}>
+              <Link href="/membro/login" className="launch-back" style={{ display: "inline" }}>{t.goToLogin}</Link>
+            </p>
+          </>
+        ) : (
+          <form className="contact-form mp-form" onSubmit={onSubmit} noValidate>
+            <label>
+              {t.password}
+              <input type="password" name="password" required minLength={8} maxLength={72} autoComplete="new-password" />
+            </label>
+            <label>
+              {t.confirmPassword}
+              <input type="password" name="confirmPassword" required minLength={8} maxLength={72} autoComplete="new-password" />
+            </label>
+            <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+              {status === "sending" ? t.submitting : t.submit}
+            </button>
+            {status === "err" && (
+              <p className="form-note err" role="status" aria-live="polite">{error}</p>
+            )}
+          </form>
+        )}
       </div>
     </section>
   );
