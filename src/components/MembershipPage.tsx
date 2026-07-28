@@ -56,22 +56,31 @@ function MembershipForm() {
   const { d, lang } = useI18n();
   const f = d.membershipPage.hero.form;
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     setStatus("sending");
+    setErrorMsg("");
     try {
       const res = await fetch("/api/membership", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, locale: lang }),
       });
-      if (!res.ok) throw new Error("request failed");
+      const json = await res.json().catch(() => null);
+      if (!res.ok) {
+        const firstIssue = json?.issues && Object.values(json.issues as Record<string, string[]>)[0]?.[0];
+        setErrorMsg(firstIssue || json?.error || f.err);
+        setStatus("err");
+        return;
+      }
       setStatus("ok");
       form.reset();
     } catch {
+      setErrorMsg(f.err);
       setStatus("err");
     }
   }
@@ -136,7 +145,7 @@ function MembershipForm() {
         role="status"
         aria-live="polite"
       >
-        {status === "ok" ? f.ok : status === "err" ? f.err : ""}
+        {status === "ok" ? f.ok : status === "err" ? errorMsg : ""}
       </p>
     </form>
   );
