@@ -595,6 +595,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .launch-article .section-title { margin-top: 2px; }
 .launch-quote { font-family: var(--font-display); font-style: italic; color: var(--gold-light); font-size: 1.15rem; margin: 18px 0 28px; }
 .launch-featured-image { display: block; width: 100%; max-width: 420px; height: auto; border-radius: 8px; border: 1px solid var(--border); margin: 18px 0 28px; }
+.mp-section-photo { display: block; width: 100%; max-width: 760px; max-height: 360px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); margin: 8px auto 36px; }
 .launch-body { display: grid; gap: 16px; max-width: 760px; margin-bottom: 48px; }
 .launch-body p { color: var(--fg-muted); font-size: 1.03rem; line-height: 1.65; margin: 0; }
 

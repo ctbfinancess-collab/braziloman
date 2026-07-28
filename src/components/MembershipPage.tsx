@@ -185,6 +185,10 @@ export function MembershipUnderstand() {
         <p className="section-eyebrow">{u.eyebrow}</p>
         <h2 className="section-title">{u.title}</h2>
         <hr className="gold-rule" />
+        {u.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="mp-section-photo" src={u.image} alt="" />
+        )}
         <div className="mp-understand-grid">
           <div className="mp-understand-text">
             <p>{u.p1}</p>
@@ -212,6 +216,10 @@ export function MembershipNumberedSection({ index }: { index: number }) {
           <span className="mp-number">{s.number}.</span> {s.title}
         </h2>
         <p className="section-lead mp-lead-center">{s.lead}</p>
+        {s.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="mp-section-photo" src={s.image} alt="" />
+        )}
         <BenefitGrid items={s.items} columns={s.items.length > 4 ? 2 : 4} />
       </div>
     </section>

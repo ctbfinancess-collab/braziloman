@@ -366,6 +366,7 @@ export const content = {
         p2: "Mais do que um programa de benefícios, ela representa a entrada em um ecossistema de cooperação, conhecimento e desenvolvimento de oportunidades.",
         subtitle: "Vantagens da Associação",
         lead: "Ser associado significa ampliar a capacidade de relacionamento da sua empresa, conhecer melhor os dois mercados e participar de iniciativas voltadas ao comércio, aos investimentos e à cooperação bilateral.",
+        image: "/associe-se/entenda.jpg",
         items: [
           { icon: "pin", h: "Presença bilateral", p: "Atuação voltada à aproximação entre o Brasil e o Sultanato de Omã, com conexões em Brasília, Mascate e outros centros estratégicos." },
           { icon: "network", h: "Rede empresarial internacional", p: "Relacionamento com empresas, investidores, instituições e lideranças interessadas em iniciativas entre os dois países." },
@@ -379,6 +380,7 @@ export const content = {
           number: "1",
           title: "Fortaleça a presença institucional da sua empresa",
           lead: "Ao integrar a Câmara de Comércio Brasil–Omã, sua empresa passa a fazer parte de uma rede comprometida com ética, transparência, cooperação e desenvolvimento econômico sustentável.",
+          image: "/associe-se/reputacao.jpg",
           items: [
             { icon: "certificate", h: "Certificado institucional de associado", p: "Documento emitido pela Câmara reconhecendo formalmente a participação da empresa em seu quadro associativo." },
             { icon: "seal", h: "Selo exclusivo de membro", p: "Identidade visual destinada às empresas associadas, conforme as normas de uso da marca." },
@@ -393,6 +395,7 @@ export const content = {
           number: "2",
           title: "Acesse oportunidades entre Brasil e Omã",
           lead: "A Câmara reúne conhecimento, conexões e iniciativas para ajudar empresas a compreender os mercados e identificar caminhos de cooperação entre os dois países.",
+          image: "/associe-se/apoio.jpg",
           items: [
             { icon: "trending", h: "Dados e indicadores econômicos", p: "Informações sobre comércio bilateral, setores prioritários, tendências e oportunidades emergentes." },
             { icon: "globe", h: "Conhecimento dos mercados locais", p: "Conteúdos sobre ambiente empresarial, práticas comerciais, aspectos culturais e características de cada país." },
@@ -405,6 +408,7 @@ export const content = {
           number: "3",
           title: "Amplie sua rede de negócios e parceiros",
           lead: "A Câmara cria ambientes favoráveis ao relacionamento entre empresas brasileiras e omanenses, contribuindo para o surgimento de novas parcerias, projetos e oportunidades comerciais.",
+          image: "/associe-se/conexao.jpg",
           items: [
             { icon: "people", h: "Matchmaking empresarial", p: "Identificação de empresas com interesses complementares para possíveis reuniões e negociações." },
             { icon: "idcard", h: "Diretório de associados", p: "Acesso às informações institucionais dos membros, respeitando as regras de privacidade e utilização da rede." },
@@ -417,6 +421,7 @@ export const content = {
           number: "4",
           title: "Desenvolva os negócios da sua empresa",
           lead: "A associação proporciona recursos e conexões para apoiar empresas em diferentes etapas de sua expansão internacional.",
+          image: "/associe-se/expansao.jpg",
           items: [
             { icon: "handshake", h: "Rodadas de negócios", p: "Participação em reuniões organizadas com potenciais compradores, fornecedores, investidores e parceiros." },
             { icon: "plane", h: "Missões empresariais", p: "Integração em delegações e agendas comerciais realizadas no Brasil e em Omã." },
@@ -1007,6 +1012,7 @@ export const content = {
         p2: "More than a benefits program, it represents entry into an ecosystem of cooperation, knowledge and opportunity development.",
         subtitle: "Advantages of Membership",
         lead: "Being a member means expanding your company's relationship capacity, getting to know both markets better and taking part in initiatives focused on trade, investment and bilateral cooperation.",
+        image: "/associe-se/entenda.jpg",
         items: [
           { icon: "pin", h: "Bilateral presence", p: "Action focused on bringing Brazil and the Sultanate of Oman closer, with connections in Brasília, Muscat and other strategic hubs." },
           { icon: "network", h: "International business network", p: "Relationships with companies, investors, institutions and leaders interested in initiatives between the two countries." },
@@ -1020,6 +1026,7 @@ export const content = {
           number: "1",
           title: "Strengthen your company's institutional presence",
           lead: "By joining the Brazil–Oman Chamber of Commerce, your company becomes part of a network committed to ethics, transparency, cooperation and sustainable economic development.",
+          image: "/associe-se/reputacao.jpg",
           items: [
             { icon: "certificate", h: "Institutional member certificate", p: "Document issued by the Chamber formally recognizing the company's participation in its membership base." },
             { icon: "seal", h: "Exclusive member seal", p: "Visual identity intended for member companies, in line with brand usage guidelines." },
@@ -1034,6 +1041,7 @@ export const content = {
           number: "2",
           title: "Access opportunities between Brazil and Oman",
           lead: "The Chamber brings together knowledge, connections and initiatives to help companies understand the markets and identify paths for cooperation between the two countries.",
+          image: "/associe-se/apoio.jpg",
           items: [
             { icon: "trending", h: "Economic data and indicators", p: "Information on bilateral trade, priority sectors, trends and emerging opportunities." },
             { icon: "globe", h: "Knowledge of local markets", p: "Content on the business environment, commercial practices, cultural aspects and traits of each country." },
@@ -1046,6 +1054,7 @@ export const content = {
           number: "3",
           title: "Expand your network of business and partners",
           lead: "The Chamber creates environments favorable to relationships between Brazilian and Omani companies, contributing to new partnerships, projects and business opportunities.",
+          image: "/associe-se/conexao.jpg",
           items: [
             { icon: "people", h: "Business matchmaking", p: "Identification of companies with complementary interests for possible meetings and negotiations." },
             { icon: "idcard", h: "Member directory", p: "Access to members' institutional information, respecting the network's privacy and usage rules." },
@@ -1058,6 +1067,7 @@ export const content = {
           number: "4",
           title: "Grow your company's business",
           lead: "Membership provides resources and connections to support companies at different stages of their international expansion.",
+          image: "/associe-se/expansao.jpg",
           items: [
             { icon: "handshake", h: "Business rounds", p: "Participation in meetings organized with potential buyers, suppliers, investors and partners." },
             { icon: "plane", h: "Business missions", p: "Integration into delegations and trade agendas held in Brazil and Oman." },
