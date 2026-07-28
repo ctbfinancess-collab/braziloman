@@ -17,6 +17,8 @@ const PHOTOS = [
 const VIDEOS = [
   { src: "/news/lancamento/video-3.mp4", poster: "/news/lancamento/video-3-poster.jpg" },
   { src: "/news/lancamento/video-2.mp4", poster: "/news/lancamento/video-2-poster.jpg" },
+  { src: "/news/lancamento/video-5.mp4", poster: "/news/lancamento/video-5-poster.jpg" },
+  { src: "/news/lancamento/video-6.mp4", poster: "/news/lancamento/video-6-poster.jpg" },
   { src: "/news/lancamento/video-4.mp4", poster: "/news/lancamento/video-4-poster.jpg" },
   { src: "/news/lancamento/video-1.mp4", poster: "/news/lancamento/video-1-poster.jpg" },
 ];

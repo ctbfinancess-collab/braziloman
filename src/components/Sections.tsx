@@ -528,18 +528,21 @@ export function News() {
           <span className="df-line" /><span className="df-dot" /><span className="df-line" />
         </span>
         <p className="section-lead">{d.news.lead}</p>
-        <div className="grid grid-3">
+        <div className="grid grid-4">
           {d.news.items.map((n) => {
             const body = (
               <>
-                <div className="news-card-top">
-                  <span className="news-icon"><Icon name={n.icon} /></span>
-                  <span className="news-tag">{n.tag}</span>
+                {n.image && <img className="news-card-photo" src={n.image} alt="" />}
+                <div className="news-card-body">
+                  <div className="news-card-top">
+                    <span className="news-icon"><Icon name={n.icon} /></span>
+                    <span className="news-tag">{n.tag}</span>
+                  </div>
+                  <time>{n.date}</time>
+                  <h3>{n.h}</h3>
+                  <p>{n.p}</p>
+                  <span className="news-arrow" aria-hidden="true">→</span>
                 </div>
-                <time>{n.date}</time>
-                <h3>{n.h}</h3>
-                <p>{n.p}</p>
-                <span className="news-arrow" aria-hidden="true">→</span>
               </>
             );
             return n.link ? (
