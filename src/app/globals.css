@@ -381,7 +381,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 }
 .gov-avatar-sm { width: 56px; height: 56px; font-size: 1.1rem; margin-bottom: 0; flex: 0 0 auto; }
 .gov-avatar-photo {
-  display: block; width: 100%; height: 380px;
+  display: block; width: 100%; height: 323px;
   object-fit: cover; object-position: top center;
   border-bottom: 3px solid var(--gold);
 }
