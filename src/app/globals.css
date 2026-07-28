@@ -938,7 +938,9 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .ce-section-title {
   font-family: var(--font-display); color: var(--gold-light); letter-spacing: 0.05em;
   text-transform: uppercase; font-size: 0.95rem; padding: 14px 0; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
 }
+.ce-section-save { text-transform: none; letter-spacing: normal; font-family: var(--font-body); }
 .ce-section-body { padding: 6px 0 18px; display: flex; flex-direction: column; gap: 18px; }
 .ce-object { border-left: 2px solid var(--border); padding-left: 16px; margin: 4px 0; }
 .ce-object-title { font-weight: 600; color: var(--fg-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }

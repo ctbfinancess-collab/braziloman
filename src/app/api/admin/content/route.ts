@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/adminAuth";
 import { content } from "@/lib/content";
 import { computeDiff, invalidateContentCache } from "@/lib/contentOverrides";
+import type { Json } from "@/lib/contentMerge";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -41,7 +42,32 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
-  const { pt, en } = (body ?? {}) as { pt?: unknown; en?: unknown };
+  const { pt, en, section } = (body ?? {}) as { pt?: unknown; en?: unknown; section?: string };
+
+  if (section) {
+    // Salva só a seção informada, preservando as substituições já salvas nas outras.
+    const row = await prisma.siteContent.findUnique({ where: { id: "singleton" } });
+    const existing = (row?.data ?? {}) as { pt?: Record<string, Json>; en?: Record<string, Json> };
+
+    const sectionDiffPt = computeDiff((content.pt as Record<string, unknown>)[section], pt);
+    const sectionDiffEn = computeDiff((content.en as Record<string, unknown>)[section], en);
+
+    const nextPt: Record<string, Json> = { ...(existing.pt ?? {}) };
+    const nextEn: Record<string, Json> = { ...(existing.en ?? {}) };
+    if (sectionDiffPt === undefined) delete nextPt[section];
+    else nextPt[section] = sectionDiffPt;
+    if (sectionDiffEn === undefined) delete nextEn[section];
+    else nextEn[section] = sectionDiffEn;
+
+    await prisma.siteContent.upsert({
+      where: { id: "singleton" },
+      create: { id: "singleton", data: { pt: nextPt, en: nextEn } },
+      update: { data: { pt: nextPt, en: nextEn } },
+    });
+
+    invalidateContentCache();
+    return NextResponse.json({ ok: true });
+  }
 
   const diffPt = computeDiff(content.pt, pt ?? content.pt);
   const diffEn = computeDiff(content.en, en ?? content.en);

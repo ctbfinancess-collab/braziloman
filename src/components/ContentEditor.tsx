@@ -124,10 +124,12 @@ type FieldProps = {
   depth: number;
   uploadingKey: string | null;
   onUploadImage: (path: PathSeg[], file: File) => void;
+  onSaveSection?: (key: string) => void;
+  savingSection?: string | null;
 };
 
 function FieldNode(props: FieldProps) {
-  const { path, label, ptNode, enNode, defaultPtNode, onChangePt, onChangeEn, onArrayAdd, onArrayRemove, searchTerm, depth, uploadingKey, onUploadImage } = props;
+  const { path, label, ptNode, enNode, defaultPtNode, onChangePt, onChangeEn, onArrayAdd, onArrayRemove, searchTerm, depth, uploadingKey, onUploadImage, onSaveSection, savingSection } = props;
 
   if (searchTerm && !matchesSearch(ptNode, searchTerm) && !matchesSearch(enNode, searchTerm) && !label.toLowerCase().includes(searchTerm)) {
     return null;
@@ -262,9 +264,27 @@ function FieldNode(props: FieldProps) {
     );
 
     if (depth === 0) {
+      const sectionKey = path[0] as string;
+      const isSaving = savingSection === sectionKey;
       return (
         <details className="ce-section" open={Boolean(searchTerm)}>
-          <summary className="ce-section-title">{label}</summary>
+          <summary className="ce-section-title">
+            <span>{label}</span>
+            {onSaveSection && (
+              <button
+                type="button"
+                className="ce-mini-btn ce-section-save"
+                disabled={isSaving}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSaveSection(sectionKey);
+                }}
+              >
+                {isSaving ? "Salvando…" : "Salvar esta seção"}
+              </button>
+            )}
+          </summary>
           {content}
         </details>
       );
@@ -292,6 +312,7 @@ export function ContentEditor() {
   const [status, setStatus] = useState<"idle" | "loading" | "saving" | "saved" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState("");
   const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [savingSection, setSavingSection] = useState<string | null>(null);
   const dirty = useRef(false);
 
   useEffect(() => {
@@ -402,6 +423,27 @@ export function ContentEditor() {
     }
   }
 
+  async function onSaveSection(key: string) {
+    if (!draftPt || !draftEn) return;
+    setSavingSection(key);
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section: key,
+          pt: (draftPt as Record<string, Node>)[key],
+          en: (draftEn as Record<string, Node>)[key],
+        }),
+      });
+      if (!res.ok) throw new Error();
+    } catch {
+      alert("Não foi possível salvar esta seção.");
+    } finally {
+      setSavingSection(null);
+    }
+  }
+
   async function onResetAll() {
     if (!confirm("Restaurar TODO o conteúdo para o padrão original? Isso apaga todas as suas edições.")) return;
     setStatus("saving");
@@ -503,6 +545,8 @@ export function ContentEditor() {
               depth={0}
               uploadingKey={uploadingKey}
               onUploadImage={onUploadImage}
+              onSaveSection={onSaveSection}
+              savingSection={savingSection}
             />
           ))}
         </div>

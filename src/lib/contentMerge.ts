@@ -4,7 +4,7 @@
  * cliente (components/ContentEditor.tsx).
  */
 
-type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
+export type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 type Tree = Record<string, Json>;
 
 /**
