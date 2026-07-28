@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { membershipSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
 import { prisma } from "@/lib/prisma";
+import { sendApplicationReceivedEmail, sendNewApplicationAdminEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -84,6 +85,16 @@ export async function POST(req: Request) {
     }
     console.error("[membership] erro ao salvar:", err);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
+
+  // 5) E-mails transacionais (não bloqueiam a resposta em caso de falha).
+  try {
+    await Promise.all([
+      sendApplicationReceivedEmail(data.email, data.name),
+      sendNewApplicationAdminEmail(data),
+    ]);
+  } catch (err) {
+    console.error("[membership] erro ao enviar e-mails:", err);
   }
 
   return NextResponse.json({ ok: true }, { status: 201 });

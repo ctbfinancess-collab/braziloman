@@ -48,3 +48,14 @@ enum ApplicationStatus {
   APPROVED
   REJECTED
 }
+
+/// Substituições de conteúdo do site (textos/imagens editados pelo admin).
+/// Uma única linha (id fixo "singleton"): "data" é um objeto profundo, no mesmo
+/// formato de content.ts, contendo só os campos que o admin alterou. O site
+/// mescla isso por cima dos padrões de content.ts em tempo de execução
+/// (ver lib/contentOverrides.ts) — nunca sobrescreve o código-fonte.
+model SiteContent {
+  id        String   @id @default("singleton")
+  data      Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}

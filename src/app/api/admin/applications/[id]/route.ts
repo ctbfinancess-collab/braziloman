@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { verifyAdminSession, ADMIN_COOKIE } from "@/lib/session";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,12 +43,26 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   try {
+    const before = await prisma.membershipApplication.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+
     const updated = await prisma.membershipApplication.update({
       where: { id },
       data: { status: parsed.data.status },
-      select: { id: true, status: true },
+      select: { id: true, status: true, name: true, email: true },
     });
-    return NextResponse.json({ ok: true, application: updated });
+
+    if (parsed.data.status === "APPROVED" && before?.status !== "APPROVED") {
+      try {
+        await sendWelcomeEmail(updated.email, updated.name);
+      } catch (err) {
+        console.error("[admin/applications] erro ao enviar e-mail de boas-vindas:", err);
+      }
+    }
+
+    return NextResponse.json({ ok: true, application: { id: updated.id, status: updated.status } });
   } catch {
     return NextResponse.json({ error: "Associado não encontrado" }, { status: 404 });
   }

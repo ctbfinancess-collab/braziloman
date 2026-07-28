@@ -16,6 +16,7 @@ const STORAGE_KEY = "ctb-lang";
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Locale>("pt");
+  const [dict, setDict] = useState<typeof content>(content);
 
   // Load persisted / browser preference on mount (client only).
   useEffect(() => {
@@ -25,6 +26,22 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     } else if (navigator.language && !navigator.language.toLowerCase().startsWith("pt")) {
       setLangState("en");
     }
+  }, []);
+
+  // Busca conteúdo efetivo (padrões + substituições do painel admin).
+  // O valor estático de content.ts já é usado no primeiro render (sem tela em branco);
+  // se houver substituições salvas, o texto é atualizado assim que a resposta chega.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/content")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data) setDict(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Keep <html lang> and storage in sync.
@@ -37,7 +54,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const toggle = () => setLangState((p) => (p === "pt" ? "en" : "pt"));
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, toggle, d: content[lang] }}>
+    <I18nContext.Provider value={{ lang, setLang, toggle, d: dict[lang] }}>
       {children}
     </I18nContext.Provider>
   );

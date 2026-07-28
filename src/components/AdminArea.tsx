@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -126,7 +127,10 @@ export function AdminApplicationsList() {
             <p className="section-eyebrow">Administração</p>
             <h1 className="section-title" style={{ marginBottom: 0 }}>Pedidos de Associação</h1>
           </div>
-          <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
+          <div style={{ display: "flex", gap: 10 }}>
+            <Link href="/admin/conteudo" className="btn btn-ghost">Conteúdo do site</Link>
+            <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
+          </div>
         </div>
         <span className="about-flourish" aria-hidden="true" />
 

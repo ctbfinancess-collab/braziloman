@@ -11,6 +11,16 @@ const schema = z.object({
   // Área do Membro: obrigatórias em produção para login funcionar (ver lib/session.ts).
   SESSION_SECRET: z.string().min(16).optional(),
   ADMIN_PASSWORD: z.string().min(6).optional(),
+  // E-mails transacionais (Resend): sem a chave, o site funciona normalmente,
+  // só não envia e-mails automáticos (ver lib/email.ts).
+  RESEND_API_KEY: z.string().optional(),
+  // Armazenamento de mídia (Cloudflare R2, compatível com S3). Sem essas
+  // variáveis, o upload de imagens no painel de conteúdo fica desabilitado.
+  R2_ACCOUNT_ID: z.string().optional(),
+  R2_ACCESS_KEY_ID: z.string().optional(),
+  R2_SECRET_ACCESS_KEY: z.string().optional(),
+  R2_BUCKET: z.string().optional(),
+  R2_PUBLIC_URL: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -22,3 +32,7 @@ if (!parsed.success) {
 
 export const env = parsed.data;
 export const hasDatabase = Boolean(env.DATABASE_URL);
+export const hasEmail = Boolean(env.RESEND_API_KEY);
+export const hasMedia = Boolean(
+  env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY && env.R2_BUCKET && env.R2_PUBLIC_URL
+);
