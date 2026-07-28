@@ -155,7 +155,7 @@ function FieldNode(props: FieldProps) {
           <div className="ce-image-row">
             {ptNode && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={ptNode} alt="" className="ce-image-preview" />
+              <img key={ptNode} src={ptNode} alt="" className="ce-image-preview" />
             )}
             <label className="ce-upload-btn">
               {uploadingKey === pathKey ? "Enviando…" : "Trocar imagem"}
@@ -473,6 +473,10 @@ export function ContentEditor() {
         </div>
         {status === "saved" && <p className="form-note" style={{ color: "var(--gold)" }}>Salvo com sucesso.</p>}
         {status === "error" && <p className="form-note err">{errorMsg}</p>}
+
+        <button type="button" className="btn btn-primary ce-fab" onClick={onSave} disabled={status === "saving"}>
+          {status === "saving" ? "Salvando…" : "Salvar alterações"}
+        </button>
 
         <div className="ce-sections">
           {sections.map((key) => (

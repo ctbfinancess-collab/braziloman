@@ -922,7 +922,11 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 /* Editor de conteúdo (painel admin) */
 .ce-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 .ce-toolbar-actions { display: flex; gap: 10px; }
-.ce-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; position: sticky; top: 8px; z-index: 5; }
+.ce-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.ce-fab {
+  position: fixed; right: 24px; bottom: 24px; z-index: 50;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
 .ce-controls-actions { display: flex; gap: 10px; }
 .ce-search {
   flex: 1; min-width: 220px; max-width: 420px; padding: 10px 14px;
