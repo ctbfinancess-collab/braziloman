@@ -13,6 +13,24 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+type GovPerson = { name: string; role: string; flag: string; photo?: string; bio?: string };
+
+function GovCard({ person }: { person: GovPerson }) {
+  return (
+    <div className="gov-exec-card">
+      {person.photo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={person.photo} alt={person.name} className="gov-avatar-photo" />
+      ) : (
+        <span className="gov-avatar" aria-hidden="true">{initials(person.name)}</span>
+      )}
+      <h3>{person.name}</h3>
+      <p className="gov-role">{person.role} <span aria-hidden="true">{person.flag}</span></p>
+      {person.bio && <p className="gov-bio">{person.bio}</p>}
+    </div>
+  );
+}
+
 export function ACamaraTabs({ active }: { active: string }) {
   const { d } = useI18n();
   const t = d.acamaraPage.tabs;
@@ -50,25 +68,28 @@ export function GovernancePage() {
         <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.execTitle}</h2>
         <div className="gov-exec-grid">
           {g.executives.map((e) => (
-            <div className="gov-exec-card" key={e.name}>
-              <span className="gov-avatar" aria-hidden="true">{initials(e.name)}</span>
-              <h3>{e.name}</h3>
-              <p className="gov-role">{e.role} <span aria-hidden="true">{e.flag}</span></p>
-              <p className="gov-bio">{e.bio}</p>
-            </div>
+            <GovCard person={e} key={e.name} />
+          ))}
+        </div>
+
+        <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.fiscalTitle}</h2>
+        <div className="gov-exec-grid">
+          {g.fiscalCouncil.map((c) => (
+            <GovCard person={c} key={c.name} />
           ))}
         </div>
 
         <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.councilTitle}</h2>
-        <div className="gov-council-grid">
+        <div className="gov-exec-grid">
           {g.council.map((c) => (
-            <div className="gov-council-card" key={c.name}>
-              <span className="gov-avatar gov-avatar-sm" aria-hidden="true">{initials(c.name)}</span>
-              <div>
-                <h3>{c.name}</h3>
-                <p className="gov-role">{c.role} <span aria-hidden="true">{c.flag}</span></p>
-              </div>
-            </div>
+            <GovCard person={c} key={c.name} />
+          ))}
+        </div>
+
+        <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.legalTitle}</h2>
+        <div className="gov-exec-grid">
+          {g.legalAdvisory.map((c) => (
+            <GovCard person={c} key={c.name} />
           ))}
         </div>
 
