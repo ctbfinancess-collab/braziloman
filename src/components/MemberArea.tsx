@@ -245,6 +245,19 @@ export function LogoutButton() {
   );
 }
 
+export type ApplicationStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "INCOMPLETE"
+  | "AWAITING_DOCUMENTS"
+  | "UNDER_REVIEW"
+  | "INFO_REQUESTED"
+  | "CONDITIONALLY_APPROVED"
+  | "APPROVED_PENDING_PAYMENT"
+  | "ACTIVE"
+  | "REJECTED"
+  | "SUSPENDED";
+
 type MemberData = {
   name: string;
   email: string;
@@ -253,17 +266,37 @@ type MemberData = {
   sector: string | null;
   country: string | null;
   phone: string | null;
-  status: "PENDING" | "APPROVED" | "REJECTED";
+  status: ApplicationStatus;
   createdAt: string;
+  membershipCategory?: string | null;
+  annualContribution?: number | null;
+  complianceNotes?: string | null;
+};
+
+const STATUS_LABELS: Record<ApplicationStatus, string> = {
+  PENDING: "Em análise",
+  APPROVED: "Aprovado",
+  INCOMPLETE: "Cadastro incompleto",
+  AWAITING_DOCUMENTS: "Aguardando documentos",
+  UNDER_REVIEW: "Em análise de compliance",
+  INFO_REQUESTED: "Informações adicionais solicitadas",
+  CONDITIONALLY_APPROVED: "Aprovado condicionalmente",
+  APPROVED_PENDING_PAYMENT: "Aprovado — aguardando pagamento",
+  ACTIVE: "Associado ativo",
+  REJECTED: "Não aprovado",
+  SUSPENDED: "Associação suspensa",
 };
 
 export function MemberPanel({ member }: { member: MemberData }) {
   const { d } = useI18n();
   const t = d.memberArea.panel;
-  const statusLabel =
-    member.status === "APPROVED" ? t.statusApproved : member.status === "REJECTED" ? t.statusRejected : t.statusPending;
+  const statusLabel = STATUS_LABELS[member.status] ?? member.status;
   const statusClass =
-    member.status === "APPROVED" ? "gov-role" : member.status === "REJECTED" ? "form-note err" : "form-note";
+    member.status === "ACTIVE" || member.status === "APPROVED"
+      ? "gov-role"
+      : member.status === "REJECTED" || member.status === "SUSPENDED"
+        ? "form-note err"
+        : "form-note";
 
   const rows: [string, string | null][] = [
     [t.fields.name, member.name],
@@ -299,6 +332,49 @@ export function MemberPanel({ member }: { member: MemberData }) {
         </div>
 
         <p className="partnership-block-lead">{t.comingSoon}</p>
+      </div>
+    </section>
+  );
+}
+
+/** Tela exibida quando a candidatura não está mais editável, mas também ainda não é associado ativo. */
+export function MemberStatusScreen({ member }: { member: MemberData }) {
+  const statusLabel = STATUS_LABELS[member.status] ?? member.status;
+
+  const messages: Partial<Record<ApplicationStatus, string>> = {
+    UNDER_REVIEW: "Sua candidatura está em análise de compliance pela nossa equipe. Avisaremos por e-mail assim que houver uma atualização.",
+    CONDITIONALLY_APPROVED: "Sua candidatura foi aprovada com condições. Nossa equipe vai entrar em contato com os próximos passos.",
+    APPROVED_PENDING_PAYMENT: "Sua candidatura foi aprovada! Falta finalizar sua associação com o pagamento da contribuição anual — nossa equipe vai entrar em contato para combinar a forma de pagamento.",
+    REJECTED: "Sua candidatura não foi aprovada neste momento. Se tiver dúvidas, entre em contato conosco.",
+    SUSPENDED: "Sua associação está suspensa no momento. Entre em contato com a Câmara para mais informações.",
+    PENDING: "Sua candidatura está em análise.",
+  };
+
+  return (
+    <section className="section">
+      <div className="container reveal" style={{ maxWidth: 640 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <p className="section-eyebrow">Área do Membro</p>
+            <h1 className="section-title" style={{ marginBottom: 0 }}>Status da candidatura</h1>
+          </div>
+          <LogoutButton />
+        </div>
+        <span className="about-flourish" aria-hidden="true" />
+
+        <div className="about-section-card">
+          <p className="cp-chips-label">Status</p>
+          <p className="gov-role" style={{ marginBottom: 20 }}>{statusLabel}</p>
+          <p className="section-lead" style={{ margin: 0 }}>
+            {messages[member.status] ?? "Acompanhe sua candidatura por aqui."}
+          </p>
+          {member.membershipCategory && (
+            <p style={{ marginTop: 16 }}><b>Categoria:</b> {member.membershipCategory}</p>
+          )}
+          {member.annualContribution != null && (
+            <p><b>Contribuição anual:</b> R$ {member.annualContribution.toLocaleString("pt-BR")}</p>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -21,6 +21,9 @@ const schema = z.object({
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_BUCKET: z.string().optional(),
   R2_PUBLIC_URL: z.string().optional(),
+  // Bucket privado (sem domínio público) para documentos sensíveis do Portal
+  // do Candidato — acesso só via link assinado de curta duração.
+  R2_DOCUMENTS_BUCKET: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -35,4 +38,7 @@ export const hasDatabase = Boolean(env.DATABASE_URL);
 export const hasEmail = Boolean(env.RESEND_API_KEY);
 export const hasMedia = Boolean(
   env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY && env.R2_BUCKET && env.R2_PUBLIC_URL
+);
+export const hasDocumentStorage = Boolean(
+  env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY && env.R2_DOCUMENTS_BUCKET
 );

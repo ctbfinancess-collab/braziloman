@@ -26,6 +26,9 @@ model ContactMessage {
 }
 
 /// Pedidos de associação — também funciona como conta do associado (Área do Membro).
+/// Fluxo completo: pré-cadastro (name/email/company/senha) -> Portal do Candidato
+/// (7 etapas, salvas nos campos Json abaixo) -> análise de compliance -> aprovação
+/// -> finalizar associação (categoria + pagamento, Stripe integrado depois) -> ativo.
 model MembershipApplication {
   id           String            @id @default(cuid())
   name         String
@@ -37,16 +40,56 @@ model MembershipApplication {
   country      String?
   phone        String?
   message      String?
-  status       ApplicationStatus @default(PENDING)
+  status       ApplicationStatus @default(INCOMPLETE)
   createdAt    DateTime          @default(now())
+
+  /// Etapa atual do Portal do Candidato (1 a 7), para salvar/continuar depois.
+  wizardStep  Int       @default(1)
+  submittedAt DateTime?
+
+  /// Etapa 1 — dados do responsável (nacionalidade, CPF/RG, cargo, endereço, etc.).
+  personalData Json?
+  /// Etapa 2 — dados da empresa (CNPJ, quadro societário, beneficiários finais, etc.).
+  companyData Json?
+  /// Etapa 3 — perfil econômico/comercial e diagnóstico de internacionalização.
+  businessProfile Json?
+  /// Etapa 4 — respostas de compliance e integridade (cada uma com explicação/anexo opcional).
+  complianceAnswers Json?
+  /// Etapa 5 — documentos enviados (lista de {tipo, nome, url}).
+  documents Json?
+  /// Etapa 6 — aceites e assinatura eletrônica (nome, cargo, data, IP).
+  declarations Json?
+
+  /// Preenchidos pela equipe da Câmara durante a análise de compliance.
+  riskLevel          String?
+  complianceNotes    String?
+  membershipCategory String?
+  annualContribution Int?
 
   @@index([status])
 }
 
 enum ApplicationStatus {
+  /// Valores legados do fluxo simples anterior (mantidos por compatibilidade).
   PENDING
   APPROVED
+  /// Pré-cadastro feito, Portal do Candidato ainda não concluído.
+  INCOMPLETE
+  /// Formulário concluído, faltam documentos.
+  AWAITING_DOCUMENTS
+  /// Em análise pela equipe de compliance.
+  UNDER_REVIEW
+  /// Compliance pediu informações/documentos adicionais ao candidato.
+  INFO_REQUESTED
+  /// Aprovado com condições a cumprir.
+  CONDITIONALLY_APPROVED
+  /// Aprovado pela Diretoria, aguardando pagamento da contribuição anual.
+  APPROVED_PENDING_PAYMENT
+  /// Associado ativo (pagamento confirmado).
+  ACTIVE
   REJECTED
+  /// Associação ativa, porém suspensa.
+  SUSPENDED
 }
 
 /// Substituições de conteúdo do site (textos/imagens editados pelo admin).

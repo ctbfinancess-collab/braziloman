@@ -73,20 +73,20 @@ function button(label: string, href: string): string {
   </table>`;
 }
 
-/** E-mail 1: confirmação de recebimento, enviado logo após o cadastro em /associe-se. */
+/** E-mail 1: confirmação de recebimento, enviado logo após o pré-cadastro em /associe-se. */
 export async function sendApplicationReceivedEmail(to: string, name: string) {
   if (!resend) return;
   const html = layout(
-    "Recebemos seu pedido de associação à CTB.",
+    "Recebemos sua manifestação de interesse — acesse o Portal do Candidato.",
     `${heading(`Olá, ${name}!`)}
-     ${paragraph("Recebemos seu pedido de associação à Câmara de Comércio Brasil–Omã. Nossa equipe vai analisar as informações enviadas e você receberá um novo e-mail assim que o cadastro for aprovado.")}
-     ${paragraph("Isso costuma levar pouco tempo. Enquanto isso, fique à vontade para conhecer mais sobre nossos serviços e o ecossistema Brasil–Omã no site.")}
-     ${button("Visitar o site", SITE_URL)}`
+     ${paragraph("Recebemos sua manifestação de interesse em se associar à Câmara de Comércio Brasil–Omã. Falta só um passo: acesse o Portal do Candidato com o e-mail e senha que você cadastrou e complete as informações da sua candidatura.")}
+     ${button("Acessar o Portal do Candidato", `${SITE_URL}/membro/login`)}
+     ${paragraph("Assim que enviar todas as informações, nossa equipe de compliance vai analisar sua candidatura e avisaremos por e-mail sobre qualquer atualização.")}`
   );
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Recebemos seu pedido de associação — CTB",
+    subject: "Recebemos sua manifestação de interesse — CTB",
     html,
   });
 }
@@ -144,6 +144,77 @@ export async function sendPasswordResetEmail(to: string, name: string, resetUrl:
     from: FROM,
     to,
     subject: "Redefinição de senha — CTB",
+    html,
+  });
+}
+
+/** E-mail: enviado quando o candidato conclui e envia o Portal do Candidato (etapa 7). */
+export async function sendApplicationSubmittedEmail(to: string, name: string) {
+  if (!resend) return;
+  const html = layout(
+    "Recebemos sua documentação — em análise de compliance.",
+    `${heading(`Olá, ${name}!`)}
+     ${paragraph("Recebemos todas as informações e documentos do seu cadastro de associação. Sua candidatura entrou em <strong>análise de compliance</strong> pela nossa equipe.")}
+     ${paragraph("Vamos avisar por e-mail assim que houver uma atualização — seja um pedido de esclarecimento adicional, seja o resultado da análise.")}
+     ${button("Acompanhar meu cadastro", `${SITE_URL}/membro/painel`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Recebemos sua documentação — CTB",
+    html,
+  });
+}
+
+/** E-mail: aviso interno quando um candidato conclui o envio do Portal do Candidato. */
+export async function sendNewSubmissionAdminEmail(data: { name: string; email: string; company: string }) {
+  if (!resend) return;
+  const html = layout(
+    "Candidatura completa recebida para análise.",
+    `${heading("Candidatura pronta para análise")}
+     ${paragraph(`<strong>${data.name}</strong> (${data.company}, ${data.email}) concluiu todas as etapas do Portal do Candidato e está aguardando análise de compliance.`)}
+     ${button("Abrir painel de associados", `${SITE_URL}/admin/associados`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    subject: `Candidatura completa: ${data.company}`,
+    html,
+  });
+}
+
+/** E-mail: enviado quando o compliance solicita informações/documentos adicionais. */
+export async function sendInfoRequestedEmail(to: string, name: string, notes: string) {
+  if (!resend) return;
+  const html = layout(
+    "Precisamos de informações adicionais para sua candidatura.",
+    `${heading(`Olá, ${name}!`)}
+     ${paragraph("Estamos analisando sua candidatura à Câmara de Comércio Brasil–Omã e precisamos de algumas informações ou documentos adicionais antes de prosseguir:")}
+     <div style="background:#efece3; border-left:3px solid #96712c; padding:14px 18px; margin:0 0 20px; font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.6;">${notes}</div>
+     ${button("Completar meu cadastro", `${SITE_URL}/membro/painel`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Precisamos de mais informações — CTB",
+    html,
+  });
+}
+
+/** E-mail: enviado quando a Diretoria aprova a candidatura (falta finalizar/pagar). */
+export async function sendApprovedPendingPaymentEmail(to: string, name: string, category: string) {
+  if (!resend) return;
+  const html = layout(
+    "Sua candidatura foi aprovada pela Câmara de Comércio Brasil–Omã.",
+    `${heading(`Parabéns, ${name}!`)}
+     ${paragraph(`Sua candidatura foi <strong>aprovada</strong> pela Diretoria da Câmara de Comércio Brasil–Omã, na categoria <strong>${category}</strong>.`)}
+     ${paragraph("Falta só um passo: finalizar sua associação escolhendo a forma de pagamento da contribuição anual. Nossa equipe vai entrar em contato para concluir essa etapa com você.")}
+     ${button("Acessar meu painel", `${SITE_URL}/membro/painel`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Candidatura aprovada — CTB",
     html,
   });
 }
