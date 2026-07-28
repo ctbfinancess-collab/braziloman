@@ -581,7 +581,7 @@ export const content = {
       items: [
         { icon: "calendar", tag: "Lançamento", date: "2026 · Brasília / Mascate", h: "Lançamento Oficial da Câmara de Comércio Brasil–Omã", p: "“Hoje iniciamos uma nova rota de crescimento global. Junte-se à Câmara de Comércio Brasil–Omã.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
         { icon: "bank", tag: "Institucional", date: "Em tramitação · Brasília", h: "Frente Parlamentar Brasil–Omã", p: "Deputado Federal Bibo Nunes propõe no Congresso Nacional a criação de frente parlamentar para fortalecer as relações entre Brasil e Omã.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
-        { icon: "plane", tag: "Missão", date: "Em breve · Mascate", h: "Missão Empresarial a Omã", p: "Delegação de empresas brasileiras para rodadas de negócios nos portos de Duqm, Sohar e Salalah." },
+        { icon: "plane", tag: "Missão", date: "Em breve · Brasília e Mascate", h: "Missão Empresarial Brasil–Omã", p: "A CTB organiza a próxima Missão Empresarial Brasil–Omã, com agendas estratégicas em Brasília e Mascate para empresários, investidores e representantes institucionais.", link: "/noticias/missao-empresarial" },
         { icon: "monitor", tag: "Webinar", date: "Em breve · Online", h: "Como Exportar para o Golfo", p: "Especialistas apresentam oportunidades e caminhos para acessar o mercado do Oriente Médio." },
       ],
     },
@@ -604,6 +604,15 @@ export const content = {
       title: "Frente Parlamentar Brasil–Omã",
       image: "/news/frente-parlamentar.jpg",
       p1: "Encontra-se em tramitação no Congresso Nacional a proposta de criação da Frente Parlamentar Brasil–Omã, de iniciativa do Deputado Federal Bibo Nunes, destinada a fortalecer as relações institucionais, comerciais, culturais e de investimentos entre Brasil e Omã, ampliando o diálogo e promovendo novas oportunidades de cooperação bilateral.",
+      backLabel: "Voltar para Notícias",
+    },
+    missaoArticle: {
+      tag: "Missão",
+      date: "Em breve · Brasília e Mascate",
+      title: "Missão Empresarial Brasil–Omã",
+      p1: "A CTB Câmara de Comércio Brasil–Omã está organizando a próxima Missão Empresarial Brasil–Omã, com agendas estratégicas em Brasília e Mascate, reunindo empresários, investidores e representantes institucionais interessados em expandir suas operações e fortalecer sua presença nos mercados brasileiro e omanita.",
+      p2: "A programação incluirá reuniões de negócios, encontros com autoridades governamentais, visitas técnicas, rodadas de networking e apresentações de oportunidades de investimento em setores estratégicos, promovendo conexões qualificadas e o desenvolvimento de parcerias de longo prazo entre os dois países.",
+      cta: "Entre em contato com a CTB e faça parte da próxima Missão Empresarial Brasil–Omã. Descubra novas oportunidades, estabeleça parcerias estratégicas e integre essa iniciativa que fortalece a cooperação econômica, comercial e institucional entre Brasil e Omã.",
       backLabel: "Voltar para Notícias",
     },
     contact: {
@@ -1213,7 +1222,7 @@ export const content = {
       items: [
         { icon: "calendar", tag: "Launch", date: "2026 · Brasília / Muscat", h: "Official Launch of the Brazil–Oman Chamber of Commerce", p: "“Today we begin a new route of global growth. Join the Brazil–Oman Chamber of Commerce.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
         { icon: "bank", tag: "Institutional", date: "Under review · Brasília", h: "Brazil–Oman Parliamentary Front", p: "Federal Deputy Bibo Nunes proposes a parliamentary front in Brazil's National Congress to strengthen relations between Brazil and Oman.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
-        { icon: "plane", tag: "Mission", date: "Soon · Muscat", h: "Business Mission to Oman", p: "A delegation of Brazilian companies for business rounds at the ports of Duqm, Sohar and Salalah." },
+        { icon: "plane", tag: "Mission", date: "Soon · Brasília and Muscat", h: "Brazil–Oman Business Mission", p: "CTB is organizing the next Brazil–Oman Business Mission, with strategic agendas in Brasília and Muscat for business leaders, investors and institutional representatives.", link: "/noticias/missao-empresarial" },
         { icon: "monitor", tag: "Webinar", date: "Soon · Online", h: "How to Export to the Gulf", p: "Experts present opportunities and pathways to access the Middle East market." },
       ],
     },
@@ -1236,6 +1245,15 @@ export const content = {
       title: "Brazil–Oman Parliamentary Front",
       image: "/news/frente-parlamentar.jpg",
       p1: "A proposal to establish the Brazil–Oman Parliamentary Front is currently under review in Brazil's National Congress, introduced by Federal Deputy Bibo Nunes. The initiative aims to strengthen institutional, commercial, cultural and investment relations between Brazil and Oman, broadening dialogue and fostering new opportunities for bilateral cooperation.",
+      backLabel: "Back to News",
+    },
+    missaoArticle: {
+      tag: "Mission",
+      date: "Soon · Brasília and Muscat",
+      title: "Brazil–Oman Business Mission",
+      p1: "CTB Brazil–Oman Chamber of Commerce is organizing the next Brazil–Oman Business Mission, with strategic agendas in Brasília and Muscat, bringing together business leaders, investors and institutional representatives interested in expanding their operations and strengthening their presence in the Brazilian and Omani markets.",
+      p2: "The program will include business meetings, meetings with government authorities, technical visits, networking rounds and presentations of investment opportunities in strategic sectors, promoting qualified connections and the development of long-term partnerships between the two countries.",
+      cta: "Get in touch with CTB and be part of the next Brazil–Oman Business Mission. Discover new opportunities, build strategic partnerships and join an initiative that strengthens economic, commercial and institutional cooperation between Brazil and Oman.",
       backLabel: "Back to News",
     },
     contact: {

@@ -12,6 +12,14 @@ const PHOTOS = [
   "/news/lancamento/ccb-4.jpeg",
   "/news/lancamento/ccb-8.jpeg",
   "/news/lancamento/ccb-2.jpeg",
+  "/news/lancamento/ccb-9.jpg",
+  "/news/lancamento/ccb-10.jpg",
+  "/news/lancamento/ccb-11.jpg",
+  "/news/lancamento/ccb-12.jpg",
+  "/news/lancamento/ccb-13.jpg",
+  "/news/lancamento/ccb-14.jpg",
+  "/news/lancamento/ccb-15.jpg",
+  "/news/lancamento/ccb-16.jpg",
 ];
 
 const VIDEOS = [

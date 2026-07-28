@@ -292,8 +292,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
-/* notícias: o card de lançamento tem texto bem mais longo — evita que os outros cards da fileira estiquem e sobre espaço vazio neles */
-.news-section .grid-4 { align-items: start; }
 
 .card {
   background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
