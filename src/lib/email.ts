@@ -27,7 +27,7 @@ function layout(previewText: string, bodyHtml: string): string {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background-color:#f5f2eb; border:1px solid rgba(150,116,52,0.28);">
             <tr>
               <td style="background-color:#1a1408; padding: 28px 36px; text-align:center;">
-                <img src="${SITE_URL}/logo-ctb-transparent.png" width="52" height="52" alt="CTB" style="display:block; margin: 0 auto 10px;" />
+                <img src="${SITE_URL}/logo-ctb-transparent.png" width="84" height="84" alt="CTB" style="display:block; margin: 0 auto 12px;" />
                 <div style="font-family: Georgia, serif; letter-spacing: 0.14em; color:#c19a4b; font-size: 18px; font-weight:bold;">CTB</div>
                 <div style="font-family: Arial, sans-serif; letter-spacing: 0.08em; color:#f0e2b8; font-size: 11px; text-transform: uppercase; margin-top: 4px;">
                   Câmara de Comércio Brasil–Omã
