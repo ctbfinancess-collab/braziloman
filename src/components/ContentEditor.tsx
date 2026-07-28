@@ -30,10 +30,70 @@ function setAt(obj: Node, path: PathSeg[], value: Node): Node {
   return copy;
 }
 
+const SECTION_LABELS: Record<string, string> = {
+  meta: "Título da aba do navegador",
+  nav: "Menu de navegação",
+  brand: "Nome/selo da marca",
+  hero: "Página inicial — topo (Hero)",
+  heroBridge: "Página inicial — banner de transição",
+  purpose: "Página inicial — missão e pilares",
+  about: "A Câmara — quem somos",
+  acamaraPage: "A Câmara — abas (Governança, Estatuto, etc.)",
+  moment: "Página inicial — seção de destaque",
+  countries: "Página Brasil & Omã",
+  partnership: "Parcerias / países",
+  video: "Vídeo institucional",
+  services: "Página Atuação",
+  ecosystem: "Página Ecossistema",
+  membership: "Associe-se — resumo",
+  membershipPage: "Associe-se — página completa e formulário",
+  consultingPage: "Associe-se — subpáginas (benefícios, serviços etc.)",
+  news: "Notícias — lista",
+  launchArticle: "Notícia — Lançamento",
+  frenteParlamentarArticle: "Notícia — Frente Parlamentar",
+  missaoArticle: "Notícia — Missão Empresarial",
+  memberArea: "Área do Membro (login e painel)",
+  contact: "Página de Contato",
+  footer: "Rodapé",
+};
+
+const FIELD_LABEL_OVERRIDES: Record<string, string> = {
+  eyebrow: "Texto pequeno (acima do título)",
+  title: "Título",
+  titleA: "Título (início)",
+  titleB: "Título (final)",
+  titleAccent: "Título (parte destacada)",
+  titleLine1: "Título (linha 1)",
+  titleLine2: "Título (linha 2)",
+  lead: "Parágrafo principal",
+  tagline: "Frase de efeito",
+  motto: "Lema",
+  mottoMain: "Lema (principal)",
+  mottoSub: "Lema (linha menor)",
+  photo: "Foto",
+  image: "Imagem",
+  intro: "Parágrafos de introdução",
+  ctaJoin: "Botão: Associe-se",
+  ctaContact: "Botão: Fale conosco",
+  ctaLearn: "Botão: Saiba mais",
+  stats: "Números em destaque",
+  items: "Itens/cards",
+  n: "Número/valor",
+  l: "Legenda",
+  h: "Título do card",
+  p: "Texto do card",
+  icon: "Ícone (nome técnico, cuidado ao mudar)",
+};
+
 function humanize(key: string): string {
+  if (FIELD_LABEL_OVERRIDES[key]) return FIELD_LABEL_OVERRIDES[key];
   return key
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^./, (c) => c.toUpperCase());
+}
+
+function sectionLabel(key: string): string {
+  return SECTION_LABELS[key] ?? humanize(key);
 }
 
 function isImagePath(value: unknown): boolean {
@@ -419,7 +479,7 @@ export function ContentEditor() {
             <FieldNode
               key={key}
               path={[key]}
-              label={humanize(key)}
+              label={sectionLabel(key)}
               ptNode={(draftPt as Record<string, Node>)[key]}
               enNode={(draftEn as Record<string, Node>)[key]}
               defaultPtNode={(defaults.pt as Record<string, Node>)[key]}
