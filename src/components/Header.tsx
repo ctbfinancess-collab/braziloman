@@ -15,7 +15,6 @@ export default function Header() {
     { href: "/brasil-oma", label: d.nav.countries },
     { href: "/atuacao", label: d.nav.services },
     { href: "/ecossistema", label: d.nav.ecosystem },
-    { href: "/associe-se", label: d.nav.membership },
     { href: "/noticias", label: d.nav.news },
     { href: "/contato", label: d.nav.contact },
   ];
@@ -44,6 +43,9 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
+          <Link href="/associe-se" onClick={close} className="btn btn-primary nav-cta">
+            {d.nav.membership}
+          </Link>
           <button
             className="lang-toggle"
             type="button"

@@ -127,6 +127,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,162,90,0.25); }
 .btn-ghost { border-color: var(--border-strong); color: var(--gold-light); background: transparent; }
 .btn-ghost:hover { background: rgba(201,162,90,0.08); border-color: var(--gold); }
+.nav-cta { padding: 9px 20px; font-size: 0.8rem; }
 
 /* ---------- header ---------- */
 .site-header {
@@ -867,6 +868,7 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   }
   .nav.open { transform: none; }
   .nav a { padding: 14px 0; width: 100%; border-bottom: 1px solid var(--border); }
+  .nav-cta.btn { width: 100%; justify-content: center; padding: 12px 20px; margin-top: 14px; border-bottom: none; }
   .lang-toggle { margin-top: 14px; }
   .menu-btn { display: flex; }
   .section { padding: 64px 0; }
