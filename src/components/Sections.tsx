@@ -143,14 +143,6 @@ export function About() {
         </div>
 
         <div className="about-section-card">
-          <span className="corridor-icon"><Icon name="bank" /></span>
-          <h3 className="mp-subtitle mp-subtitle-tight">{a.governance.title}</h3>
-          <p>{a.governance.p1}</p>
-          <p>{a.governance.p2}</p>
-          <p>{a.governance.p3}</p>
-        </div>
-
-        <div className="about-section-card">
           <span className="corridor-icon"><Icon name="network" /></span>
           <h3 className="mp-subtitle mp-subtitle-tight">{a.role.title}</h3>
           <p className="partnership-block-lead">{a.role.p1}</p>

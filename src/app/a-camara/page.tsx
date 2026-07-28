@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { About } from "@/components/Sections";
+import { ACamaraTabs } from "@/components/ACamaraPage";
 
 export const metadata: Metadata = {
   title: "A Câmara",
@@ -8,5 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function ACamaraPage() {
-  return <About />;
+  return (
+    <>
+      <ACamaraTabs active="home" />
+      <About />
+    </>
+  );
 }
