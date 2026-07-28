@@ -198,13 +198,21 @@ function FieldNode(props: FieldProps) {
   if (Array.isArray(ptNode)) {
     const enArr = Array.isArray(enNode) ? enNode : [];
     return (
-      <div className="ce-array">
-        <div className="ce-field-head">
-          <span className="ce-field-label">{label}</span>
-          <button type="button" className="ce-mini-btn" onClick={() => onArrayAdd(path)}>
+      <details className="ce-array" open={Boolean(searchTerm)}>
+        <summary className="ce-field-head">
+          <span className="ce-field-label">{label} ({ptNode.length} {ptNode.length === 1 ? "item" : "itens"})</span>
+          <button
+            type="button"
+            className="ce-mini-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onArrayAdd(path);
+            }}
+          >
             + Adicionar item
           </button>
-        </div>
+        </summary>
         {ptNode.map((item, idx) => (
           <div key={idx} className="ce-array-item">
             <div className="ce-array-item-head">
@@ -225,7 +233,7 @@ function FieldNode(props: FieldProps) {
           </div>
         ))}
         {ptNode.length === 0 && <p className="ce-empty">Nenhum item.</p>}
-      </div>
+      </details>
     );
   }
 

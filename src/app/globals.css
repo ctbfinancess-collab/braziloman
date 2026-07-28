@@ -960,6 +960,10 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 }
 .ce-lang-tag { font-size: 0.68rem; font-weight: 700; color: var(--fg-dim); letter-spacing: 0.06em; }
 .ce-array { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+.ce-array > summary { cursor: pointer; list-style: none; }
+.ce-array > summary::-webkit-details-marker { display: none; }
+.ce-array > summary::before { content: "▸"; margin-right: 8px; color: var(--gold); }
+.ce-array[open] > summary::before { content: "▾"; }
 .ce-array-item { border: 1px solid var(--border); padding: 12px 16px; margin: 10px 0; background: var(--bg); }
 .ce-array-item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .ce-array-index { font-size: 0.72rem; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.05em; }
