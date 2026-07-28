@@ -369,22 +369,24 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 /* Governança */
 .gov-exec-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 24px; }
 .gov-exec-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-  padding: 32px 24px; text-align: center; flex: 1 1 280px; max-width: 340px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  text-align: center; flex: 1 1 300px; max-width: 360px; overflow: hidden;
 }
+.gov-exec-card-body { padding: 28px 26px 32px; }
 .gov-avatar {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 84px; height: 84px; border-radius: 50%; margin-bottom: 16px;
+  width: 84px; height: 84px; border-radius: 50%; margin: 32px 0 16px;
   background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
   color: #1a1408; font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
 }
 .gov-avatar-sm { width: 56px; height: 56px; font-size: 1.1rem; margin-bottom: 0; flex: 0 0 auto; }
 .gov-avatar-photo {
-  width: 84px; height: 84px; border-radius: 50%; margin-bottom: 16px;
-  object-fit: cover; border: 2px solid var(--gold);
+  display: block; width: 100%; height: 380px;
+  object-fit: cover; object-position: top center;
+  border-bottom: 3px solid var(--gold);
 }
-.gov-exec-card h3 { color: var(--gold-light); font-size: 1.05rem; margin: 0 0 4px; }
-.gov-role { color: var(--gold); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px; }
+.gov-exec-card h3 { color: var(--gold-light); font-size: 1.15rem; margin: 0 0 4px; }
+.gov-role { color: var(--gold); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 14px; }
 .gov-bio { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.55; margin: 0; }
 .gov-orgchart { display: flex; flex-direction: column; align-items: center; gap: 0; margin-top: 12px; }
 .gov-org-node {

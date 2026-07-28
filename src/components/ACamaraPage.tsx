@@ -24,9 +24,11 @@ function GovCard({ person }: { person: GovPerson }) {
       ) : (
         <span className="gov-avatar" aria-hidden="true">{initials(person.name)}</span>
       )}
-      <h3>{person.name}</h3>
-      <p className="gov-role">{person.role} <span aria-hidden="true">{person.flag}</span></p>
-      {person.bio && <p className="gov-bio">{person.bio}</p>}
+      <div className="gov-exec-card-body">
+        <h3>{person.name}</h3>
+        <p className="gov-role">{person.role} <span aria-hidden="true">{person.flag}</span></p>
+        {person.bio && <p className="gov-bio">{person.bio}</p>}
+      </div>
     </div>
   );
 }
