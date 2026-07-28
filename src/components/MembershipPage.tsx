@@ -92,6 +92,14 @@ function MembershipForm() {
         <input type="email" name="email" required autoComplete="email" maxLength={160} />
       </label>
       <label>
+        {f.password}
+        <input type="password" name="password" required minLength={8} maxLength={72} autoComplete="new-password" />
+      </label>
+      <label>
+        {f.confirmPassword}
+        <input type="password" name="confirmPassword" required minLength={8} maxLength={72} autoComplete="new-password" />
+      </label>
+      <label>
         {f.company}
         <input type="text" name="company" required autoComplete="organization" maxLength={160} />
       </label>

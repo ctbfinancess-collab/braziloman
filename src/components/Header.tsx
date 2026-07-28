@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { Icon } from "./Icons";
 
 export default function Header() {
   const { d, lang, toggle } = useI18n();
@@ -43,6 +44,10 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
+          <Link href="/membro/login" onClick={close} className="nav-login">
+            <Icon name="idcard" className="nav-login-icon" />
+            {d.nav.memberLogin}
+          </Link>
           <Link href="/associe-se" onClick={close} className="btn btn-primary nav-cta">
             {d.nav.membership}
           </Link>

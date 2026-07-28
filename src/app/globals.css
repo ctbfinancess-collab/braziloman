@@ -127,7 +127,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .btn-primary:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,162,90,0.25); }
 .btn-ghost { border-color: var(--border-strong); color: var(--gold-light); background: transparent; }
 .btn-ghost:hover { background: rgba(201,162,90,0.08); border-color: var(--gold); }
-.nav-cta { padding: 9px 20px; font-size: 0.8rem; }
+.nav-cta { padding: 9px 20px; font-size: 0.8rem; white-space: nowrap; }
 
 /* ---------- header ---------- */
 .site-header {
@@ -141,14 +141,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .brand-text strong { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.14em; color: var(--gold-light); }
 .brand-text small { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-dim); }
 
-.nav { display: flex; align-items: center; gap: 30px; }
-.nav a { font-size: 0.86rem; font-weight: 500; color: var(--fg-muted); letter-spacing: 0.02em; transition: color 0.2s; }
+.nav { display: flex; align-items: center; gap: 20px; }
+.nav a { font-size: 0.82rem; font-weight: 500; color: var(--fg-muted); letter-spacing: 0.02em; transition: color 0.2s; white-space: nowrap; }
 .nav a:hover { color: var(--gold-light); }
+.nav-login { display: inline-flex; align-items: center; gap: 6px; }
+.nav-login-icon { width: 15px; height: 15px; flex: 0 0 auto; }
 
 .lang-toggle {
   background: transparent; border: 1px solid var(--border-strong); color: var(--gold-light);
   border-radius: 2px; padding: 7px 12px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
-  letter-spacing: 0.06em; transition: all 0.2s;
+  letter-spacing: 0.06em; transition: all 0.2s; white-space: nowrap;
 }
 .lang-toggle:hover { background: rgba(201,162,90,0.1); }
 .lang-toggle .on { color: var(--gold-bright); }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { membershipSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
 import { prisma } from "@/lib/prisma";
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { website, ...data } = parsed.data;
+  const { website, password, confirmPassword: _confirmPassword, ...data } = parsed.data;
 
   // 3) Honeypot: se preenchido, finge sucesso (não vaza que detectamos o bot).
   if (website) return NextResponse.json({ ok: true });
@@ -48,10 +49,12 @@ export async function POST(req: Request) {
   // 4) Persiste se houver banco; caso contrário, apenas registra em log.
   try {
     if (prisma) {
+      const passwordHash = await bcrypt.hash(password, 10);
       await prisma.membershipApplication.create({
         data: {
           name: data.name,
           email: data.email,
+          passwordHash,
           company: data.company,
           role: data.role || null,
           sector: data.sector || null,
@@ -67,7 +70,18 @@ export async function POST(req: Request) {
         company: data.company,
       });
     }
-  } catch (err) {
+  } catch (err: unknown) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      (err as { code?: string }).code === "P2002"
+    ) {
+      return NextResponse.json(
+        { error: "Já existe um cadastro com este e-mail." },
+        { status: 409 }
+      );
+    }
     console.error("[membership] erro ao salvar:", err);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }

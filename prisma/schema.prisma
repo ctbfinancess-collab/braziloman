@@ -25,19 +25,20 @@ model ContactMessage {
   @@index([createdAt])
 }
 
-/// Pedidos de associação (base para o sistema de membros futuro).
+/// Pedidos de associação — também funciona como conta do associado (Área do Membro).
 model MembershipApplication {
-  id        String            @id @default(cuid())
-  name      String
-  email     String
-  company   String
-  role      String?
-  sector    String?
-  country   String?
-  phone     String?
-  message   String?
-  status    ApplicationStatus @default(PENDING)
-  createdAt DateTime          @default(now())
+  id           String            @id @default(cuid())
+  name         String
+  email        String            @unique
+  passwordHash String?
+  company      String
+  role         String?
+  sector       String?
+  country      String?
+  phone        String?
+  message      String?
+  status       ApplicationStatus @default(PENDING)
+  createdAt    DateTime          @default(now())
 
   @@index([status])
 }
