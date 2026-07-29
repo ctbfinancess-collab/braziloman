@@ -15,6 +15,7 @@ import type {
   DocumentEntry,
 } from "@/lib/candidateSchemas";
 import { COMPLIANCE_QUESTIONS } from "@/lib/candidateSchemas";
+import { PersonalStep, CompanyStep, ProfileStep } from "@/components/CandidatePortal";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -246,6 +247,20 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [aiError, setAiError] = useState("");
   const [pdfLoading, setPdfLoading] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const [editingSection, setEditingSection] = useState<"personal" | "company" | "profile" | null>(null);
+
+  function adminFieldSave(field: "personalData" | "companyData" | "businessProfile") {
+    return async (data: unknown) => {
+      const res = await fetch(`/api/admin/applications/${id}/data`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field, data }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) return { ok: false, error: json.error, issues: json.issues };
+      return { ok: true };
+    };
+  }
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/admin/applications/${id}`);
@@ -458,62 +473,110 @@ export function AdminApplicationDetail({ id }: { id: string }) {
 
         {p && (
           <div className="about-section-card">
-            <h3 className="mp-subtitle mp-subtitle-tight">Dados do responsável</h3>
-            <Row label="Nome" value={p.fullName} />
-            <Row label="Nacionalidade" value={p.nationality} />
-            <Row label="Data de nascimento" value={p.birthDate} />
-            <Row label="CPF/documento" value={p.taxId} />
-            <Row label="RG/passaporte/Emirates ID" value={p.idDocument} />
-            <Row label="Cargo" value={p.role} />
-            <Row label="Telefone" value={p.phone} />
-            <Row label="E-mail" value={p.email} />
-            <Row label="Endereço" value={p.address} />
-            <Row label="País de residência" value={p.residenceCountry} />
-            <Row label="LinkedIn/currículo" value={p.linkedin} />
-            <Row label="Vínculo com a empresa" value={p.companyRelationship} />
-            <Row label="Autorizado a representar" value={p.authorizedRepresentative ? "Sim" : "Não"} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Dados do responsável</h3>
+              <button type="button" className="btn btn-ghost" onClick={() => setEditingSection(editingSection === "personal" ? null : "personal")}>
+                {editingSection === "personal" ? "Cancelar" : "Editar"}
+              </button>
+            </div>
+            {editingSection === "personal" ? (
+              <PersonalStep
+                initial={p}
+                onSave={adminFieldSave("personalData")}
+                onNext={() => { setEditingSection(null); load(); }}
+                submitLabel="Salvar alterações"
+              />
+            ) : (
+              <>
+                <Row label="Nome" value={p.fullName} />
+                <Row label="Nacionalidade" value={p.nationality} />
+                <Row label="Data de nascimento" value={p.birthDate} />
+                <Row label="CPF/documento" value={p.taxId} />
+                <Row label="RG/passaporte/Emirates ID" value={p.idDocument} />
+                <Row label="Cargo" value={p.role} />
+                <Row label="Telefone" value={p.phone} />
+                <Row label="E-mail" value={p.email} />
+                <Row label="Endereço" value={p.address} />
+                <Row label="País de residência" value={p.residenceCountry} />
+                <Row label="LinkedIn/currículo" value={p.linkedin} />
+                <Row label="Vínculo com a empresa" value={p.companyRelationship} />
+                <Row label="Autorizado a representar" value={p.authorizedRepresentative ? "Sim" : "Não"} />
+              </>
+            )}
           </div>
         )}
 
         {c && (
           <div className="about-section-card">
-            <h3 className="mp-subtitle mp-subtitle-tight">Dados da empresa</h3>
-            <Row label="Tipo" value={c.entityType === "foreign" ? "Estrangeira" : "Brasileira"} />
-            <Row label="Razão social" value={c.legalName} />
-            <Row label="Nome comercial" value={c.tradeName} />
-            <Row label={c.entityType === "foreign" ? "Registro" : "CNPJ"} value={c.registrationNumber} />
-            <Row label="Constituição" value={c.foundingDate} />
-            <Row label="Sede" value={`${c.cityHQ}, ${c.countryHQ}`} />
-            <Row label="Endereço" value={c.address} />
-            <Row label="Site" value={c.website} />
-            <Row label="Telefone" value={c.phone} />
-            <Row label="E-mail institucional" value={c.institutionalEmail} />
-            <Row label="Natureza jurídica" value={c.legalNature} />
-            <Row label="Capital social" value={c.shareCapital} />
-            <Row label="Funcionários" value={c.employeeCount} />
-            <Row label="Setores" value={c.sectors} />
-            <Row label="Produtos e serviços" value={c.productsServices} />
-            <Row label="Países onde opera" value={c.countriesOfOperation} />
-            <Row label="Filiais" value={c.affiliates} />
-            <Row label="Administradores" value={c.administrators} />
-            <Row label="Quadro societário" value={c.shareholderStructure} />
-            <Row label="Beneficiários finais" value={c.beneficialOwners} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Dados da empresa</h3>
+              <button type="button" className="btn btn-ghost" onClick={() => setEditingSection(editingSection === "company" ? null : "company")}>
+                {editingSection === "company" ? "Cancelar" : "Editar"}
+              </button>
+            </div>
+            {editingSection === "company" ? (
+              <CompanyStep
+                initial={c}
+                onSave={adminFieldSave("companyData")}
+                onNext={() => { setEditingSection(null); load(); }}
+                submitLabel="Salvar alterações"
+              />
+            ) : (
+              <>
+                <Row label="Tipo" value={c.entityType === "foreign" ? "Estrangeira" : "Brasileira"} />
+                <Row label="Razão social" value={c.legalName} />
+                <Row label="Nome comercial" value={c.tradeName} />
+                <Row label={c.entityType === "foreign" ? "Registro" : "CNPJ"} value={c.registrationNumber} />
+                <Row label="Constituição" value={c.foundingDate} />
+                <Row label="Sede" value={`${c.cityHQ}, ${c.countryHQ}`} />
+                <Row label="Endereço" value={c.address} />
+                <Row label="Site" value={c.website} />
+                <Row label="Telefone" value={c.phone} />
+                <Row label="E-mail institucional" value={c.institutionalEmail} />
+                <Row label="Natureza jurídica" value={c.legalNature} />
+                <Row label="Capital social" value={c.shareCapital} />
+                <Row label="Funcionários" value={c.employeeCount} />
+                <Row label="Setores" value={c.sectors} />
+                <Row label="Produtos e serviços" value={c.productsServices} />
+                <Row label="Países onde opera" value={c.countriesOfOperation} />
+                <Row label="Filiais" value={c.affiliates} />
+                <Row label="Administradores" value={c.administrators} />
+                <Row label="Quadro societário" value={c.shareholderStructure} />
+                <Row label="Beneficiários finais" value={c.beneficialOwners} />
+              </>
+            )}
           </div>
         )}
 
         {b && (
           <div className="about-section-card">
-            <h3 className="mp-subtitle mp-subtitle-tight">Perfil comercial e diagnóstico</h3>
-            <Row label="Faturamento anual" value={b.annualRevenueRange} />
-            <Row label="Principais mercados" value={b.mainMarkets as string} />
-            <Row label="Interesse no Brasil" value={b.interestInBrazil} />
-            <Row label="Interesse em Omã" value={b.interestInOman} />
-            <Row label="Objetivo da associação" value={b.membershipGoal} />
-            <Row label="Expectativa em relação à Câmara" value={b.expectationFromChamber} />
-            <Row label="Já exporta/importa" value={b.exportsOrImports ? "Sim" : "Não"} />
-            <Row label="Precisa de financiamento" value={b.needsFinancing ? "Sim" : "Não"} />
-            <Row label="Pretende abrir filial" value={b.plansToOpenBranch ? "Sim" : "Não"} />
-            <Row label="Principais dificuldades" value={b.mainDifficulties as string} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Perfil comercial e diagnóstico</h3>
+              <button type="button" className="btn btn-ghost" onClick={() => setEditingSection(editingSection === "profile" ? null : "profile")}>
+                {editingSection === "profile" ? "Cancelar" : "Editar"}
+              </button>
+            </div>
+            {editingSection === "profile" ? (
+              <ProfileStep
+                initial={b}
+                onSave={adminFieldSave("businessProfile")}
+                onNext={() => { setEditingSection(null); load(); }}
+                submitLabel="Salvar alterações"
+              />
+            ) : (
+              <>
+                <Row label="Faturamento anual" value={b.annualRevenueRange} />
+                <Row label="Principais mercados" value={b.mainMarkets as string} />
+                <Row label="Interesse no Brasil" value={b.interestInBrazil} />
+                <Row label="Interesse em Omã" value={b.interestInOman} />
+                <Row label="Objetivo da associação" value={b.membershipGoal} />
+                <Row label="Expectativa em relação à Câmara" value={b.expectationFromChamber} />
+                <Row label="Já exporta/importa" value={b.exportsOrImports ? "Sim" : "Não"} />
+                <Row label="Precisa de financiamento" value={b.needsFinancing ? "Sim" : "Não"} />
+                <Row label="Pretende abrir filial" value={b.plansToOpenBranch ? "Sim" : "Não"} />
+                <Row label="Principais dificuldades" value={b.mainDifficulties as string} />
+              </>
+            )}
           </div>
         )}
 

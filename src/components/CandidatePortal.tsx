@@ -150,7 +150,19 @@ function StepNav({ current, maxReached, onGo }: { current: number; maxReached: n
 // ---------------------------------------------------------------------------
 // Etapa 1 — Dados pessoais
 // ---------------------------------------------------------------------------
-function PersonalStep({ initial, onNext }: { initial: PersonalData | null; onNext: () => void }) {
+type StepSaveFn = (data: unknown) => Promise<{ ok: boolean; error?: string; issues?: unknown }>;
+
+export function PersonalStep({
+  initial,
+  onNext,
+  onSave = (data) => saveStep(1, data),
+  submitLabel,
+}: {
+  initial: PersonalData | null;
+  onNext: () => void;
+  onSave?: StepSaveFn;
+  submitLabel?: string;
+}) {
   const [data, setData] = useState<Partial<PersonalData>>(initial ?? {});
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
@@ -162,7 +174,7 @@ function PersonalStep({ initial, onNext }: { initial: PersonalData | null; onNex
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("saving");
-    const result = await saveStep(1, { ...data, authorizedRepresentative: Boolean(data.authorizedRepresentative) });
+    const result = await onSave({ ...data, authorizedRepresentative: Boolean(data.authorizedRepresentative) });
     if (!result.ok) {
       setError(result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
@@ -224,7 +236,7 @@ function PersonalStep({ initial, onNext }: { initial: PersonalData | null; onNex
       </label>
       {status === "error" && <p className="form-note err">{error}</p>}
       <button type="submit" className="btn btn-primary" disabled={status === "saving"}>
-        {status === "saving" ? "Salvando…" : "Salvar e continuar"}
+        {status === "saving" ? "Salvando…" : submitLabel ?? "Salvar e continuar"}
       </button>
     </form>
   );
@@ -233,7 +245,17 @@ function PersonalStep({ initial, onNext }: { initial: PersonalData | null; onNex
 // ---------------------------------------------------------------------------
 // Etapa 2 — Dados da empresa
 // ---------------------------------------------------------------------------
-function CompanyStep({ initial, onNext }: { initial: CompanyData | null; onNext: () => void }) {
+export function CompanyStep({
+  initial,
+  onNext,
+  onSave = (data) => saveStep(2, data),
+  submitLabel,
+}: {
+  initial: CompanyData | null;
+  onNext: () => void;
+  onSave?: StepSaveFn;
+  submitLabel?: string;
+}) {
   const [data, setData] = useState<Partial<CompanyData>>(initial ?? { entityType: "br" });
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
@@ -245,7 +267,7 @@ function CompanyStep({ initial, onNext }: { initial: CompanyData | null; onNext:
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("saving");
-    const result = await saveStep(2, data);
+    const result = await onSave(data);
     if (!result.ok) {
       setError(result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
@@ -328,7 +350,7 @@ function CompanyStep({ initial, onNext }: { initial: CompanyData | null; onNext:
       </Field>
       {status === "error" && <p className="form-note err">{error}</p>}
       <button type="submit" className="btn btn-primary" disabled={status === "saving"}>
-        {status === "saving" ? "Salvando…" : "Salvar e continuar"}
+        {status === "saving" ? "Salvando…" : submitLabel ?? "Salvar e continuar"}
       </button>
     </form>
   );
@@ -337,7 +359,17 @@ function CompanyStep({ initial, onNext }: { initial: CompanyData | null; onNext:
 // ---------------------------------------------------------------------------
 // Etapa 3 — Perfil comercial + diagnóstico de internacionalização
 // ---------------------------------------------------------------------------
-function ProfileStep({ initial, onNext }: { initial: BusinessProfile | null; onNext: () => void }) {
+export function ProfileStep({
+  initial,
+  onNext,
+  onSave = (data) => saveStep(3, data),
+  submitLabel,
+}: {
+  initial: BusinessProfile | null;
+  onNext: () => void;
+  onSave?: StepSaveFn;
+  submitLabel?: string;
+}) {
   const [data, setData] = useState<Partial<BusinessProfile>>(initial ?? {});
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
@@ -370,7 +402,7 @@ function ProfileStep({ initial, onNext }: { initial: BusinessProfile | null; onN
     for (const [key] of boolFields) {
       (payload as Record<string, unknown>)[key] = Boolean((data as Record<string, unknown>)[key]);
     }
-    const result = await saveStep(3, payload);
+    const result = await onSave(payload);
     if (!result.ok) {
       setError(result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
@@ -442,7 +474,7 @@ function ProfileStep({ initial, onNext }: { initial: BusinessProfile | null; onN
       </Field>
       {status === "error" && <p className="form-note err">{error}</p>}
       <button type="submit" className="btn btn-primary" disabled={status === "saving"}>
-        {status === "saving" ? "Salvando…" : "Salvar e continuar"}
+        {status === "saving" ? "Salvando…" : submitLabel ?? "Salvar e continuar"}
       </button>
     </form>
   );
