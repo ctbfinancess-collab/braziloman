@@ -287,14 +287,19 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   async function onGenerateAiSummary() {
     setAiLoading(true);
     setAiError("");
-    const res = await fetch(`/api/admin/applications/${id}/ai-summary`, { method: "POST" });
-    const json = await res.json();
-    setAiLoading(false);
-    if (!res.ok) {
-      setAiError(json.error || "Não foi possível gerar o resumo.");
-      return;
+    try {
+      const res = await fetch(`/api/admin/applications/${id}/ai-summary`, { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setAiError(json.error || `Não foi possível gerar o resumo (HTTP ${res.status}).`);
+        return;
+      }
+      await load();
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : "Não foi possível gerar o resumo.");
+    } finally {
+      setAiLoading(false);
     }
-    await load();
   }
 
   if (error) return <section className="section"><div className="container reveal"><p className="form-note err">{error}</p></div></section>;
