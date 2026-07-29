@@ -1062,3 +1062,64 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   background: rgba(150,116,52,0.08); color: var(--fg-muted); font-size: 0.85rem;
 }
 .ai-summary-box hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* Página de Compliance */
+.compliance-highlight, .compliance-integrity-banner {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 28px 32px; margin-top: 40px;
+}
+.compliance-highlight-icon {
+  flex: 0 0 auto; display: inline-flex; width: 48px; height: 48px; align-items: center; justify-content: center;
+  border-radius: 50%; background: rgba(150,116,52,0.12); color: var(--gold);
+}
+.compliance-highlight-icon svg { width: 24px; height: 24px; }
+.compliance-highlight-body { flex: 1 1 320px; }
+.compliance-highlight-body h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 1.05rem; margin: 0 0 6px; }
+.compliance-highlight-body p { color: var(--fg-muted); font-size: 0.92rem; margin: 0; line-height: 1.55; }
+.compliance-highlight-cta { flex: 0 0 auto; white-space: nowrap; }
+
+.compliance-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 28px 0; }
+.compliance-card {
+  flex: 1 1 240px; max-width: 300px; text-align: center; padding: 28px 22px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+}
+.compliance-card-icon {
+  display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center;
+  border-radius: 50%; background: rgba(150,116,52,0.1); color: var(--gold); margin-bottom: 14px;
+}
+.compliance-card-icon svg { width: 22px; height: 22px; }
+.compliance-card h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 0.98rem; margin: 0 0 8px; }
+.compliance-card p { color: var(--fg-muted); font-size: 0.86rem; margin: 0; line-height: 1.5; }
+
+.compliance-process-block { margin-top: 56px; padding: 40px 32px; background: var(--bg-2); border-radius: 8px; }
+.compliance-timeline { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-top: 28px; }
+.compliance-timeline-step { flex: 1 1 160px; max-width: 190px; text-align: center; }
+.compliance-timeline-num {
+  display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center;
+  border-radius: 50%; background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+  color: #1a1408; font-family: var(--font-display); font-weight: 700; margin-bottom: 12px;
+}
+.compliance-timeline-step h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 0.9rem; margin: 0 0 6px; }
+.compliance-timeline-step p { color: var(--fg-muted); font-size: 0.82rem; margin: 0; line-height: 1.5; }
+.compliance-process-note { text-align: center; color: var(--fg-dim); font-size: 0.82rem; font-style: italic; margin: 28px 0 0; }
+
+.compliance-docs-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 28px 0; }
+.compliance-doc-card {
+  flex: 1 1 220px; max-width: 260px; padding: 22px 20px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+}
+.compliance-doc-icon {
+  display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center;
+  color: var(--gold); margin-bottom: 10px;
+}
+.compliance-doc-icon svg { width: 20px; height: 20px; }
+.compliance-doc-card h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 0.92rem; margin: 0 0 8px; }
+.compliance-doc-card p { color: var(--fg-muted); font-size: 0.82rem; margin: 0 0 14px; line-height: 1.5; }
+.compliance-doc-link { color: var(--gold); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
+.compliance-doc-link:hover { text-decoration: underline; }
+.compliance-doc-link-disabled { color: var(--fg-dim); font-weight: 400; font-style: italic; }
+
+@media (max-width: 720px) {
+  .compliance-highlight, .compliance-integrity-banner { flex-direction: column; text-align: center; }
+}

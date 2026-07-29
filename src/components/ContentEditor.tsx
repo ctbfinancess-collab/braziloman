@@ -100,6 +100,10 @@ function isImagePath(value: unknown): boolean {
   return typeof value === "string" && /\.(jpe?g|png|webp|gif|svg)($|\?)/i.test(value);
 }
 
+function isDocumentPath(value: unknown): boolean {
+  return typeof value === "string" && /\.pdf($|\?)/i.test(value);
+}
+
 function matchesSearch(node: Node, term: string): boolean {
   if (!term) return true;
   if (typeof node === "string") return node.toLowerCase().includes(term);
@@ -140,6 +144,8 @@ function FieldNode(props: FieldProps) {
     const isOverridden = ptNode !== defaultPtNode;
     const pathKey = path.join(".");
     const isImg = isImagePath(ptNode) || isImagePath(defaultPtNode);
+    const isUrlField = path[path.length - 1] === "url";
+    const isDoc = isDocumentPath(ptNode) || isDocumentPath(defaultPtNode) || (isUrlField && !isImg);
     const long = ptNode.length > 70 || (typeof enNode === "string" && enNode.length > 70);
 
     return (
@@ -153,17 +159,20 @@ function FieldNode(props: FieldProps) {
             </button>
           )}
         </div>
-        {isImg && (
+        {(isImg || isDoc) && (
           <div className="ce-image-row">
-            {ptNode && (
+            {isImg && ptNode && (
               // eslint-disable-next-line @next/next/no-img-element
               <img key={ptNode} src={ptNode} alt="" className="ce-image-preview" />
             )}
+            {isDoc && ptNode && (
+              <a href={ptNode} target="_blank" rel="noreferrer" className="ce-mini-btn">Ver arquivo atual</a>
+            )}
             <label className="ce-upload-btn">
-              {uploadingKey === pathKey ? "Enviando…" : "Trocar imagem"}
+              {uploadingKey === pathKey ? "Enviando…" : isImg ? "Trocar imagem" : "Enviar arquivo (PDF ou imagem)"}
               <input
                 type="file"
-                accept="image/*"
+                accept={isImg ? "image/*" : "image/*,application/pdf"}
                 style={{ display: "none" }}
                 onChange={(e) => {
                   const file = e.target.files?.[0];

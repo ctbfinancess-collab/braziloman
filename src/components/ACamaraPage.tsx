@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { Icon } from "./Icons";
 
 function initials(name: string) {
   return name
@@ -156,7 +157,80 @@ export function CompliancePage() {
         <h1 className="section-title center">{c.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{c.lead}</p>
-        <p className="partnership-block-lead" style={{ textAlign: "center" }}>{c.note}</p>
+
+        <div className="compliance-highlight">
+          <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="shieldcheck" /></span>
+          <div className="compliance-highlight-body">
+            <h3>{c.highlightTitle}</h3>
+            <p>{c.highlightText}</p>
+          </div>
+          <a href="#processo" className="btn btn-ghost compliance-highlight-cta">{c.highlightCta}</a>
+        </div>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{c.principlesTitle}</h2>
+        <div className="compliance-grid">
+          {c.principles.map((item) => (
+            <div className="compliance-card" key={item.h}>
+              <span className="compliance-card-icon" aria-hidden="true"><Icon name={item.icon} /></span>
+              <h3>{item.h}</h3>
+              <p>{item.p}</p>
+            </div>
+          ))}
+        </div>
+
+        <div id="processo" className="compliance-process-block">
+          <h2 className="mp-subtitle center">{c.processTitle}</h2>
+          <div className="compliance-timeline">
+            {c.process.map((step) => (
+              <div className="compliance-timeline-step" key={step.n}>
+                <span className="compliance-timeline-num">{step.n}</span>
+                <h3>{step.h}</h3>
+                <p>{step.p}</p>
+              </div>
+            ))}
+          </div>
+          <p className="compliance-process-note">{c.processNote}</p>
+        </div>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{c.dueDiligenceTitle}</h2>
+        <p className="section-lead mp-lead-center">{c.dueDiligenceLead}</p>
+        <div className="compliance-grid">
+          {c.dueDiligence.map((item) => (
+            <div className="compliance-card" key={item.h}>
+              <span className="compliance-card-icon" aria-hidden="true"><Icon name={item.icon} /></span>
+              <h3>{item.h}</h3>
+              <p>{item.p}</p>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{c.documentsTitle}</h2>
+        <p className="section-lead mp-lead-center">{c.documentsLead}</p>
+        <div className="compliance-docs-grid">
+          {c.documents.map((doc) => (
+            <div className="compliance-doc-card" key={doc.h}>
+              <span className="compliance-doc-icon" aria-hidden="true"><Icon name="certificate" /></span>
+              <h3>{doc.h}</h3>
+              <p>{doc.p}</p>
+              {doc.url ? (
+                <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Ler documento →</a>
+              ) : (
+                <span className="compliance-doc-link compliance-doc-link-disabled">Em breve</span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="compliance-integrity-banner">
+          <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="megaphone" /></span>
+          <div className="compliance-highlight-body">
+            <h3>{c.integrityChannelTitle}</h3>
+            <p>{c.integrityChannelText}</p>
+          </div>
+          <Link href="/contato" className="btn btn-primary compliance-highlight-cta">{c.integrityChannelCta}</Link>
+        </div>
+
+        <p className="mp-closing-quote" style={{ marginTop: 48 }}>{c.closingQuote}</p>
       </div>
     </section>
   );

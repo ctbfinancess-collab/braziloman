@@ -20,6 +20,9 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   "image/webp": "webp",
   "image/svg+xml": "svg",
   "image/gif": "gif",
+  // documentos institucionais públicos (ex.: Código de Ética) também usam este
+  // upload — não são sensíveis como os do Portal do Candidato.
+  "application/pdf": "pdf",
 };
 
 const ALLOWED_DOCUMENT_TYPES: Record<string, string> = {
