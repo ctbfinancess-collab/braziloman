@@ -108,7 +108,9 @@ export const complianceAnswerSchema = z.object({
   key: z.string(),
   answer: z.enum(["yes", "no"]),
   explanation: z.string().trim().max(1000).optional().or(z.literal("")),
-  documentUrl: z.string().trim().optional().or(z.literal("")),
+  /// Chave do objeto no bucket privado do R2 (não é a URL de exibição, que é
+  /// gerada à parte e assinada com validade curta — ver rotas GET).
+  documentKey: z.string().trim().optional().or(z.literal("")),
 });
 export const complianceAnswersSchema = z.array(complianceAnswerSchema);
 export type ComplianceAnswer = z.infer<typeof complianceAnswerSchema>;

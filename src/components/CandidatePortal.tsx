@@ -22,7 +22,7 @@ type AppData = {
   personalData: PersonalData | null;
   companyData: CompanyData | null;
   businessProfile: (BusinessProfile & Record<string, unknown>) | null;
-  complianceAnswers: ComplianceAnswer[] | null;
+  complianceAnswers: (ComplianceAnswer & { documentSignedUrl?: string })[] | null;
   documents: UploadedDoc[] | null;
   declarations: Record<string, unknown> | null;
 };
@@ -44,6 +44,16 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {label}
       {children}
     </label>
+  );
+}
+
+function LinkPreview({ value }: { value?: string }) {
+  if (!value || !value.trim()) return null;
+  const href = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  return (
+    <span className="wiz-field-link">
+      <a href={href} target="_blank" rel="noreferrer">Abrir link ↗</a>
+    </span>
   );
 }
 
@@ -194,6 +204,7 @@ function PersonalStep({ initial, onNext }: { initial: PersonalData | null; onNex
         </Field>
         <Field label="Currículo ou LinkedIn (opcional)">
           <input value={data.linkedin ?? ""} onChange={(e) => set("linkedin", e.target.value)} />
+          <LinkPreview value={data.linkedin} />
         </Field>
       </div>
       <Field label="Endereço">
@@ -273,6 +284,7 @@ function CompanyStep({ initial, onNext }: { initial: CompanyData | null; onNext:
         </Field>
         <Field label="Site (opcional)">
           <input value={data.website ?? ""} onChange={(e) => set("website", e.target.value)} />
+          <LinkPreview value={data.website} />
         </Field>
         <Field label="Telefone">
           <input required value={data.phone ?? ""} onChange={(e) => set("phone", e.target.value)} />
@@ -439,19 +451,27 @@ function ProfileStep({ initial, onNext }: { initial: BusinessProfile | null; onN
 // ---------------------------------------------------------------------------
 // Etapa 4 — Compliance e integridade
 // ---------------------------------------------------------------------------
-function ComplianceStep({ initial, onNext }: { initial: ComplianceAnswer[] | null; onNext: () => void }) {
-  const [answers, setAnswers] = useState<Record<string, ComplianceAnswer>>(() => {
-    const map: Record<string, ComplianceAnswer> = {};
+type ComplianceAnswerWithUrl = ComplianceAnswer & { documentSignedUrl?: string };
+
+function ComplianceStep({
+  initial,
+  onNext,
+}: {
+  initial: ComplianceAnswerWithUrl[] | null;
+  onNext: () => void;
+}) {
+  const [answers, setAnswers] = useState<Record<string, ComplianceAnswerWithUrl>>(() => {
+    const map: Record<string, ComplianceAnswerWithUrl> = {};
     for (const q of COMPLIANCE_QUESTIONS) {
       const existing = initial?.find((a) => a.key === q.key);
-      map[q.key] = existing ?? { key: q.key, answer: "no", explanation: "", documentUrl: "" };
+      map[q.key] = existing ?? { key: q.key, answer: "no", explanation: "", documentKey: "" };
     }
     return map;
   });
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
 
-  function update(key: string, patch: Partial<ComplianceAnswer>) {
+  function update(key: string, patch: Partial<ComplianceAnswerWithUrl>) {
     setAnswers((a) => ({ ...a, [key]: { ...a[key], ...patch } }));
   }
 
@@ -488,8 +508,12 @@ function ComplianceStep({ initial, onNext }: { initial: ComplianceAnswer[] | nul
                 <DocUploadButton
                   docKey={`compliance-${q.key}`}
                   label={q.label}
-                  existing={a.documentUrl ? { key: q.key, label: q.label, storageKey: a.documentUrl, url: a.documentUrl } : undefined}
-                  onUploaded={(doc) => update(q.key, { documentUrl: doc.storageKey })}
+                  existing={
+                    a.documentKey
+                      ? { key: q.key, label: q.label, storageKey: a.documentKey, url: a.documentSignedUrl ?? "" }
+                      : undefined
+                  }
+                  onUploaded={(doc) => update(q.key, { documentKey: doc.storageKey, documentSignedUrl: doc.url })}
                 />
               </>
             )}

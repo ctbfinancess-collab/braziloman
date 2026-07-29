@@ -53,7 +53,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   const complianceWithUrls = await Promise.all(
     complianceAnswers.map(async (a) => ({
       ...a,
-      documentUrl: a.documentUrl ? await getDocumentSignedUrl(a.documentUrl).catch(() => "") : "",
+      documentSignedUrl: a.documentKey ? await getDocumentSignedUrl(a.documentKey).catch(() => "") : "",
     }))
   );
 

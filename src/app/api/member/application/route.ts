@@ -10,6 +10,7 @@ import {
   documentsSchema,
   declarationsSchema,
   type DocumentEntry,
+  type ComplianceAnswer,
 } from "@/lib/candidateSchemas";
 
 export const runtime = "nodejs";
@@ -50,10 +51,19 @@ export async function GET() {
     }))
   );
 
+  const complianceAnswers = ((application.complianceAnswers as ComplianceAnswer[] | null) ?? []) as ComplianceAnswer[];
+  const complianceWithUrls = await Promise.all(
+    complianceAnswers.map(async (a) => ({
+      ...a,
+      documentSignedUrl: a.documentKey ? await getDocumentSignedUrl(a.documentKey).catch(() => "") : "",
+    }))
+  );
+
   return NextResponse.json({
     application: {
       ...application,
       documents: documentsWithUrls,
+      complianceAnswers: complianceWithUrls,
     },
   });
 }

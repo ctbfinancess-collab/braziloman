@@ -194,7 +194,7 @@ type FullApplication = Application & {
   personalData: PersonalData | null;
   companyData: CompanyData | null;
   businessProfile: (BusinessProfile & Record<string, unknown>) | null;
-  complianceAnswers: (ComplianceAnswer & { url?: string })[] | null;
+  complianceAnswers: (ComplianceAnswer & { documentSignedUrl?: string })[] | null;
   documents: (DocumentEntry & { url: string })[] | null;
   declarations: Record<string, unknown> | null;
   riskLevel: string | null;
@@ -256,14 +256,15 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     load();
   }, [load]);
 
-  async function onSave() {
+  async function onSave(statusOverride?: ApplicationStatus) {
+    const nextStatus = statusOverride ?? status;
     setSaving(true);
     setSaved(false);
     const res = await fetch(`/api/admin/applications/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        status,
+        status: nextStatus,
         riskLevel: riskLevel || null,
         complianceNotes: complianceNotes || null,
         membershipCategory: membershipCategory || null,
@@ -272,6 +273,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     });
     setSaving(false);
     if (res.ok) {
+      setStatus(nextStatus);
       setSaved(true);
       await load();
       setTimeout(() => setSaved(false), 2500);
@@ -299,7 +301,28 @@ export function AdminApplicationDetail({ id }: { id: string }) {
         <span className="about-flourish" aria-hidden="true" />
 
         <div className="about-section-card">
-          <h3 className="mp-subtitle mp-subtitle-tight">Análise (etapa {app.wizardStep}/7)</h3>
+          <h3 className="mp-subtitle mp-subtitle-tight">Ações rápidas</h3>
+          <p className="section-lead" style={{ marginBottom: 14 }}>
+            Aprovar/rejeitar aqui já salva e envia o e-mail correspondente na hora. Use os campos abaixo se quiser ajustar risco, categoria ou notas antes.
+          </p>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button type="button" className="btn btn-primary" disabled={saving} onClick={() => onSave("APPROVED_PENDING_PAYMENT")}>
+              Aprovar (aguardando pagamento)
+            </button>
+            <button type="button" className="btn btn-ghost" disabled={saving} onClick={() => onSave("ACTIVE")}>
+              Marcar como associado ativo
+            </button>
+            <button type="button" className="btn btn-ghost" disabled={saving} onClick={() => onSave("INFO_REQUESTED")}>
+              Solicitar informações
+            </button>
+            <button type="button" className="btn btn-ghost" disabled={saving} onClick={() => onSave("REJECTED")}>
+              Rejeitar
+            </button>
+          </div>
+        </div>
+
+        <div className="about-section-card">
+          <h3 className="mp-subtitle mp-subtitle-tight">Análise detalhada (etapa {app.wizardStep}/7)</h3>
           <div className="wiz-grid">
             <label className="wiz-field">
               Status
@@ -336,7 +359,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
             Notas internas / pedido de informações
             <textarea rows={3} value={complianceNotes} onChange={(e) => setComplianceNotes(e.target.value)} />
           </label>
-          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={onSave} disabled={saving}>
+          <button type="button" className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => onSave()} disabled={saving}>
             {saving ? "Salvando…" : "Salvar análise"}
           </button>
           {saved && <span className="form-note" style={{ marginLeft: 12, color: "var(--gold)" }}>Salvo — e-mail enviado se o status mudou.</span>}
@@ -414,7 +437,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                     <b>{q?.label ?? a.key}:</b> {a.answer === "yes" ? "Sim" : "Não"}
                   </p>
                   {a.explanation && <p style={{ marginTop: 0, color: "var(--fg-muted)" }}>{a.explanation}</p>}
-                  {a.url && <a href={a.url} target="_blank" rel="noreferrer">Ver anexo</a>}
+                  {a.documentSignedUrl && <a href={a.documentSignedUrl} target="_blank" rel="noreferrer">Ver anexo</a>}
                 </div>
               );
             })}
