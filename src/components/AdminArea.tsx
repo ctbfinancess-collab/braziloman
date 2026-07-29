@@ -331,8 +331,18 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   async function onDownloadPdf() {
     if (!summaryRef.current || !app) return;
     setPdfLoading(true);
+    const el = summaryRef.current;
+    const prevMaxHeight = el.style.maxHeight;
+    const prevOverflow = el.style.overflowY;
     try {
-      const canvas = await html2canvas(summaryRef.current, { scale: 2, backgroundColor: "#f5f2eb" });
+      // A caixa tem altura limitada com rolagem na tela; pra capturar o
+      // conteúdo inteiro (não só o que está visível), removemos o limite
+      // temporariamente antes de gerar a imagem.
+      el.style.maxHeight = "none";
+      el.style.overflowY = "visible";
+      const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#f5f2eb" });
+      el.style.maxHeight = prevMaxHeight;
+      el.style.overflowY = prevOverflow;
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({ unit: "px", format: "a4" });
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -351,6 +361,8 @@ export function AdminApplicationDetail({ id }: { id: string }) {
       }
       pdf.save(`resumo-compliance-${app.name.replace(/\s+/g, "-")}.pdf`);
     } finally {
+      el.style.maxHeight = prevMaxHeight;
+      el.style.overflowY = prevOverflow;
       setPdfLoading(false);
     }
   }
