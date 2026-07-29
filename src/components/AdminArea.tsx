@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import type {
   PersonalData,
   CompanyData,
@@ -222,6 +226,11 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return <p><b>{label}:</b> {value}</p>;
 }
 
+function renderMarkdown(text: string): string {
+  const html = marked.parse(text, { async: false }) as string;
+  return DOMPurify.sanitize(html);
+}
+
 export function AdminApplicationDetail({ id }: { id: string }) {
   const router = useRouter();
   const [app, setApp] = useState<FullApplication | null>(null);
@@ -235,6 +244,8 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [saved, setSaved] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const summaryRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/admin/applications/${id}`);
@@ -302,6 +313,33 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     }
   }
 
+  async function onDownloadPdf() {
+    if (!summaryRef.current || !app) return;
+    setPdfLoading(true);
+    try {
+      const canvas = await html2canvas(summaryRef.current, { scale: 2, backgroundColor: "#f5f2eb" });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({ unit: "px", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save(`resumo-compliance-${app.name.replace(/\s+/g, "-")}.pdf`);
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
   if (error) return <section className="section"><div className="container reveal"><p className="form-note err">{error}</p></div></section>;
   if (!app) return <section className="section"><div className="container reveal"><p className="section-lead">Carregando…</p></div></section>;
 
@@ -325,14 +363,21 @@ export function AdminApplicationDetail({ id }: { id: string }) {
         <div className="about-section-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
             <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Resumo de triagem (IA)</h3>
-            <button type="button" className="btn btn-ghost" onClick={onGenerateAiSummary} disabled={aiLoading}>
-              {aiLoading ? "Gerando…" : app.aiSummary ? "Regenerar resumo" : "Gerar resumo com IA"}
-            </button>
+            <div style={{ display: "flex", gap: 8 }}>
+              {app.aiSummary && (
+                <button type="button" className="btn btn-ghost" onClick={onDownloadPdf} disabled={pdfLoading}>
+                  {pdfLoading ? "Gerando PDF…" : "Baixar PDF"}
+                </button>
+              )}
+              <button type="button" className="btn btn-ghost" onClick={onGenerateAiSummary} disabled={aiLoading}>
+                {aiLoading ? "Gerando…" : app.aiSummary ? "Regenerar resumo" : "Gerar resumo com IA"}
+              </button>
+            </div>
           </div>
           {aiError && <p className="form-note err">{aiError}</p>}
           {app.aiSummary ? (
             <>
-              <div style={{ whiteSpace: "pre-wrap", fontSize: "0.92rem", lineHeight: 1.6, marginTop: 10 }}>{app.aiSummary}</div>
+              <div ref={summaryRef} className="ai-summary-box" dangerouslySetInnerHTML={{ __html: renderMarkdown(app.aiSummary) }} />
               {app.aiSummaryGeneratedAt && (
                 <p style={{ color: "var(--fg-dim)", fontSize: "0.78rem", marginTop: 10 }}>
                   Gerado em {new Date(app.aiSummaryGeneratedAt).toLocaleString()} — é só um apoio à leitura, a decisão é sempre sua.

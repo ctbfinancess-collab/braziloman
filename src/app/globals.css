@@ -1041,3 +1041,23 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 @media (max-width: 720px) {
   .wiz-grid, .wiz-bool-grid { grid-template-columns: 1fr; }
 }
+
+/* Resumo de IA (admin) */
+.ai-summary-box {
+  max-height: 480px; overflow-y: auto; margin-top: 12px; padding: 20px 24px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  font-size: 0.9rem; line-height: 1.65; color: var(--fg);
+}
+.ai-summary-box h1, .ai-summary-box h2, .ai-summary-box h3 {
+  font-family: var(--font-display); color: var(--gold-light); margin: 18px 0 8px; font-size: 1.05rem;
+}
+.ai-summary-box h1:first-child, .ai-summary-box h2:first-child, .ai-summary-box h3:first-child { margin-top: 0; }
+.ai-summary-box p { margin: 0 0 10px; }
+.ai-summary-box ul, .ai-summary-box ol { margin: 0 0 10px; padding-left: 22px; }
+.ai-summary-box li { margin-bottom: 4px; }
+.ai-summary-box strong { color: var(--gold-deep); }
+.ai-summary-box blockquote {
+  margin: 0 0 14px; padding: 8px 14px; border-left: 3px solid var(--gold);
+  background: rgba(150,116,52,0.08); color: var(--fg-muted); font-size: 0.85rem;
+}
+.ai-summary-box hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
