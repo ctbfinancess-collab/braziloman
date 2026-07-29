@@ -335,7 +335,7 @@ export function Partnership() {
 export function InstitutionalVideo() {
   const { d } = useI18n();
   const v = d.video;
-  const src = process.env.NEXT_PUBLIC_INSTITUTIONAL_VIDEO || "/institucional.mp4";
+  const src = process.env.NEXT_PUBLIC_HERO_VIDEO || "/institucional.mp4";
   return (
     <section className="section video-section" id="video">
       <div className="container reveal">
