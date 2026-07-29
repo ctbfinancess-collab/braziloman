@@ -243,6 +243,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [annualContribution, setAnnualContribution] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
   const [pdfLoading, setPdfLoading] = useState(false);
@@ -290,6 +291,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     const nextStatus = statusOverride ?? status;
     setSaving(true);
     setSaved(false);
+    setSaveError("");
     const res = await fetch(`/api/admin/applications/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -307,6 +309,9 @@ export function AdminApplicationDetail({ id }: { id: string }) {
       setSaved(true);
       await load();
       setTimeout(() => setSaved(false), 2500);
+    } else {
+      const json = await res.json().catch(() => ({}));
+      setSaveError(json.error || `Não foi possível salvar (HTTP ${res.status}). Confira se a contribuição está entre 1.000 e 1.000.000.`);
     }
   }
 
@@ -469,8 +474,15 @@ export function AdminApplicationDetail({ id }: { id: string }) {
               </select>
             </label>
             <label className="wiz-field">
-              Contribuição anual (R$)
-              <input type="number" min={0} value={annualContribution} onChange={(e) => setAnnualContribution(e.target.value)} />
+              Contribuição anual (R$) — entre 1.000 e 1.000.000
+              <input
+                type="number"
+                min={1000}
+                max={1000000}
+                step={100}
+                value={annualContribution}
+                onChange={(e) => setAnnualContribution(e.target.value)}
+              />
             </label>
           </div>
           <label className="wiz-field" style={{ marginTop: 12 }}>
@@ -481,6 +493,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
             {saving ? "Salvando…" : "Salvar análise"}
           </button>
           {saved && <span className="form-note" style={{ marginLeft: 12, color: "var(--gold)" }}>Salvo — e-mail enviado se o status mudou.</span>}
+          {saveError && <p className="form-note err">{saveError}</p>}
         </div>
 
         {p && (

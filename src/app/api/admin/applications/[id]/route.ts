@@ -32,7 +32,7 @@ const patchSchema = z.object({
   riskLevel: z.string().max(40).optional().nullable(),
   complianceNotes: z.string().max(4000).optional().nullable(),
   membershipCategory: z.string().max(120).optional().nullable(),
-  annualContribution: z.number().int().min(0).optional().nullable(),
+  annualContribution: z.number().int().min(1000).max(1_000_000).optional().nullable(),
 });
 
 /** Detalhe completo de uma candidatura para o painel de compliance do admin. */
