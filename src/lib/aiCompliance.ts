@@ -67,10 +67,17 @@ Gere a resposta em português, em markdown simples, com estas seções:
 
   const message = await client.messages.create({
     model: "claude-opus-5",
-    max_tokens: 1024,
+    max_tokens: 2048,
     messages: [{ role: "user", content: prompt }],
   });
 
-  const block = message.content[0];
-  return block.type === "text" ? block.text : "";
+  console.info("[aiCompliance] stop_reason:", message.stop_reason, "blocks:", message.content.map((b) => b.type));
+
+  const block = message.content.find((b) => b.type === "text");
+  if (!block || !block.text.trim()) {
+    throw new Error(
+      `A IA não retornou texto (stop_reason: ${message.stop_reason}). Tente novamente ou avise o suporte.`
+    );
+  }
+  return block.text;
 }
