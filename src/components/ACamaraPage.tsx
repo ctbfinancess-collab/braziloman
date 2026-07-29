@@ -247,6 +247,50 @@ export function TransparencyPage() {
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{t.lead}</p>
         <p className="partnership-block-lead" style={{ textAlign: "center" }}>{t.note}</p>
+
+        <div className="compliance-highlight">
+          <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>
+          <div className="compliance-highlight-body">
+            <h3>{t.commitmentTitle}</h3>
+            <p>{t.commitmentText}</p>
+          </div>
+        </div>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{t.documentsTitle}</h2>
+        <div className="compliance-grid">
+          {t.documents.map((item) => (
+            <div className="compliance-card transparency-doc-card" key={item.h}>
+              <span className="compliance-card-icon" aria-hidden="true"><Icon name={item.icon} /></span>
+              <h3>{item.h}</h3>
+              <p>{item.p}</p>
+              <span className="transparency-status">
+                <Icon name="clock" className="transparency-status-icon" />
+                {t.comingSoon}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{t.publicationsTitle}</h2>
+        <div className="compliance-docs-grid">
+          {t.publications.map((item) => (
+            <div className="compliance-doc-card transparency-pub-card" key={item.h}>
+              <span className="compliance-doc-icon transparency-pub-icon" aria-hidden="true"><Icon name={item.icon} /></span>
+              <h3>{item.h}</h3>
+              <p>{item.p}</p>
+              <span className="compliance-doc-link-disabled">{t.comingSoonShort}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="compliance-integrity-banner">
+          <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="mail" /></span>
+          <div className="compliance-highlight-body">
+            <h3>{t.requestTitle}</h3>
+            <p>{t.requestText}</p>
+          </div>
+          <Link href="/contato" className="btn btn-primary compliance-highlight-cta">{t.requestCta} →</Link>
+        </div>
       </div>
     </section>
   );

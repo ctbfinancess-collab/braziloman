@@ -84,6 +84,9 @@ export const IconShieldCheck = (p: P) => (
 export const IconLeaf = (p: P) => (
   <svg {...base} {...p}><path d="M5 19c-1-6 2-13 14-14-1 12-8 15-14 14z" /><path d="M5 19c2-5 5-8 10-10" /></svg>
 );
+export const IconClock = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -110,6 +113,7 @@ const map = {
   idcard: IconIdCard,
   shieldcheck: IconShieldCheck,
   leaf: IconLeaf,
+  clock: IconClock,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

@@ -1146,3 +1146,17 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   .compliance-card { flex: 1 1 100%; max-width: 100%; }
   .compliance-doc-card { flex: 1 1 100%; max-width: 100%; }
 }
+
+/* Página de Transparência (reaproveita estilos da página de Compliance) */
+.transparency-doc-card { display: flex; flex-direction: column; }
+.transparency-status {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+  color: var(--gold-deep); font-size: 0.78rem; font-weight: 600;
+}
+.transparency-status-icon { width: 15px; height: 15px; }
+.transparency-pub-card { text-align: center; }
+.transparency-pub-icon {
+  display: inline-flex; width: 48px; height: 48px; align-items: center; justify-content: center;
+  border-radius: 50%; background: rgba(150,116,52,0.1);
+}
+.transparency-pub-card .compliance-doc-link-disabled { display: inline-block; margin-top: 4px; }
