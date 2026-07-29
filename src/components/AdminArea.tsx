@@ -15,7 +15,7 @@ import type {
   DocumentEntry,
 } from "@/lib/candidateSchemas";
 import { COMPLIANCE_QUESTIONS } from "@/lib/candidateSchemas";
-import { PersonalStep, CompanyStep, ProfileStep } from "@/components/CandidatePortal";
+import { PersonalStep, CompanyStep, ProfileStep, ComplianceStep, DocumentsStep } from "@/components/CandidatePortal";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -248,9 +248,13 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [aiError, setAiError] = useState("");
   const [pdfLoading, setPdfLoading] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const [editingSection, setEditingSection] = useState<"personal" | "company" | "profile" | null>(null);
+  const [editingSection, setEditingSection] = useState<
+    "personal" | "company" | "profile" | "compliance" | "documents" | null
+  >(null);
 
-  function adminFieldSave(field: "personalData" | "companyData" | "businessProfile") {
+  function adminFieldSave(
+    field: "personalData" | "companyData" | "businessProfile" | "complianceAnswers" | "documents"
+  ) {
     return async (data: unknown) => {
       const res = await fetch(`/api/admin/applications/${id}/data`, {
         method: "PATCH",
@@ -607,33 +611,62 @@ export function AdminApplicationDetail({ id }: { id: string }) {
 
         {app.complianceAnswers && app.complianceAnswers.length > 0 && (
           <div className="about-section-card">
-            <h3 className="mp-subtitle mp-subtitle-tight">Compliance e integridade</h3>
-            {app.complianceAnswers.map((a) => {
-              const q = COMPLIANCE_QUESTIONS.find((q) => q.key === a.key);
-              return (
-                <div key={a.key} style={{ marginBottom: 12 }}>
-                  <p style={{ marginBottom: 2 }}>
-                    <b>{q?.label ?? a.key}:</b> {a.answer === "yes" ? "Sim" : "Não"}
-                  </p>
-                  {a.explanation && <p style={{ marginTop: 0, color: "var(--fg-muted)" }}>{a.explanation}</p>}
-                  {a.documentSignedUrl && <a href={a.documentSignedUrl} target="_blank" rel="noreferrer">Ver anexo</a>}
-                </div>
-              );
-            })}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Compliance e integridade</h3>
+              <button type="button" className="btn btn-ghost" onClick={() => setEditingSection(editingSection === "compliance" ? null : "compliance")}>
+                {editingSection === "compliance" ? "Cancelar" : "Editar"}
+              </button>
+            </div>
+            {editingSection === "compliance" ? (
+              <ComplianceStep
+                initial={app.complianceAnswers}
+                onSave={adminFieldSave("complianceAnswers")}
+                onNext={() => { setEditingSection(null); load(); }}
+                submitLabel="Salvar alterações"
+              />
+            ) : (
+              app.complianceAnswers.map((a) => {
+                const q = COMPLIANCE_QUESTIONS.find((q) => q.key === a.key);
+                return (
+                  <div key={a.key} style={{ marginBottom: 12 }}>
+                    <p style={{ marginBottom: 2 }}>
+                      <b>{q?.label ?? a.key}:</b> {a.answer === "yes" ? "Sim" : "Não"}
+                    </p>
+                    {a.explanation && <p style={{ marginTop: 0, color: "var(--fg-muted)" }}>{a.explanation}</p>}
+                    {a.documentSignedUrl && <a href={a.documentSignedUrl} target="_blank" rel="noreferrer">Ver anexo</a>}
+                  </div>
+                );
+              })
+            )}
           </div>
         )}
 
         {app.documents && app.documents.length > 0 && (
           <div className="about-section-card">
-            <h3 className="mp-subtitle mp-subtitle-tight">Documentos enviados</h3>
-            <ul className="why-list about-why-list">
-              {app.documents.map((d) => (
-                <li key={d.key}>
-                  <b>{d.label}:</b>{" "}
-                  {d.url ? <a href={d.url} target="_blank" rel="noreferrer">{d.fileName || "ver arquivo"}</a> : "—"}
-                </li>
-              ))}
-            </ul>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Documentos enviados</h3>
+              <button type="button" className="btn btn-ghost" onClick={() => setEditingSection(editingSection === "documents" ? null : "documents")}>
+                {editingSection === "documents" ? "Cancelar" : "Editar"}
+              </button>
+            </div>
+            {editingSection === "documents" ? (
+              <DocumentsStep
+                entityType={c?.entityType ?? "br"}
+                initial={app.documents}
+                onSave={adminFieldSave("documents")}
+                onNext={() => { setEditingSection(null); load(); }}
+                submitLabel="Salvar alterações"
+              />
+            ) : (
+              <ul className="why-list about-why-list">
+                {app.documents.map((d) => (
+                  <li key={d.key}>
+                    <b>{d.label}:</b>{" "}
+                    {d.url ? <a href={d.url} target="_blank" rel="noreferrer">{d.fileName || "ver arquivo"}</a> : "—"}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 

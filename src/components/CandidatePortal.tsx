@@ -485,12 +485,16 @@ export function ProfileStep({
 // ---------------------------------------------------------------------------
 type ComplianceAnswerWithUrl = ComplianceAnswer & { documentSignedUrl?: string };
 
-function ComplianceStep({
+export function ComplianceStep({
   initial,
   onNext,
+  onSave = (data) => saveStep(4, data),
+  submitLabel,
 }: {
   initial: ComplianceAnswerWithUrl[] | null;
   onNext: () => void;
+  onSave?: StepSaveFn;
+  submitLabel?: string;
 }) {
   const [answers, setAnswers] = useState<Record<string, ComplianceAnswerWithUrl>>(() => {
     const map: Record<string, ComplianceAnswerWithUrl> = {};
@@ -510,7 +514,7 @@ function ComplianceStep({
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("saving");
-    const result = await saveStep(4, Object.values(answers));
+    const result = await onSave(Object.values(answers));
     if (!result.ok) {
       setError(result.error || "Não foi possível salvar.");
       setStatus("error");
@@ -554,7 +558,7 @@ function ComplianceStep({
       })}
       {status === "error" && <p className="form-note err">{error}</p>}
       <button type="submit" className="btn btn-primary" disabled={status === "saving"}>
-        {status === "saving" ? "Salvando…" : "Salvar e continuar"}
+        {status === "saving" ? "Salvando…" : submitLabel ?? "Salvar e continuar"}
       </button>
     </form>
   );
@@ -563,14 +567,18 @@ function ComplianceStep({
 // ---------------------------------------------------------------------------
 // Etapa 5 — Documentos
 // ---------------------------------------------------------------------------
-function DocumentsStep({
+export function DocumentsStep({
   entityType,
   initial,
   onNext,
+  onSave = (data) => saveStep(5, data),
+  submitLabel,
 }: {
   entityType: "br" | "foreign";
   initial: UploadedDoc[] | null;
   onNext: () => void;
+  onSave?: StepSaveFn;
+  submitLabel?: string;
 }) {
   const [docs, setDocs] = useState<Record<string, UploadedDoc>>(() => {
     const map: Record<string, UploadedDoc> = {};
@@ -581,7 +589,7 @@ function DocumentsStep({
 
   async function onContinue(e: React.FormEvent) {
     e.preventDefault();
-    await saveStep(5, Object.values(docs));
+    await onSave(Object.values(docs));
     onNext();
   }
 
@@ -602,7 +610,7 @@ function DocumentsStep({
         ))}
       </div>
       <button type="submit" className="btn btn-primary" style={{ marginTop: 20 }}>
-        Continuar
+        {submitLabel ?? "Continuar"}
       </button>
     </form>
   );

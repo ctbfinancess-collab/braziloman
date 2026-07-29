@@ -395,6 +395,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 }
 .gov-org-top { font-weight: 600; }
 .gov-org-main { font-weight: 600; border-color: var(--gold); }
+.gov-org-support { border-style: dashed; color: var(--fg-muted); font-size: 0.82rem; }
 .gov-org-line { width: 1px; height: 24px; background: var(--border-strong); }
 .gov-org-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 0; }
 

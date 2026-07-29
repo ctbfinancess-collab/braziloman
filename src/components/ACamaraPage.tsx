@@ -105,14 +105,22 @@ export function GovernancePage() {
 
         <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.structureTitle}</h2>
         <div className="gov-orgchart">
-          <div className="gov-org-node gov-org-top">Assembleia</div>
+          <div className="gov-org-node gov-org-top">Assembleia Geral</div>
           <div className="gov-org-line" />
           <div className="gov-org-node gov-org-main">Presidente</div>
           <div className="gov-org-line" />
           <div className="gov-org-row">
             <div className="gov-org-node">Vice-Presidente</div>
+            <div className="gov-org-node">VP de Relações Institucionais</div>
+            <div className="gov-org-node">VP de Comércio Exterior</div>
             <div className="gov-org-node">Diretoria Financeira</div>
-            <div className="gov-org-node">Conselho Consultivo</div>
+            <div className="gov-org-node">Secretário Executivo</div>
+          </div>
+          <div className="gov-org-line" />
+          <div className="gov-org-row">
+            <div className="gov-org-node gov-org-support">Conselho Fiscal</div>
+            <div className="gov-org-node gov-org-support">Conselho Consultivo Internacional</div>
+            <div className="gov-org-node gov-org-support">Assessoria Jurídica</div>
           </div>
         </div>
 

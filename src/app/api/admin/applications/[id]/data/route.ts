@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/adminAuth";
-import { personalDataSchema, companyDataSchema, businessProfileSchema } from "@/lib/candidateSchemas";
+import {
+  personalDataSchema,
+  companyDataSchema,
+  businessProfileSchema,
+  complianceAnswersSchema,
+  documentsSchema,
+} from "@/lib/candidateSchemas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,6 +16,8 @@ const FIELD_SCHEMAS = {
   personalData: personalDataSchema,
   companyData: companyDataSchema,
   businessProfile: businessProfileSchema,
+  complianceAnswers: complianceAnswersSchema,
+  documents: documentsSchema,
 } as const;
 
 type EditableField = keyof typeof FIELD_SCHEMAS;
