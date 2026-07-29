@@ -215,7 +215,7 @@ export function CompliancePage() {
               {doc.url ? (
                 <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Ler documento →</a>
               ) : (
-                <span className="compliance-doc-link compliance-doc-link-disabled">Em breve</span>
+                <span className="compliance-doc-link compliance-doc-link-disabled">Disponível em breve</span>
               )}
             </div>
           ))}
@@ -230,7 +230,7 @@ export function CompliancePage() {
           <Link href="/contato" className="btn btn-primary compliance-highlight-cta">{c.integrityChannelCta}</Link>
         </div>
 
-        <p className="mp-closing-quote" style={{ marginTop: 48 }}>{c.closingQuote}</p>
+        <p className="mp-closing-quote compliance-closing-quote" style={{ marginTop: 48 }}>{c.closingQuote}</p>
       </div>
     </section>
   );

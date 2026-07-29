@@ -1077,23 +1077,37 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .compliance-highlight-body { flex: 1 1 320px; }
 .compliance-highlight-body h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 1.05rem; margin: 0 0 6px; }
 .compliance-highlight-body p { color: var(--fg-muted); font-size: 0.92rem; margin: 0; line-height: 1.55; }
-.compliance-highlight-cta { flex: 0 0 auto; white-space: nowrap; }
+.compliance-highlight-cta { flex: 0 0 auto; white-space: nowrap; transition: background 200ms ease, transform 200ms ease; }
+.compliance-highlight-cta:hover { transform: translateY(-2px); }
+
+/* Canal de integridade: mais destaque (ícone/título maiores, mais respiro) */
+.compliance-integrity-banner { padding: 36px 40px; margin-top: 48px; }
+.compliance-integrity-banner .compliance-highlight-icon { width: 58px; height: 58px; }
+.compliance-integrity-banner .compliance-highlight-icon svg { width: 30px; height: 30px; }
+.compliance-integrity-banner .compliance-highlight-body h3 { font-size: 1.2rem; }
+.compliance-integrity-banner .compliance-highlight-body p { font-size: 0.96rem; }
 
 .compliance-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 28px 0; }
 .compliance-card {
   flex: 1 1 240px; max-width: 300px; text-align: center; padding: 28px 22px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+}
+.compliance-card:hover {
+  transform: translateY(-5px); box-shadow: 0 12px 28px rgba(26,20,8,0.1); border-color: var(--border-strong);
 }
 .compliance-card-icon {
   display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center;
   border-radius: 50%; background: rgba(150,116,52,0.1); color: var(--gold); margin-bottom: 14px;
+  transition: background 250ms ease, color 250ms ease, transform 250ms ease;
 }
 .compliance-card-icon svg { width: 22px; height: 22px; }
+.compliance-card:hover .compliance-card-icon { background: rgba(150,116,52,0.22); color: var(--gold-bright); transform: scale(1.08); }
 .compliance-card h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 0.98rem; margin: 0 0 8px; }
 .compliance-card p { color: var(--fg-muted); font-size: 0.86rem; margin: 0; line-height: 1.5; }
 
-.compliance-process-block { margin-top: 56px; padding: 40px 32px; background: var(--bg-2); border-radius: 8px; }
-.compliance-timeline { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-top: 28px; }
+.compliance-process-block { margin-top: 56px; padding: 44px 40px; background: #F7F2EA; border-radius: 12px; }
+.compliance-timeline { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px 28px; margin-top: 32px; }
 .compliance-timeline-step { flex: 1 1 160px; max-width: 190px; text-align: center; }
 .compliance-timeline-num {
   display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center;
@@ -1102,11 +1116,11 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 }
 .compliance-timeline-step h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 0.9rem; margin: 0 0 6px; }
 .compliance-timeline-step p { color: var(--fg-muted); font-size: 0.82rem; margin: 0; line-height: 1.5; }
-.compliance-process-note { text-align: center; color: var(--fg-dim); font-size: 0.82rem; font-style: italic; margin: 28px 0 0; }
+.compliance-process-note { text-align: center; color: var(--fg-muted); font-size: 0.86rem; font-style: normal; margin: 32px 0 0; line-height: 1.6; }
 
 .compliance-docs-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 28px 0; }
 .compliance-doc-card {
-  flex: 1 1 220px; max-width: 260px; padding: 22px 20px;
+  flex: 1 1 240px; max-width: 45%; padding: 22px 20px;
   background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
 }
 .compliance-doc-icon {
@@ -1120,6 +1134,15 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .compliance-doc-link:hover { text-decoration: underline; }
 .compliance-doc-link-disabled { color: var(--fg-dim); font-weight: 400; font-style: italic; }
 
+.compliance-closing-quote { font-size: 1.21rem; text-align: center; }
+
+@media (max-width: 1024px) {
+  .compliance-card { flex: 1 1 45%; max-width: 46%; }
+  .compliance-doc-card { flex: 1 1 45%; max-width: 46%; }
+}
+
 @media (max-width: 720px) {
   .compliance-highlight, .compliance-integrity-banner { flex-direction: column; text-align: center; }
+  .compliance-card { flex: 1 1 100%; max-width: 100%; }
+  .compliance-doc-card { flex: 1 1 100%; max-width: 100%; }
 }
