@@ -66,6 +66,12 @@ model MembershipApplication {
   membershipCategory String?
   annualContribution Int?
 
+  /// Resumo de triagem gerado por IA (Claude) a partir dos dados da candidatura —
+  /// apoia a análise humana, nunca decide sozinho. Gerado automaticamente no
+  /// envio final e pode ser atualizado manualmente pelo admin.
+  aiSummary            String?
+  aiSummaryGeneratedAt DateTime?
+
   @@index([status])
 }
 

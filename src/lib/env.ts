@@ -24,6 +24,9 @@ const schema = z.object({
   // Bucket privado (sem domínio público) para documentos sensíveis do Portal
   // do Candidato — acesso só via link assinado de curta duração.
   R2_DOCUMENTS_BUCKET: z.string().optional(),
+  // Resumo de compliance por IA (Claude). Sem a chave, o botão "Gerar resumo
+  // com IA" no admin apenas avisa que não está configurado.
+  ANTHROPIC_API_KEY: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -42,3 +45,4 @@ export const hasMedia = Boolean(
 export const hasDocumentStorage = Boolean(
   env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY && env.R2_DOCUMENTS_BUCKET
 );
+export const hasAiSummary = Boolean(env.ANTHROPIC_API_KEY);

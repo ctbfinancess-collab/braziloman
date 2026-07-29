@@ -201,6 +201,8 @@ type FullApplication = Application & {
   complianceNotes: string | null;
   membershipCategory: string | null;
   annualContribution: number | null;
+  aiSummary: string | null;
+  aiSummaryGeneratedAt: string | null;
 };
 
 const STATUS_OPTIONS: ApplicationStatus[] = [
@@ -231,6 +233,8 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [annualContribution, setAnnualContribution] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/admin/applications/${id}`);
@@ -280,6 +284,19 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     }
   }
 
+  async function onGenerateAiSummary() {
+    setAiLoading(true);
+    setAiError("");
+    const res = await fetch(`/api/admin/applications/${id}/ai-summary`, { method: "POST" });
+    const json = await res.json();
+    setAiLoading(false);
+    if (!res.ok) {
+      setAiError(json.error || "Não foi possível gerar o resumo.");
+      return;
+    }
+    await load();
+  }
+
   if (error) return <section className="section"><div className="container reveal"><p className="form-note err">{error}</p></div></section>;
   if (!app) return <section className="section"><div className="container reveal"><p className="section-lead">Carregando…</p></div></section>;
 
@@ -299,6 +316,30 @@ export function AdminApplicationDetail({ id }: { id: string }) {
           <Link href="/admin/associados" className="btn btn-ghost">Voltar à lista</Link>
         </div>
         <span className="about-flourish" aria-hidden="true" />
+
+        <div className="about-section-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+            <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 0 }}>Resumo de triagem (IA)</h3>
+            <button type="button" className="btn btn-ghost" onClick={onGenerateAiSummary} disabled={aiLoading}>
+              {aiLoading ? "Gerando…" : app.aiSummary ? "Regenerar resumo" : "Gerar resumo com IA"}
+            </button>
+          </div>
+          {aiError && <p className="form-note err">{aiError}</p>}
+          {app.aiSummary ? (
+            <>
+              <div style={{ whiteSpace: "pre-wrap", fontSize: "0.92rem", lineHeight: 1.6, marginTop: 10 }}>{app.aiSummary}</div>
+              {app.aiSummaryGeneratedAt && (
+                <p style={{ color: "var(--fg-dim)", fontSize: "0.78rem", marginTop: 10 }}>
+                  Gerado em {new Date(app.aiSummaryGeneratedAt).toLocaleString()} — é só um apoio à leitura, a decisão é sempre sua.
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="section-lead" style={{ margin: "10px 0 0" }}>
+              Nenhum resumo gerado ainda. Ele é criado automaticamente quando o candidato envia a candidatura completa, ou clique acima para gerar agora.
+            </p>
+          )}
+        </div>
 
         <div className="about-section-card">
           <h3 className="mp-subtitle mp-subtitle-tight">Ações rápidas</h3>

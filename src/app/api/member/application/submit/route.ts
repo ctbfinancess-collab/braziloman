@@ -14,6 +14,7 @@ import {
   type CompanyData,
 } from "@/lib/candidateSchemas";
 import { sendApplicationSubmittedEmail, sendNewSubmissionAdminEmail } from "@/lib/email";
+import { generateComplianceSummary, isAiSummaryEnabled } from "@/lib/aiCompliance";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -101,6 +102,25 @@ export async function POST(req: Request) {
     ]);
   } catch (err) {
     console.error("[application/submit] erro ao enviar e-mails:", err);
+  }
+
+  if (isAiSummaryEnabled()) {
+    try {
+      const summary = await generateComplianceSummary({
+        name: application.name,
+        company: application.company,
+        personalData: personal.success ? personal.data : null,
+        companyData: companyParsed.success ? companyParsed.data : null,
+        businessProfile: profile.success ? profile.data : null,
+        complianceAnswers: compliance.success ? compliance.data : null,
+      });
+      await prisma.membershipApplication.update({
+        where: { id: memberId },
+        data: { aiSummary: summary, aiSummaryGeneratedAt: new Date() },
+      });
+    } catch (err) {
+      console.error("[application/submit] erro ao gerar resumo de IA:", err);
+    }
   }
 
   return NextResponse.json({ ok: true });
