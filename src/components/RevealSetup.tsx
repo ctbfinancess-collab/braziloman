@@ -8,6 +8,10 @@ export default function RevealSetup() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // threshold precisa ser 0: com ratio > 0 a área visível é medida contra a
+    // altura TOTAL do alvo, e páginas longas (ex.: Governança, com várias fotos,
+    // passam de 10.000px) nunca atingem a fração exigida — o .reveal fica opacity:0
+    // para sempre. rootMargin recupera o efeito de só revelar perto do centro da tela.
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -17,7 +21,7 @@ export default function RevealSetup() {
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0, rootMargin: "0px 0px -12% 0px" }
     );
 
     const observeNew = () => {
