@@ -420,7 +420,9 @@ export function Ecosystem() {
         <div className="eco-grid">
           {e.companies.map((c) => (
             <article className="eco-card" key={c.h}>
-              <img className="eco-logo" src={c.logo} alt="" />
+              <span className={`eco-logo-wrap${c.logo.includes("logo-ctb-transparent") ? " eco-logo-wrap-dark" : ""}`}>
+                <img className="eco-logo" src={c.logo} alt="" />
+              </span>
               <div className="eco-card-body">
                 <span className="tag">{c.tag}</span>
                 <h3>{c.h}</h3>

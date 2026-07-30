@@ -409,7 +409,7 @@ export const content = {
         { logo: "/ecosystem/ctb-venture.png", tag: "Brasil", h: "CTBX Venture Investments S.A.", p: "Empresa brasileira focada em participações estratégicas, investimentos e desenvolvimento de negócios.", cta: "Saiba mais" },
         { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brasil", h: "Fundação Wahibi", p: "Organização sem fins lucrativos dedicada a projetos de educação, inovação, saúde, sustentabilidade e desenvolvimento humano.", cta: "Saiba mais", url: "https://fundacaowahibi.org/" },
         { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brasil", h: "CTB Câmara de Comércio Brasil–Omã", p: "Entidade que promove e fortalece as relações comerciais, econômicas e institucionais entre o Brasil e o Sultanato de Omã.", cta: "Saiba mais", url: "/a-camara" },
-        { logo: "/ecosystem/omanbrasil.png", tag: "Mascate – Omã", h: "OmanBrazil", p: "Hub de inteligência comercial que aproxima os mercados do Brasil e de Omã, promovendo estudos de mercado, conexões empresariais e projetos de comércio exterior e investimento.", cta: "Saiba mais", url: "https://www.omanbrazil.com/" },
+        { logo: "/ecosystem/omanbrasil-white.png", tag: "Mascate – Omã", h: "OmanBrazil", p: "Hub de inteligência comercial que aproxima os mercados do Brasil e de Omã, promovendo estudos de mercado, conexões empresariais e projetos de comércio exterior e investimento.", cta: "Saiba mais", url: "https://www.omanbrazil.com/" },
       ],
       solutionsEyebrow: "Soluções que entregamos",
       solutions: [
@@ -1247,7 +1247,7 @@ export const content = {
         { logo: "/ecosystem/ctb-venture.png", tag: "Brazil", h: "CTBX Venture Investments S.A.", p: "Brazilian company focused on strategic holdings, investment and business development.", cta: "Learn more" },
         { logo: "/ecosystem/fundacao-wahibi.png", tag: "Brasília – Brazil", h: "Wahibi Foundation", p: "Non-profit organization dedicated to education, innovation, health, sustainability and human development projects.", cta: "Learn more", url: "https://fundacaowahibi.org/" },
         { logo: "/logo-ctb-transparent.png", tag: "Brasília – Brazil", h: "CTB Brazil–Oman Chamber of Commerce", p: "Entity that promotes and strengthens commercial, economic and institutional relations between Brazil and the Sultanate of Oman.", cta: "Learn more", url: "/a-camara" },
-        { logo: "/ecosystem/omanbrasil.png", tag: "Muscat – Oman", h: "OmanBrazil", p: "A business intelligence hub connecting the Brazilian and Omani markets through market research, business matchmaking, and foreign trade and investment projects.", cta: "Learn more", url: "https://www.omanbrazil.com/" },
+        { logo: "/ecosystem/omanbrasil-white.png", tag: "Muscat – Oman", h: "OmanBrazil", p: "A business intelligence hub connecting the Brazilian and Omani markets through market research, business matchmaking, and foreign trade and investment projects.", cta: "Learn more", url: "https://www.omanbrazil.com/" },
       ],
       solutionsEyebrow: "Solutions we deliver",
       solutions: [
