@@ -38,6 +38,91 @@ async function saveStep(step: number, data: unknown): Promise<{ ok: boolean; err
   return { ok: true };
 }
 
+/** Converte o flatten() do Zod em uma mensagem legível, trocando as chaves em inglês pelo rótulo em PT do campo. */
+function formatIssues(issues: unknown, labels: Record<string, string>): string | null {
+  if (!issues || typeof issues !== "object") return null;
+  const flat = issues as { fieldErrors?: Record<string, string[]>; formErrors?: string[] };
+  const parts: string[] = [];
+  if (flat.fieldErrors) {
+    for (const [key, msgs] of Object.entries(flat.fieldErrors)) {
+      if (!msgs || msgs.length === 0) continue;
+      parts.push(`${labels[key] ?? key}: ${msgs[0]}`);
+    }
+  }
+  if (flat.formErrors?.length) parts.push(...flat.formErrors);
+  return parts.length ? parts.join(" · ") : null;
+}
+
+const PERSONAL_LABELS: Record<string, string> = {
+  fullName: "Nome completo",
+  nationality: "Nacionalidade",
+  birthDate: "Data de nascimento",
+  taxId: "CPF ou documento estrangeiro",
+  idDocument: "RG, CPF, passaporte ou documento de identidade",
+  role: "Cargo",
+  phone: "Telefone",
+  email: "E-mail",
+  address: "Endereço",
+  residenceCountry: "País de residência",
+  linkedin: "Currículo ou LinkedIn",
+  companyRelationship: "Vínculo com a empresa",
+  authorizedRepresentative: "Autorização de representação",
+};
+
+const COMPANY_LABELS: Record<string, string> = {
+  entityType: "Tipo de empresa",
+  legalName: "Razão social",
+  tradeName: "Nome comercial",
+  registrationNumber: "CNPJ ou registro estrangeiro",
+  foundingDate: "Data de constituição",
+  countryHQ: "País da sede",
+  cityHQ: "Cidade da sede",
+  address: "Endereço completo",
+  website: "Site",
+  phone: "Telefone",
+  institutionalEmail: "E-mail institucional",
+  legalNature: "Natureza jurídica",
+  shareCapital: "Capital social",
+  employeeCount: "Número de empregados",
+  sectors: "Setores de atuação",
+  productsServices: "Produtos e serviços",
+  countriesOfOperation: "Países onde opera",
+  affiliates: "Filiais e empresas relacionadas",
+  administrators: "Nome dos administradores",
+  shareholderStructure: "Quadro societário",
+  beneficialOwners: "Beneficiários finais",
+};
+
+const PROFILE_LABELS: Record<string, string> = {
+  annualRevenueRange: "Faturamento anual (faixa)",
+  mainMarkets: "Principais mercados",
+  importExportVolume: "Volume de importação/exportação",
+  tradedProducts: "Produtos comercializados",
+  interestInBrazil: "Interesse no Brasil",
+  interestInOman: "Interesse em Omã",
+  sectorsOfInterest: "Setores de interesse",
+  membershipGoal: "Objetivo da associação",
+  partnershipType: "Tipo de parceria procurada",
+  investmentIntention: "Intenção de investimento",
+  expectationFromChamber: "Expectativa em relação à Câmara",
+  estimatedTimeline: "Prazo estimado para iniciar operações",
+  estimatedProjectValue: "Valor estimado do projeto",
+  mainDifficulties: "Principais dificuldades encontradas",
+};
+
+const DECLARATION_LABELS: Record<string, string> = {
+  confirmTruthfulInfo: "Declaração: informações verdadeiras",
+  confirmAuthorized: "Declaração: autorização para representar a empresa",
+  confirmWillUpdate: "Declaração: comunicar mudanças cadastrais",
+  acceptsIntegrityChecks: "Declaração: verificações de integridade",
+  acceptsDataProcessing: "Declaração: tratamento de dados",
+  knowsCodeOfEthics: "Declaração: código de ética",
+  acceptsStatute: "Declaração: estatuto e regras",
+  understandsDecision: "Declaração: entendimento sobre a decisão",
+  signatureName: "Nome (assinatura eletrônica)",
+  signatureRole: "Cargo",
+};
+
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="wiz-field">
@@ -163,11 +248,14 @@ export function PersonalStep({
   onSave?: StepSaveFn;
   submitLabel?: string;
 }) {
-  const [data, setData] = useState<Partial<PersonalData>>(initial ?? {});
+  type PersonalFormState = Partial<Omit<PersonalData, "authorizedRepresentative">> & {
+    authorizedRepresentative?: boolean;
+  };
+  const [data, setData] = useState<PersonalFormState>(initial ?? {});
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState("");
 
-  function set<K extends keyof PersonalData>(key: K, value: PersonalData[K]) {
+  function set<K extends keyof PersonalFormState>(key: K, value: PersonalFormState[K]) {
     setData((d) => ({ ...d, [key]: value }));
   }
 
@@ -176,7 +264,7 @@ export function PersonalStep({
     setStatus("saving");
     const result = await onSave({ ...data, authorizedRepresentative: Boolean(data.authorizedRepresentative) });
     if (!result.ok) {
-      setError(result.error || "Não foi possível salvar. Confira os campos.");
+      setError(formatIssues(result.issues, PERSONAL_LABELS) || result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
       return;
     }
@@ -199,7 +287,7 @@ export function PersonalStep({
         <Field label="CPF ou documento estrangeiro">
           <input required value={data.taxId ?? ""} onChange={(e) => set("taxId", e.target.value)} />
         </Field>
-        <Field label="RG, passaporte ou Emirates ID">
+        <Field label="RG, CPF, passaporte ou documento de identidade">
           <input required value={data.idDocument ?? ""} onChange={(e) => set("idDocument", e.target.value)} />
         </Field>
         <Field label="Cargo">
@@ -269,7 +357,7 @@ export function CompanyStep({
     setStatus("saving");
     const result = await onSave(data);
     if (!result.ok) {
-      setError(result.error || "Não foi possível salvar. Confira os campos.");
+      setError(formatIssues(result.issues, COMPANY_LABELS) || result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
       return;
     }
@@ -404,7 +492,7 @@ export function ProfileStep({
     }
     const result = await onSave(payload);
     if (!result.ok) {
-      setError(result.error || "Não foi possível salvar. Confira os campos.");
+      setError(formatIssues(result.issues, PROFILE_LABELS) || result.error || "Não foi possível salvar. Confira os campos.");
       setStatus("error");
       return;
     }
@@ -646,7 +734,11 @@ function DeclarationsStep({ initial, onNext }: { initial: Record<string, unknown
     setStatus("saving");
     const result = await saveStep(6, { ...checks, signatureName, signatureRole });
     if (!result.ok) {
-      setError(result.error || "Confirme todos os itens e informe seu nome e cargo.");
+      setError(
+        formatIssues(result.issues, DECLARATION_LABELS) ||
+          result.error ||
+          "Confirme todos os itens e informe seu nome e cargo."
+      );
       setStatus("error");
       return;
     }

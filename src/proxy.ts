@@ -14,7 +14,11 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/admin/associados") || pathname.startsWith("/admin/conteudo")) {
+  if (
+    pathname.startsWith("/admin/associados") ||
+    pathname.startsWith("/admin/conteudo") ||
+    pathname.startsWith("/admin/mensagens")
+  ) {
     const token = req.cookies.get(ADMIN_COOKIE)?.value;
     const session = token ? await verifyAdminSession(token) : null;
     if (!session) {
@@ -28,5 +32,10 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/membro/painel/:path*", "/admin/associados/:path*", "/admin/conteudo/:path*"],
+  matcher: [
+    "/membro/painel/:path*",
+    "/admin/associados/:path*",
+    "/admin/conteudo/:path*",
+    "/admin/mensagens/:path*",
+  ],
 };

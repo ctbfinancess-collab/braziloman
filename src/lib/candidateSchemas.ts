@@ -20,7 +20,10 @@ export const personalDataSchema = z.object({
   residenceCountry: z.string().trim().min(1).max(80),
   linkedin: z.string().trim().max(300).optional().or(z.literal("")),
   companyRelationship: z.string().trim().min(1).max(200),
-  authorizedRepresentative: z.boolean(),
+  authorizedRepresentative: z.literal(
+    true,
+    "Você precisa confirmar que está autorizado(a) a representar a empresa."
+  ),
 });
 export type PersonalData = z.infer<typeof personalDataSchema>;
 

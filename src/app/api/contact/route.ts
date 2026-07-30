@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
 import { prisma } from "@/lib/prisma";
+import { sendNewContactMessageEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,6 +69,17 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[contact] erro ao salvar:", err);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
+
+  try {
+    await sendNewContactMessageEmail({
+      name: data.name,
+      email: data.email,
+      company: data.company,
+      message: data.message,
+    });
+  } catch (err) {
+    console.error("[contact] erro ao enviar e-mail de notificação:", err);
   }
 
   return NextResponse.json({ ok: true }, { status: 201 });

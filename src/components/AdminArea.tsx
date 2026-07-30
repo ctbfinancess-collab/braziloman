@@ -150,6 +150,7 @@ export function AdminApplicationsList() {
             <h1 className="section-title" style={{ marginBottom: 0 }}>Pedidos de Associação</h1>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
+            <Link href="/admin/mensagens" className="btn btn-ghost">Mensagens de contato</Link>
             <Link href="/admin/conteudo" className="btn btn-ghost">Conteúdo do site</Link>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>
@@ -185,6 +186,76 @@ export function AdminApplicationsList() {
               {a.message && <p><b>Mensagem:</b> {a.message}</p>}
               <p style={{ color: "var(--fg-dim)", fontSize: "0.82rem" }}>
                 Enviado em {new Date(a.createdAt).toLocaleString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  company: string | null;
+  message: string;
+  createdAt: string;
+};
+
+export function AdminContactMessagesList() {
+  const [messages, setMessages] = useState<ContactMessage[] | null>(null);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const load = useCallback(async () => {
+    const res = await fetch("/api/admin/contact-messages");
+    if (res.status === 401) {
+      router.push("/admin/login");
+      return;
+    }
+    const json = await res.json();
+    if (!res.ok) {
+      setError(json.error || "Erro ao carregar.");
+      return;
+    }
+    setMessages(json.messages);
+  }, [router]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return (
+    <section className="section">
+      <div className="container reveal">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <p className="section-eyebrow">Administração</p>
+            <h1 className="section-title" style={{ marginBottom: 0 }}>Mensagens de Contato</h1>
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
+          </div>
+        </div>
+        <span className="about-flourish" aria-hidden="true" />
+
+        {error && <p className="form-note err">{error}</p>}
+        {!messages && !error && <p className="section-lead">Carregando…</p>}
+        {messages && messages.length === 0 && (
+          <p className="section-lead">Nenhuma mensagem recebida ainda.</p>
+        )}
+
+        <div style={{ display: "grid", gap: 20 }}>
+          {messages?.map((m) => (
+            <div key={m.id} className="about-section-card">
+              <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 4 }}>{m.name}</h3>
+              <p><b>E-mail:</b> {m.email}</p>
+              {m.company && <p><b>Empresa:</b> {m.company}</p>}
+              <p style={{ whiteSpace: "pre-wrap" }}><b>Mensagem:</b> {m.message}</p>
+              <p style={{ color: "var(--fg-dim)", fontSize: "0.82rem" }}>
+                Enviado em {new Date(m.createdAt).toLocaleString()}
               </p>
             </div>
           ))}

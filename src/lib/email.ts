@@ -166,6 +166,30 @@ export async function sendApplicationSubmittedEmail(to: string, name: string) {
   });
 }
 
+/** E-mail: aviso interno quando alguém envia o formulário de contato do site. */
+export async function sendNewContactMessageEmail(data: {
+  name: string;
+  email: string;
+  company?: string | null;
+  message: string;
+}) {
+  if (!resend) return;
+  const html = layout(
+    "Nova mensagem recebida pelo formulário de contato.",
+    `${heading("Nova mensagem de contato")}
+     ${paragraph(`<strong>${data.name}</strong> (${data.email}${data.company ? `, ${data.company}` : ""}) enviou uma mensagem pelo site:`)}
+     <div style="background:#efece3; border-left:3px solid #96712c; padding:14px 18px; margin:0 0 20px; font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.6; white-space:pre-wrap;">${data.message}</div>
+     ${button("Ver mensagens no painel", `${SITE_URL}/admin/mensagens`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    replyTo: data.email,
+    subject: `Nova mensagem de contato: ${data.name}`,
+    html,
+  });
+}
+
 /** E-mail: aviso interno quando um candidato conclui o envio do Portal do Candidato. */
 export async function sendNewSubmissionAdminEmail(data: { name: string; email: string; company: string }) {
   if (!resend) return;
