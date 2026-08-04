@@ -34,6 +34,26 @@ function GovCard({ person }: { person: GovPerson }) {
   );
 }
 
+const COMMITTEE_ICONS = ["swap", "trending", "leaf", "shieldcheck", "globetech", "scale"];
+
+function OrgNode({
+  icon,
+  label,
+  variant,
+}: {
+  icon: string;
+  label: string;
+  variant?: "top" | "main" | "support";
+}) {
+  const cls = ["gov-org-node", variant ? `gov-org-${variant}` : ""].filter(Boolean).join(" ");
+  return (
+    <div className={cls}>
+      <span className="gov-org-node-icon" aria-hidden="true"><Icon name={icon} /></span>
+      <span>{label}</span>
+    </div>
+  );
+}
+
 export function ACamaraTabs({ active }: { active: string }) {
   const { d } = useI18n();
   const t = d.acamaraPage.tabs;
@@ -98,30 +118,35 @@ export function GovernancePage() {
 
         <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.committeesTitle}</h2>
         <p className="partnership-block-lead">{g.committeesLead}</p>
-        <div className="cp-chips">
-          {g.committees.map((c) => (
-            <span className="cp-chip" key={c}>{c}</span>
+        <div className="gov-committee-grid">
+          {g.committees.map((c, i) => (
+            <div className="gov-committee-card" key={c}>
+              <span className="gov-committee-icon" aria-hidden="true">
+                <Icon name={COMMITTEE_ICONS[i % COMMITTEE_ICONS.length]} />
+              </span>
+              <span>{c}</span>
+            </div>
           ))}
         </div>
 
         <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{g.structureTitle}</h2>
         <div className="gov-orgchart">
-          <div className="gov-org-node gov-org-top">Assembleia Geral</div>
+          <OrgNode icon="people" label="Assembleia Geral" variant="top" />
           <div className="gov-org-line" />
-          <div className="gov-org-node gov-org-main">Presidente</div>
+          <OrgNode icon="seal" label="Presidente" variant="main" />
           <div className="gov-org-line" />
-          <div className="gov-org-row">
-            <div className="gov-org-node">Vice-Presidente</div>
-            <div className="gov-org-node">VP de Relações Institucionais</div>
-            <div className="gov-org-node">VP de Comércio Exterior</div>
-            <div className="gov-org-node">Diretoria Financeira</div>
-            <div className="gov-org-node">Secretário Executivo</div>
+          <div className="gov-org-tier">
+            <OrgNode icon="handshake" label="Vice-Presidente" />
+            <OrgNode icon="globe" label="VP de Relações Institucionais" />
+            <OrgNode icon="swap" label="VP de Comércio Exterior" />
+            <OrgNode icon="bank" label="Diretoria Financeira" />
+            <OrgNode icon="briefcase" label="Secretário Executivo" />
           </div>
           <div className="gov-org-line" />
-          <div className="gov-org-row">
-            <div className="gov-org-node gov-org-support">Conselho Fiscal</div>
-            <div className="gov-org-node gov-org-support">Conselho Consultivo Internacional</div>
-            <div className="gov-org-node gov-org-support">Assessoria Jurídica</div>
+          <div className="gov-org-tier">
+            <OrgNode icon="scale" label="Conselho Fiscal" variant="support" />
+            <OrgNode icon="network" label="Conselho Consultivo Internacional" variant="support" />
+            <OrgNode icon="shieldcheck" label="Assessoria Jurídica" variant="support" />
           </div>
         </div>
 
