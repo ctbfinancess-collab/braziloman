@@ -1197,3 +1197,9 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 @media (max-width: 700px) {
   .statute-record-signatories { grid-template-columns: 1fr; }
 }
+
+/* Documentos de política (Código de Ética, Compliance, Admissão, AML/KYC) */
+.policy-doc-body { margin-top: 40px; display: flex; flex-direction: column; gap: 28px; }
+.policy-doc-section h2 { font-family: var(--font-display); color: var(--gold-light); font-size: 1.05rem; margin: 0 0 10px; }
+.policy-doc-section p { color: var(--fg-muted); font-size: 0.96rem; line-height: 1.75; margin: 0; }
+.policy-doc-footer { text-align: center; color: var(--fg-dim); font-size: 0.82rem; margin-top: 40px; font-style: italic; }

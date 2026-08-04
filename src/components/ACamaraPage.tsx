@@ -255,7 +255,11 @@ export function CompliancePage() {
               <h3>{doc.h}</h3>
               <p>{doc.p}</p>
               {doc.url ? (
-                <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Ler documento →</a>
+                doc.url.startsWith("/") ? (
+                  <Link href={doc.url} className="compliance-doc-link">Ler documento →</Link>
+                ) : (
+                  <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Ler documento →</a>
+                )
               ) : (
                 <span className="compliance-doc-link compliance-doc-link-disabled">Disponível em breve</span>
               )}
@@ -333,6 +337,35 @@ export function TransparencyPage() {
           </div>
           <Link href="/contato" className="btn btn-primary compliance-highlight-cta">{t.requestCta} →</Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+type PolicyDocKey = "codeOfEthics" | "complianceProgram" | "admissionPolicy" | "amlKyc";
+
+export function PolicyDocumentPage({ docKey }: { docKey: PolicyDocKey }) {
+  const { d } = useI18n();
+  const doc = d.acamaraPage.policyDocuments[docKey];
+  return (
+    <section className="section">
+      <div className="container reveal" style={{ maxWidth: 820 }}>
+        <p className="section-eyebrow center">A Câmara · Compliance</p>
+        <h1 className="section-title center">{doc.title}</h1>
+        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+        <p className="section-lead mp-lead-center">{doc.intro}</p>
+        <div className="policy-doc-body">
+          {doc.sections.map((s, i) => (
+            <div className="policy-doc-section" key={s.h}>
+              <h2>{i + 1}. {s.h}</h2>
+              <p>{s.p}</p>
+            </div>
+          ))}
+        </div>
+        <p className="policy-doc-footer">{doc.footer}</p>
+        <p style={{ textAlign: "center", marginTop: 24 }}>
+          <Link href="/a-camara/compliance" className="btn btn-ghost">← Voltar para Compliance</Link>
+        </p>
       </div>
     </section>
   );
