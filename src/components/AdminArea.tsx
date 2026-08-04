@@ -293,6 +293,17 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
   "SUSPENDED",
 ];
 
+function renderPeopleList(rows: { name: string; [key: string]: unknown }[] | undefined, fields: string[]): React.ReactNode {
+  if (!rows || rows.length === 0) return null;
+  return (
+    <ul className="why-list about-why-list">
+      {rows.map((r, i) => (
+        <li key={i}>{[r.name, ...fields.map((f) => r[f]).filter(Boolean)].join(" — ")}</li>
+      ))}
+    </ul>
+  );
+}
+
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   if (!value) return null;
   return <p><b>{label}:</b> {value}</p>;
@@ -593,13 +604,15 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                 <Row label="Data de nascimento" value={p.birthDate} />
                 <Row label="CPF/documento" value={p.taxId} />
                 <Row label="RG/passaporte/Emirates ID" value={p.idDocument} />
-                <Row label="Cargo" value={p.role} />
+                <Row label="Cargo / Relação com a empresa" value={p.role} />
                 <Row label="Telefone" value={p.phone} />
+                <Row label="WhatsApp" value={p.whatsapp} />
                 <Row label="E-mail" value={p.email} />
                 <Row label="Endereço" value={p.address} />
                 <Row label="País de residência" value={p.residenceCountry} />
                 <Row label="LinkedIn/currículo" value={p.linkedin} />
-                <Row label="Vínculo com a empresa" value={p.companyRelationship} />
+                <Row label="Já possui relacionamento com Omã" value={p.hasOmanRelationship ? `Sim — ${p.omanRelationshipWho ?? ""}` : "Não"} />
+                <Row label="Indicado por" value={p.referredBy} />
                 <Row label="Autorizado a representar" value={p.authorizedRepresentative ? "Sim" : "Não"} />
               </>
             )}
@@ -640,9 +653,12 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                 <Row label="Produtos e serviços" value={c.productsServices} />
                 <Row label="Países onde opera" value={c.countriesOfOperation} />
                 <Row label="Filiais" value={c.affiliates} />
-                <Row label="Administradores" value={c.administrators} />
-                <Row label="Quadro societário" value={c.shareholderStructure} />
-                <Row label="Beneficiários finais" value={c.beneficialOwners} />
+                <Row label="Administradores" value={renderPeopleList(c.administrators, ["document", "role"])} />
+                <Row label="Quadro societário" value={renderPeopleList(c.shareholderStructure, ["stake", "nationality"])} />
+                <Row label="Beneficiários finais" value={renderPeopleList(c.beneficialOwners, ["stake", "relatedCompany"])} />
+                <Row label="Grupo econômico" value={c.belongsToEconomicGroup ? (c.economicGroupName as string) || "Sim" : undefined} />
+                <Row label="Certificações" value={(c.certificationTypes as string[] | undefined)?.join(", ")} />
+                <Row label="Receita anual consolidada" value={c.consolidatedAnnualRevenueRange ? `${c.consolidatedAnnualRevenueRange} (${c.revenueCurrency ?? ""})` : undefined} />
               </>
             )}
           </div>
@@ -668,13 +684,19 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                 <Row label="Faturamento anual" value={b.annualRevenueRange} />
                 <Row label="Principais mercados" value={b.mainMarkets as string} />
                 <Row label="Interesse no Brasil" value={b.interestInBrazil} />
-                <Row label="Interesse em Omã" value={b.interestInOman} />
+                <Row label="O que pretende fazer em Omã" value={b.omanProjectDescription as string} />
                 <Row label="Objetivo da associação" value={b.membershipGoal} />
-                <Row label="Expectativa em relação à Câmara" value={b.expectationFromChamber} />
+                <Row label="O que faria a associação ser um sucesso" value={b.expectationFromChamber} />
+                <Row label="Categorias de produto" value={(b.productCategories as string[] | undefined)?.join(", ")} />
+                <Row label="Descrição do produto" value={b.productDescription as string} />
+                <Row label="Objetivo principal na Câmara" value={(b.mainGoals as string[] | undefined)?.join(", ")} />
+                <Row label="Mercado-alvo" value={(b.targetMarkets as string[] | undefined)?.join(", ")} />
                 <Row label="Já exporta/importa" value={b.exportsOrImports ? "Sim" : "Não"} />
                 <Row label="Precisa de financiamento" value={b.needsFinancing ? "Sim" : "Não"} />
                 <Row label="Pretende abrir filial" value={b.plansToOpenBranch ? "Sim" : "Não"} />
-                <Row label="Principais dificuldades" value={b.mainDifficulties as string} />
+                <Row label="Desafios esperados" value={(b.expectedChallenges as string[] | undefined)?.join(", ")} />
+                <Row label="Áreas de apoio esperado" value={(b.chamberSupportAreas as string[] | undefined)?.join(", ")} />
+                <Row label="Outras dificuldades" value={b.mainDifficulties as string} />
               </>
             )}
           </div>

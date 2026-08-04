@@ -34,28 +34,38 @@ export async function generateComplianceSummary(app: ApplicationForSummary): Pro
   const answeredCompliance = (app.complianceAnswers ?? [])
     .map((a) => {
       const q = COMPLIANCE_QUESTIONS.find((q) => q.key === a.key);
-      return `- ${q?.label ?? a.key}: ${a.answer === "yes" ? "SIM" : "Não"}${a.explanation ? ` — explicação: ${a.explanation}` : ""}`;
+      const extra = a.selectedOptions?.length ? ` — selecionado: ${a.selectedOptions.join(", ")}` : "";
+      return `- ${q?.label ?? a.key}: ${a.answer === "yes" ? "SIM" : "Não"}${a.explanation ? ` — explicação: ${a.explanation}` : ""}${extra}`;
     })
     .join("\n");
+
+  const shareholders = (app.companyData?.shareholderStructure ?? [])
+    .map((s) => `${s.name}${s.stake ? ` (${s.stake})` : ""}`)
+    .join("; ");
+  const beneficialOwners = (app.companyData?.beneficialOwners ?? [])
+    .map((b) => `${b.name}${b.hasRelatedCompany ? ` (vínculo com ${b.relatedCompany || "outra empresa"})` : ""}`)
+    .join("; ");
 
   const prompt = `Você é um assistente de apoio à análise de compliance de uma câmara de comércio bilateral (Brasil-Omã). NÃO tome decisões — apenas organize e destaque pontos de atenção para um analista humano revisar. Seja objetivo e conciso.
 
 Dados do candidato:
 - Nome: ${app.name}
 - Empresa: ${app.company}
-- Cargo/vínculo: ${app.personalData?.role ?? "—"} / ${app.personalData?.companyRelationship ?? "—"}
+- Cargo/relação com a empresa: ${app.personalData?.role ?? "—"}
 - Nacionalidade: ${app.personalData?.nationality ?? "—"}
 
 Dados da empresa:
 - Tipo: ${app.companyData?.entityType === "foreign" ? "estrangeira" : "brasileira"}
 - Setores: ${app.companyData?.sectors ?? "—"}
-- Quadro societário: ${app.companyData?.shareholderStructure ?? "—"}
-- Beneficiários finais: ${app.companyData?.beneficialOwners ?? "—"}
+- Quadro societário: ${shareholders || "—"}
+- Beneficiários finais: ${beneficialOwners || "—"}
+- Grupo econômico: ${app.companyData?.belongsToEconomicGroup ? (app.companyData?.economicGroupName || "sim") : "não"}
 
 Perfil comercial:
 - Objetivo da associação: ${app.businessProfile?.membershipGoal ?? "—"}
 - Interesse no Brasil: ${app.businessProfile?.interestInBrazil ?? "—"}
-- Interesse em Omã: ${app.businessProfile?.interestInOman ?? "—"}
+- O que pretende fazer em Omã: ${app.businessProfile?.omanProjectDescription ?? "—"}
+- Categorias de produto: ${(app.businessProfile?.productCategories as string[] | undefined)?.join(", ") ?? "—"}
 
 Respostas de compliance e integridade:
 ${answeredCompliance || "Nenhuma resposta registrada."}

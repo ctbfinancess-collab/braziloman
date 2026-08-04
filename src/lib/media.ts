@@ -28,6 +28,10 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
 const ALLOWED_DOCUMENT_TYPES: Record<string, string> = {
   ...ALLOWED_IMAGE_TYPES,
   "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "application/zip": "zip",
+  "application/x-zip-compressed": "zip",
 };
 
 export function isMediaEnabled() {
