@@ -1181,3 +1181,19 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   border-radius: 50%; background: rgba(150,116,52,0.1);
 }
 .transparency-pub-card .compliance-doc-link-disabled { display: inline-block; margin-top: 4px; }
+
+/* Estatuto: registro de atas */
+.statute-records { display: flex; flex-direction: column; gap: 20px; max-width: 760px; margin: 24px auto 0; }
+.statute-record-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px 30px; }
+.statute-record-date {
+  display: inline-block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); background: rgba(150, 116, 52, 0.12); border-radius: 20px; padding: 5px 14px; margin-bottom: 14px;
+}
+.statute-record-card h3 { font-family: var(--font-display); color: var(--gold-light); font-size: 1.1rem; margin: 0 0 10px; }
+.statute-record-card > p { color: var(--fg-muted); font-size: 0.92rem; line-height: 1.65; margin: 0 0 18px; }
+.statute-record-signatories { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 7px 20px; }
+.statute-record-signatories li { color: var(--fg-dim); font-size: 0.84rem; padding-left: 14px; position: relative; }
+.statute-record-signatories li::before { content: "•"; position: absolute; left: 0; color: var(--gold); }
+@media (max-width: 700px) {
+  .statute-record-signatories { grid-template-columns: 1fr; }
+}

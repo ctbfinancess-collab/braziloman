@@ -167,6 +167,23 @@ export function StatutePage() {
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{s.lead}</p>
         <p className="partnership-block-lead" style={{ textAlign: "center" }}>{s.note}</p>
+
+        <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{s.recordsTitle}</h2>
+        <p className="section-lead mp-lead-center">{s.recordsLead}</p>
+        <div className="statute-records">
+          {s.records.map((r) => (
+            <div className="statute-record-card" key={r.title}>
+              <span className="statute-record-date">{r.date}</span>
+              <h3>{r.title}</h3>
+              <p>{r.body}</p>
+              <ul className="statute-record-signatories">
+                {r.signatories.map((sig) => (
+                  <li key={sig}>{sig}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
