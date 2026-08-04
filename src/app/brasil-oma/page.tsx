@@ -4,7 +4,7 @@ import { Countries, Partnership, InstitutionalVideo } from "@/components/Section
 export const metadata: Metadata = {
   title: "Brasil & Omã",
   description:
-    "Duas economias complementares: Brasil e Omã. Fluxos comerciais, sinergia estratégica e o vídeo institucional da CTB.",
+    "Duas economias complementares: Brasil e Omã. Fluxos comerciais, sinergia estratégica e o vídeo institucional da Câmara.",
 };
 
 export default function BrasilOmaPage() {

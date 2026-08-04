@@ -23,13 +23,12 @@ export default function Footer() {
             <div className="footer-brand">
               <Image
                 src="/logo-ctb-transparent.png"
-                alt="Selo CTB"
+                alt="Selo da Câmara de Comércio Brasil–Omã"
                 width={52}
                 height={52}
               />
               <div>
-                <strong>CTB</strong>
-                <p>{d.footer.tagline}</p>
+                <strong>{d.footer.tagline}</strong>
               </div>
             </div>
             <p style={{ color: "var(--footer-muted)", fontSize: "0.88rem", marginTop: 18, maxWidth: 320 }}>
@@ -53,7 +52,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© 2026 CTB — Câmara de Comércio Brasil–Omã. {d.footer.rights}</span>
+          <span>© 2026 Câmara de Comércio Brasil–Omã. {d.footer.rights}</span>
           <span>“União e Prosperidade”</span>
         </div>
       </div>

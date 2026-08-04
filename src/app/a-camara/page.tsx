@@ -5,7 +5,7 @@ import { ACamaraTabs } from "@/components/ACamaraPage";
 export const metadata: Metadata = {
   title: "A Câmara",
   description:
-    "Conheça a CTB — Câmara de Comércio Brasil–Omã: missão, princípios e governança de uma associação civil sem fins lucrativos.",
+    "Conheça a Câmara de Comércio Brasil–Omã: missão, princípios e governança de uma associação civil sem fins lucrativos.",
 };
 
 export default function ACamaraPage() {

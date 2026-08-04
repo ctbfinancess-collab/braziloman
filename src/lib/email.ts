@@ -17,7 +17,7 @@ function layout(previewText: string, bodyHtml: string): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CTB — Câmara de Comércio Brasil–Omã</title>
+    <title>Câmara de Comércio Brasil–Omã</title>
   </head>
   <body style="margin:0; padding:0; background-color:#efece3; font-family: Georgia, 'Times New Roman', serif;">
     <div style="display:none; max-height:0; overflow:hidden; opacity:0;">${previewText}</div>
@@ -27,9 +27,8 @@ function layout(previewText: string, bodyHtml: string): string {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background-color:#f5f2eb; border:1px solid rgba(150,116,52,0.28);">
             <tr>
               <td style="background-color:#1a1408; padding: 28px 36px; text-align:center;">
-                <img src="${SITE_URL}/logo-ctb-transparent.png" width="84" height="84" alt="CTB" style="display:block; margin: 0 auto 12px;" />
-                <div style="font-family: Georgia, serif; letter-spacing: 0.14em; color:#c19a4b; font-size: 18px; font-weight:bold;">CTB</div>
-                <div style="font-family: Arial, sans-serif; letter-spacing: 0.08em; color:#f0e2b8; font-size: 11px; text-transform: uppercase; margin-top: 4px;">
+                <img src="${SITE_URL}/logo-ctb-transparent.png" width="84" height="84" alt="Câmara de Comércio Brasil–Omã" style="display:block; margin: 0 auto 12px;" />
+                <div style="font-family: Georgia, serif; letter-spacing: 0.02em; color:#c19a4b; font-size: 16px; font-weight:bold;">
                   Câmara de Comércio Brasil–Omã
                 </div>
               </td>
@@ -86,7 +85,7 @@ export async function sendApplicationReceivedEmail(to: string, name: string) {
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Recebemos sua manifestação de interesse — CTB",
+    subject: "Recebemos sua manifestação de interesse — Câmara Brasil–Omã",
     html,
   });
 }
@@ -134,7 +133,7 @@ export async function sendNewApplicationAdminEmail(data: {
 export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string) {
   if (!resend) return;
   const html = layout(
-    "Redefinição de senha — Área do Membro CTB.",
+    "Redefinição de senha — Área do Membro.",
     `${heading(`Olá, ${name}!`)}
      ${paragraph("Recebemos um pedido para redefinir a senha da sua conta na Área do Membro. Clique no botão abaixo para criar uma nova senha.")}
      ${button("Redefinir minha senha", resetUrl)}
@@ -143,7 +142,7 @@ export async function sendPasswordResetEmail(to: string, name: string, resetUrl:
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Redefinição de senha — CTB",
+    subject: "Redefinição de senha — Câmara Brasil–Omã",
     html,
   });
 }
@@ -161,7 +160,7 @@ export async function sendApplicationSubmittedEmail(to: string, name: string) {
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Recebemos sua documentação — CTB",
+    subject: "Recebemos sua documentação — Câmara Brasil–Omã",
     html,
   });
 }
@@ -220,7 +219,7 @@ export async function sendInfoRequestedEmail(to: string, name: string, notes: st
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Precisamos de mais informações — CTB",
+    subject: "Precisamos de mais informações — Câmara Brasil–Omã",
     html,
   });
 }
@@ -238,7 +237,7 @@ export async function sendApprovedPendingPaymentEmail(to: string, name: string, 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Candidatura aprovada — CTB",
+    subject: "Candidatura aprovada — Câmara Brasil–Omã",
     html,
   });
 }
@@ -247,7 +246,7 @@ export async function sendApprovedPendingPaymentEmail(to: string, name: string, 
 export async function sendWelcomeEmail(to: string, name: string) {
   if (!resend) return;
   const html = layout(
-    "Sua associação foi aprovada — bem-vindo(a) à CTB.",
+    "Sua associação foi aprovada — bem-vindo(a) à Câmara.",
     `${heading(`Bem-vindo(a), ${name}!`)}
      ${paragraph("É com grande satisfação que confirmamos: sua associação à <strong>Câmara de Comércio Brasil–Omã</strong> foi aprovada.")}
      ${paragraph("A partir de agora você faz parte de uma rede dedicada a fortalecer as relações comerciais, institucionais e culturais entre o Brasil e o Omã. Acesse a Área do Membro para ver os detalhes da sua associação.")}

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================
-   CTB — Câmara de Comércio Brasil–Omã
+   Câmara de Comércio Brasil–Omã
    Design system: preto & dourado (black & gold), premium/institucional
    ============================================================ */
 
@@ -137,9 +137,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand-logo { width: 68px; height: 68px; object-fit: contain; }
-.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-.brand-text strong { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.14em; color: var(--gold-light); }
-.brand-text small { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-dim); }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; max-width: 220px; }
+.brand-text strong { font-family: var(--font-display); font-size: 0.98rem; letter-spacing: 0.01em; color: var(--gold-light); font-weight: 600; }
 
 .nav { display: flex; align-items: center; gap: 20px; }
 .nav a { font-size: 0.82rem; font-weight: 500; color: var(--fg-muted); letter-spacing: 0.02em; transition: color 0.2s; white-space: nowrap; }
@@ -768,8 +767,7 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .footer-inner { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; align-items: start; }
 .footer-brand { display: flex; gap: 14px; align-items: center; }
 .footer-brand img { width: 52px; height: 52px; }
-.footer-brand strong { font-family: var(--font-display); letter-spacing: 0.14em; color: var(--footer-gold-light); display: block; }
-.footer-brand p { color: var(--footer-dim); font-size: 0.82rem; margin: 2px 0 0; }
+.footer-brand strong { font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.01em; color: var(--footer-gold-light); display: block; }
 .footer-col h4 { color: var(--footer-gold); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.16em; margin: 0 0 16px; }
 .footer-col a, .footer-col p { display: block; color: var(--footer-muted); font-size: 0.9rem; margin-bottom: 10px; }
 .footer-col a:hover { color: var(--footer-gold-light); }

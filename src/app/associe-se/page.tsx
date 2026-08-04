@@ -5,7 +5,7 @@ import { MembershipTabs, MembershipHero, MembershipClosing } from "@/components/
 export const metadata: Metadata = {
   title: "Associe-se",
   description:
-    "Torne-se membro da CTB e acesse uma rede exclusiva de negócios, inteligência de mercado e segurança jurídica entre o Brasil e Omã.",
+    "Torne-se membro da Câmara e acesse uma rede exclusiva de negócios, inteligência de mercado e segurança jurídica entre o Brasil e Omã.",
 };
 
 export default function AssocieSePage() {

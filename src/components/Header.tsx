@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="brand" onClick={close} aria-label="CTB">
+        <Link href="/" className="brand" onClick={close} aria-label={d.brand.tagline}>
           <Image
             className="brand-logo"
             src="/logo-ctb-transparent.png"
@@ -33,8 +33,7 @@ export default function Header() {
             priority
           />
           <span className="brand-text">
-            <strong>CTB</strong>
-            <small>{d.brand.tagline}</small>
+            <strong>{d.brand.tagline}</strong>
           </span>
         </Link>
 

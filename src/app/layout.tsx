@@ -22,11 +22,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.brasilomanchamber.org"),
   title: {
-    default: "CTB — Câmara de Comércio Brasil–Omã",
-    template: "%s | CTB",
+    default: "Câmara de Comércio Brasil–Omã",
+    template: "%s | Câmara Brasil–Omã",
   },
   description:
-    "Câmara de Comércio Brasil–Omã (CTB): conectando potências complementares. Comércio, investimentos e cooperação institucional entre o Brasil e o Sultanato de Omã.",
+    "Câmara de Comércio Brasil–Omã: conectando potências complementares. Comércio, investimentos e cooperação institucional entre o Brasil e o Sultanato de Omã.",
   keywords: [
     "Câmara de Comércio Brasil Omã",
     "Brazil Oman Chamber of Commerce",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   ],
   icons: { icon: "/icon.png", apple: "/apple-icon.png" },
   openGraph: {
-    title: "CTB — Câmara de Comércio Brasil–Omã",
+    title: "Câmara de Comércio Brasil–Omã",
     description: "Conectando potências complementares. União e Prosperidade.",
     type: "website",
     locale: "pt_BR",
