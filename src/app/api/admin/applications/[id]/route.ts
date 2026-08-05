@@ -57,8 +57,10 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     }))
   );
 
+  const { passwordHash: _passwordHash, ...safeApplication } = application;
+
   return NextResponse.json({
-    application: { ...application, documents: documentsWithUrls, complianceAnswers: complianceWithUrls },
+    application: { ...safeApplication, documents: documentsWithUrls, complianceAnswers: complianceWithUrls },
   });
 }
 

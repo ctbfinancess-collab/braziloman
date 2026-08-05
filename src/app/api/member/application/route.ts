@@ -59,9 +59,11 @@ export async function GET() {
     }))
   );
 
+  const { passwordHash: _passwordHash, ...safeApplication } = application;
+
   return NextResponse.json({
     application: {
-      ...application,
+      ...safeApplication,
       documents: documentsWithUrls,
       complianceAnswers: complianceWithUrls,
     },
