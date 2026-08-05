@@ -1155,7 +1155,7 @@ export function DocumentsStep({
       <div className="wiz-doc-list">
         {slots.map((slot) => (
           <div className="wiz-doc-row" key={slot.key}>
-            <span className="wiz-doc-label">{slot.label}{slot.key === "powerOfAttorney" ? " (quando aplicável)" : ""}</span>
+            <span className="wiz-doc-label">{slot.label}</span>
             <DocUploadButton
               docKey={slot.key}
               label={slot.label}
