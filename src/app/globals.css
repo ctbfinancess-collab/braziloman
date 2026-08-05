@@ -413,7 +413,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   .gov-org-tier .gov-org-node:not(:first-child) { margin-top: 8px; }
 }
 
-.gov-committee-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+.gov-committee-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 .gov-committee-card {
   display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 8px;
   background: var(--surface); border: 1px solid var(--border-strong); color: var(--fg-muted);
