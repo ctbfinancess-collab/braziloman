@@ -309,10 +309,18 @@ export function TransparencyPage() {
               <span className="compliance-card-icon" aria-hidden="true"><Icon name={item.icon} /></span>
               <h3>{item.h}</h3>
               <p>{item.p}</p>
-              <span className="transparency-status">
-                <Icon name="clock" className="transparency-status-icon" />
-                {t.comingSoon}
-              </span>
+              {item.url ? (
+                item.url.startsWith("/") ? (
+                  <Link href={item.url} className="compliance-doc-link">Acessar →</Link>
+                ) : (
+                  <a href={item.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Acessar →</a>
+                )
+              ) : (
+                <span className="transparency-status">
+                  <Icon name="clock" className="transparency-status-icon" />
+                  {t.comingSoon}
+                </span>
+              )}
             </div>
           ))}
         </div>
