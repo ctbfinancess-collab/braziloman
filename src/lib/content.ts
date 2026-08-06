@@ -259,7 +259,6 @@ export const content = {
         eyebrow: "A Câmara",
         title: "Transparência",
         lead: "A transparência institucional é um dos princípios centrais da Câmara de Comércio Brasil–Omã, orientando a divulgação de informações relevantes sobre sua atuação, sua governança e suas iniciativas.",
-        note: "Relatórios e informações institucionais serão disponibilizados nesta página em breve.",
         commitmentTitle: "Nosso Compromisso com a Transparência",
         commitmentText: "A Câmara adota princípios de transparência, responsabilidade institucional e prestação de contas, disponibilizando informações relevantes sobre sua estrutura, governança, atuação e documentos oficiais.",
         documentsTitle: "Documentos e Informações",
@@ -275,8 +274,6 @@ export const content = {
         requestTitle: "Solicite Informações",
         requestText: "Para solicitar informações institucionais ou esclarecer dúvidas sobre documentos públicos da Câmara, entre em contato conosco.",
         requestCta: "Solicitar informação",
-        comingSoon: "Disponível em breve",
-        comingSoonShort: "Em breve",
       },
       policyDocuments: {
         codeOfEthics: {
@@ -1181,7 +1178,6 @@ export const content = {
         eyebrow: "The Chamber",
         title: "Transparency",
         lead: "Institutional transparency is a core principle of the Brazil–Oman Chamber of Commerce, guiding the disclosure of relevant information about its activities, governance and initiatives.",
-        note: "Reports and institutional information will be made available on this page soon.",
         commitmentTitle: "Our Commitment to Transparency",
         commitmentText: "The Chamber adopts principles of transparency, institutional accountability and reporting, making relevant information available about its structure, governance, activities and official documents.",
         documentsTitle: "Documents & Information",
@@ -1197,8 +1193,6 @@ export const content = {
         requestTitle: "Request Information",
         requestText: "To request institutional information or clarify questions about the Chamber's public documents, get in touch with us.",
         requestCta: "Request information",
-        comingSoon: "Available soon",
-        comingSoonShort: "Coming soon",
       },
       policyDocuments: {
         codeOfEthics: {

@@ -292,7 +292,6 @@ export function TransparencyPage() {
         <h1 className="section-title center">{t.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{t.lead}</p>
-        <p className="partnership-block-lead" style={{ textAlign: "center" }}>{t.note}</p>
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>
@@ -315,12 +314,7 @@ export function TransparencyPage() {
                 ) : (
                   <a href={item.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Acessar →</a>
                 )
-              ) : (
-                <span className="transparency-status">
-                  <Icon name="clock" className="transparency-status-icon" />
-                  {t.comingSoon}
-                </span>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
@@ -338,9 +332,7 @@ export function TransparencyPage() {
                 ) : (
                   <a href={item.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Acessar →</a>
                 )
-              ) : (
-                <span className="compliance-doc-link-disabled">{t.comingSoonShort}</span>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
