@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
+import { HeroBanner } from "./HeroBanner";
 
 type Card = { h: string; p: string };
 type SubBlock = { h: string; p: string; chipsLabel?: string; chips?: string[] };
@@ -54,10 +55,14 @@ export function ConsultingHero() {
   return (
     <section className="section" id="consultoria">
       <div className="container reveal">
-        <p className="section-eyebrow center">{c.eyebrow}</p>
-        <h1 className="section-title center">{c.title}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{c.p1}</p>
+        <HeroBanner
+          photo={c.photo}
+          alt="Reunião institucional da Câmara com bandeiras do Brasil e de Omã"
+          eyebrow={c.eyebrow}
+          title={c.title}
+          lead={c.p1}
+          aspect={1010 / 665}
+        />
         <p className="section-lead mp-lead-center">{c.p2}</p>
         <div className="cp-why">
           <h3 className="mp-subtitle">{c.whyTitle}</h3>

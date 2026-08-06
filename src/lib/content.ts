@@ -673,6 +673,7 @@ export const content = {
     consultingPage: {
       eyebrow: "Consultoria Internacional",
       title: "Inteligência estratégica para negócios entre Brasil, Omã e o Golfo",
+      photo: "/associe-se/consultoria/hero.jpg",
       p1: "Nossa equipe reúne especialistas em comércio internacional, inteligência de mercado, investimentos e relações institucionais para apoiar empresas que desejam expandir suas operações nos países do Golfo.",
       p2: "Mais do que consultoria, entregamos estratégia, conexões qualificadas e soluções personalizadas para acelerar negócios internacionais.",
       whyTitle: "Por que escolher nossa consultoria?",
@@ -1595,6 +1596,7 @@ export const content = {
     consultingPage: {
       eyebrow: "International Consulting",
       title: "Strategic intelligence for business between Brazil, Oman and the Gulf",
+      photo: "/associe-se/consultoria/hero.jpg",
       p1: "Our team brings together specialists in international trade, market intelligence, investment and institutional relations to support companies looking to expand their operations into the Gulf countries.",
       p2: "More than consulting, we deliver strategy, qualified connections and tailored solutions to accelerate international business.",
       whyTitle: "Why choose our consulting services?",
