@@ -254,9 +254,14 @@ export function MembershipExtra() {
   return (
     <section className="section section-alt">
       <div className="container reveal">
-        <p className="section-eyebrow center">{e.eyebrow}</p>
-        <h2 className="section-title center">{e.title}</h2>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+        <HeroBanner
+          photo={e.photo}
+          alt="Rodada de negócios institucional da Câmara com representantes do Brasil, Omã e Golfo"
+          eyebrow={e.eyebrow}
+          title={e.title}
+          lead={e.lead}
+          aspect={1180 / 620}
+        />
         <BenefitGrid items={e.items} columns={2} />
 
         <p className="section-eyebrow center" style={{ marginTop: 56 }}>{e.institutionalEyebrow}</p>

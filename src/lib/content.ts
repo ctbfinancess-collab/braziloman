@@ -655,6 +655,8 @@ export const content = {
       extra: {
         eyebrow: "Serviços ao associado",
         title: "Uma estrutura preparada para apoiar sua jornada",
+        lead: "Promovemos encontros estratégicos, conectamos líderes e impulsionamos parcerias entre Brasil, Omã e o Golfo.",
+        photo: "/associe-se/servicos/hero.jpg",
         items: [
           { icon: "mail", h: "Atendimento institucional dedicado", p: "Canal de relacionamento para orientar o associado sobre atividades, eventos e oportunidades da Câmara." },
           { icon: "calendar", h: "Condições especiais em eventos", p: "Benefícios ou condições diferenciadas em determinadas atividades promovidas pela Câmara, quando aplicável." },
@@ -1599,6 +1601,8 @@ export const content = {
       extra: {
         eyebrow: "Member services",
         title: "A structure built to support your journey",
+        lead: "We promote strategic meetings, connect leaders and drive partnerships between Brazil, Oman and the Gulf.",
+        photo: "/associe-se/servicos/hero.jpg",
         items: [
           { icon: "mail", h: "Dedicated institutional support", p: "Relationship channel to guide members on the Chamber's activities, events and opportunities." },
           { icon: "calendar", h: "Special conditions at events", p: "Differentiated benefits or conditions at certain activities promoted by the Chamber, when applicable." },
