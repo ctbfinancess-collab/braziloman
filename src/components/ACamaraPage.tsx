@@ -64,6 +64,14 @@ export function ACamaraTabs({ active }: { active: string }) {
     { href: "/a-camara/estatuto", key: "statute", label: t.statute },
     { href: "/a-camara/compliance", key: "compliance", label: t.compliance },
     { href: "/a-camara/transparencia", key: "transparency", label: t.transparency },
+    { href: "/associe-se/beneficios", key: "benefits", label: d.membershipPage.tabs.overview },
+    { href: "/associe-se/entenda", key: "understand", label: d.membershipPage.tabs.understand },
+    { href: "/associe-se/reputacao", key: "reputation", label: d.membershipPage.tabs.reputation },
+    { href: "/associe-se/apoio", key: "support", label: d.membershipPage.tabs.support },
+    { href: "/associe-se/conexao", key: "connection", label: d.membershipPage.tabs.connection },
+    { href: "/associe-se/expansao", key: "expansion", label: d.membershipPage.tabs.expansion },
+    { href: "/associe-se/servicos", key: "extra", label: d.membershipPage.tabs.extra },
+    { href: "/associe-se/consultoria", key: "consulting", label: d.membershipPage.tabs.consulting },
   ];
   return (
     <nav className="mp-tabs" aria-label="Navegação de A Câmara">
