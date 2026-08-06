@@ -166,6 +166,7 @@ export function StatutePage() {
         <h1 className="section-title center">{s.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{s.lead}</p>
+        <img className="partnership-photo" src={s.photo} alt="Estatuto Social da Câmara com bandeiras do Brasil e de Omã sobre uma mesa" />
         <p className="partnership-block-lead" style={{ textAlign: "center" }}>{s.note}</p>
 
         <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{s.recordsTitle}</h2>
