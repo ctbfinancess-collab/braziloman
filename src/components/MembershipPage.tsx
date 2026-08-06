@@ -207,9 +207,7 @@ export function MembershipNumberedSection({ index }: { index: number }) {
     <section className="section mp-numbered">
       <div className="container reveal">
         <p className="section-eyebrow center">{s.eyebrow}</p>
-        <h2 className="section-title center mp-numbered-title">
-          <span className="mp-number">{s.number}.</span> {s.title}
-        </h2>
+        <h2 className="section-title center mp-numbered-title">{s.title}</h2>
         <p className="section-lead mp-lead-center">{s.lead}</p>
         {s.image && (
           // eslint-disable-next-line @next/next/no-img-element

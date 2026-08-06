@@ -99,7 +99,6 @@ export function ConsultingBlocks() {
             <div className="cp-block-head">
               <span className="cp-block-icon"><Icon name={b.icon} /></span>
               <div>
-                <span className="cp-block-number">{b.number}</span>
                 <h3 className="cp-block-title">{b.title}</h3>
               </div>
             </div>
