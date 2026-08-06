@@ -16,10 +16,13 @@ const GOLD = rgb(0x96 / 255, 0x71 / 255, 0x2c / 255);
 const INK = rgb(0x20 / 255, 0x1b / 255, 0x13 / 255);
 const MUTED = rgb(0x57 / 255, 0x4f / 255, 0x40 / 255);
 
+const A4_WIDTH = 595.276;
+const A4_HEIGHT = 841.89;
+
 const MARGIN_LEFT = 92;
 const MARGIN_RIGHT = 70;
 const TOP_START = 205; // distance from top edge where body content starts
-const BOTTOM_LIMIT = 120; // distance from bottom edge reserved for footer/watermark
+const BOTTOM_LIMIT = 135; // distance from bottom edge reserved for footer/watermark
 
 const DOCS = [
   { key: "codeOfEthics", file: "codigo-de-etica" },
@@ -55,8 +58,10 @@ async function generate(locale, docKey, outFile) {
   const fontBold = await out.embedFont(StandardFonts.TimesRomanBold);
   const fontItalic = await out.embedFont(StandardFonts.TimesRomanItalic);
 
-  const pageWidth = templatePage.width;
-  const pageHeight = templatePage.height;
+  // Normalize to standard A4 regardless of the template's native page size
+  // (letterhead exports have varied — e.g. design-tool px treated as pt).
+  const pageWidth = A4_WIDTH;
+  const pageHeight = A4_HEIGHT;
   const maxWidth = pageWidth - MARGIN_LEFT - MARGIN_RIGHT;
 
   const doc = content[locale].acamaraPage.policyDocuments[docKey];
