@@ -48,6 +48,7 @@ export default function Footer() {
             <a href="mailto:contact@brasilomanchamber.org">contact@brasilomanchamber.org</a>
             <p>Brasília, Brasil</p>
             <p>Mascate, Omã</p>
+            <p>CNPJ: 68.398.637/0001-11</p>
           </div>
         </div>
 
