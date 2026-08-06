@@ -14,6 +14,23 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function HeroBanner({
+  photo, alt, eyebrow, title, lead, aspect,
+}: { photo: string; alt: string; eyebrow: string; title: string; lead: string; aspect: number }) {
+  return (
+    <div className="acamara-hero-banner" style={{ aspectRatio: aspect }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="acamara-hero-banner-img" src={photo} alt={alt} />
+      <div className="acamara-hero-banner-scrim" aria-hidden="true" />
+      <div className="acamara-hero-banner-content">
+        <p className="acamara-hero-banner-eyebrow">{eyebrow}</p>
+        <h1 className="acamara-hero-banner-title">{title}</h1>
+        <p className="acamara-hero-banner-lead">{lead}</p>
+      </div>
+    </div>
+  );
+}
+
 type GovPerson = { name: string; role: string; flag: string; photo?: string; bio?: string };
 
 function GovCard({ person }: { person: GovPerson }) {
@@ -162,11 +179,14 @@ export function StatutePage() {
   return (
     <section className="section">
       <div className="container reveal">
-        <p className="section-eyebrow center">{s.eyebrow}</p>
-        <h1 className="section-title center">{s.title}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{s.lead}</p>
-        <img className="acamara-hero-photo" src={s.photo} alt="Estatuto Social da Câmara com bandeiras do Brasil e de Omã sobre uma mesa" />
+        <HeroBanner
+          photo={s.photo}
+          alt="Estatuto Social da Câmara com bandeiras do Brasil e de Omã sobre uma mesa"
+          eyebrow={s.eyebrow}
+          title={s.title}
+          lead={s.lead}
+          aspect={1600 / 877}
+        />
 
         <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{s.recordsTitle}</h2>
         <p className="section-lead mp-lead-center">{s.recordsLead}</p>
@@ -195,11 +215,14 @@ export function CompliancePage() {
   return (
     <section className="section">
       <div className="container reveal">
-        <p className="section-eyebrow center">{c.eyebrow}</p>
-        <h1 className="section-title center">{c.title}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{c.lead}</p>
-        <img className="acamara-hero-photo" src={c.photo} alt="Profissional trabalhando em processos de compliance e integridade" />
+        <HeroBanner
+          photo={c.photo}
+          alt="Profissional trabalhando em processos de compliance e integridade"
+          eyebrow={c.eyebrow}
+          title={c.title}
+          lead={c.lead}
+          aspect={960 / 451}
+        />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="shieldcheck" /></span>
@@ -291,11 +314,14 @@ export function TransparencyPage() {
   return (
     <section className="section">
       <div className="container reveal">
-        <p className="section-eyebrow center">{t.eyebrow}</p>
-        <h1 className="section-title center">{t.title}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{t.lead}</p>
-        <img className="acamara-hero-photo" src={t.photo} alt="Documentos institucionais e bandeiras do Brasil e de Omã sobre uma mesa" />
+        <HeroBanner
+          photo={t.photo}
+          alt="Documentos institucionais e bandeiras do Brasil e de Omã sobre uma mesa"
+          eyebrow={t.eyebrow}
+          title={t.title}
+          lead={t.lead}
+          aspect={960 / 509}
+        />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>
