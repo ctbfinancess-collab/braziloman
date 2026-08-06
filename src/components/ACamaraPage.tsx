@@ -255,7 +255,9 @@ export function CompliancePage() {
               <h3>{doc.h}</h3>
               <p>{doc.p}</p>
               {doc.url ? (
-                doc.url.startsWith("/") ? (
+                doc.url.endsWith(".pdf") ? (
+                  <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Baixar PDF →</a>
+                ) : doc.url.startsWith("/") ? (
                   <Link href={doc.url} className="compliance-doc-link">Ler documento →</Link>
                 ) : (
                   <a href={doc.url} target="_blank" rel="noreferrer" className="compliance-doc-link">Ler documento →</a>
