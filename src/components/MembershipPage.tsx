@@ -189,7 +189,7 @@ export function MembershipOverview() {
           eyebrow={o.eyebrow}
           title={o.title}
           lead={o.lead}
-          aspect={1517 / 775}
+          aspect={1180 / 620}
         />
         <h3 className="mp-subtitle">{o.subtitle}</h3>
         <BenefitGrid items={o.items} columns={2} />
