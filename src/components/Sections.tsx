@@ -480,7 +480,7 @@ export function Membership() {
             <p className="section-lead">{d.membership.lead}</p>
           </div>
           <div className="membership-map">
-            <img src="/associe-se/mapa.png" alt="Executivos brasileiros e omanitas em reunião, com mapa-múndi de conexões ao fundo" />
+            <img src="/associe-se/mapa.jpg" alt="Cartões de associado da Câmara nas categorias Gold, Black e Platinum" />
           </div>
         </div>
         <div className="benefits">
