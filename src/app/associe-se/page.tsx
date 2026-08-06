@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Membership } from "@/components/Sections";
-import { MembershipTabs, MembershipHero, MembershipClosing } from "@/components/MembershipPage";
+import { MembershipHero, MembershipClosing } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
   title: "Associe-se",
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 export default function AssocieSePage() {
   return (
     <>
-      <MembershipTabs active="home" />
       <Membership />
       <MembershipHero />
       <MembershipClosing />

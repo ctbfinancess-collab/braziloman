@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { MembershipTabs } from "@/components/MembershipPage";
 import {
   ConsultingHero,
   ConsultingSolutionsIntro,
@@ -17,7 +16,6 @@ export const metadata: Metadata = {
 export default function ConsultoriaPage() {
   return (
     <>
-      <MembershipTabs active="consulting" />
       <ConsultingHero />
       <ConsultingSolutionsIntro />
       <ConsultingBlocks />

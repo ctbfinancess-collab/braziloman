@@ -8,33 +8,6 @@ import { HeroBanner } from "./HeroBanner";
 
 type BenefitItem = { icon: string; h: string; p: string };
 
-export function MembershipTabs({ active }: { active: string }) {
-  const { d } = useI18n();
-  const t = d.membershipPage.tabs;
-  const links = [
-    { href: "/associe-se", key: "home", label: t.home },
-    { href: "/associe-se/beneficios", key: "overview", label: t.overview },
-    { href: "/associe-se/entenda", key: "understand", label: t.understand },
-    { href: "/associe-se/reputacao", key: "reputation", label: t.reputation },
-    { href: "/associe-se/apoio", key: "support", label: t.support },
-    { href: "/associe-se/conexao", key: "connection", label: t.connection },
-    { href: "/associe-se/expansao", key: "expansion", label: t.expansion },
-    { href: "/associe-se/servicos", key: "extra", label: t.extra },
-    { href: "/associe-se/consultoria", key: "consulting", label: t.consulting },
-  ];
-  return (
-    <nav className="mp-tabs" aria-label="Navegação da associação">
-      <div className="container mp-tabs-inner">
-        {links.map((l) => (
-          <Link key={l.key} href={l.href} className={`mp-tab${active === l.key ? " active" : ""}`}>
-            {l.label}
-          </Link>
-        ))}
-      </div>
-    </nav>
-  );
-}
-
 function BenefitGrid({ items, columns = 2 }: { items: BenefitItem[]; columns?: 2 | 4 }) {
   return (
     <div className={`mp-grid mp-grid-${columns}`}>

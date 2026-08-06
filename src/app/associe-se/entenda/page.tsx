@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MembershipTabs, MembershipUnderstand } from "@/components/MembershipPage";
+import { MembershipUnderstand } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
   title: "Entenda a Associação",
@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 export default function EntendaPage() {
   return (
     <>
-      <MembershipTabs active="understand" />
       <MembershipUnderstand />
     </>
   );

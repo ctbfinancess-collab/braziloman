@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MembershipTabs, MembershipOverview } from "@/components/MembershipPage";
+import { MembershipOverview } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
   title: "Benefícios de ser associado",
@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 export default function BeneficiosPage() {
   return (
     <>
-      <MembershipTabs active="overview" />
       <MembershipOverview />
     </>
   );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MembershipTabs, MembershipExtra } from "@/components/MembershipPage";
+import { MembershipExtra } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
   title: "Serviços ao Associado",
@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 export default function ServicosPage() {
   return (
     <>
-      <MembershipTabs active="extra" />
       <MembershipExtra />
     </>
   );

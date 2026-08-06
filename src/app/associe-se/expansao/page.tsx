@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MembershipTabs, MembershipNumberedSection } from "@/components/MembershipPage";
+import { MembershipNumberedSection } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
   title: "Expansão",
@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 export default function ExpansaoPage() {
   return (
     <>
-      <MembershipTabs active="expansion" />
       <MembershipNumberedSection index={3} />
     </>
   );
