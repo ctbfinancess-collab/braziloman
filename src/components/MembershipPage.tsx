@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
+import { HeroBanner } from "./HeroBanner";
 
 type BenefitItem = { icon: string; h: string; p: string };
 
@@ -182,10 +183,14 @@ export function MembershipOverview() {
   return (
     <section className="section section-alt" id="beneficios">
       <div className="container reveal">
-        <p className="section-eyebrow center">{o.eyebrow}</p>
-        <h2 className="section-title center">{o.title}</h2>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{o.lead}</p>
+        <HeroBanner
+          photo={o.photo}
+          alt="Cartão de associado da Câmara de Comércio Brasil–Omã"
+          eyebrow={o.eyebrow}
+          title={o.title}
+          lead={o.lead}
+          aspect={1517 / 775}
+        />
         <h3 className="mp-subtitle">{o.subtitle}</h3>
         <BenefitGrid items={o.items} columns={2} />
       </div>
@@ -253,6 +258,12 @@ export function MembershipExtra() {
         <h2 className="section-title center">{e.title}</h2>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <BenefitGrid items={e.items} columns={2} />
+
+        <p className="section-eyebrow center" style={{ marginTop: 56 }}>{e.institutionalEyebrow}</p>
+        <h2 className="mp-subtitle center">{e.institutionalTitle}</h2>
+        <p className="section-lead mp-lead-center">{e.institutionalLead}</p>
+        <BenefitGrid items={e.institutional} columns={2} />
+        <p className="partnership-block-lead" style={{ textAlign: "center", marginTop: 24 }}>{e.institutionalNote}</p>
       </div>
     </section>
   );

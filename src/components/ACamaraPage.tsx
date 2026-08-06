@@ -172,6 +172,15 @@ export function StatutePage() {
           aspect={1600 / 877}
         />
 
+        <div className="compliance-highlight">
+          <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>
+          <div className="compliance-highlight-body">
+            <h3>{s.pdfTitle}</h3>
+            <p>{s.pdfText}</p>
+          </div>
+          <a href={s.pdfUrl} target="_blank" rel="noreferrer" className="btn btn-ghost compliance-highlight-cta">{s.pdfCta}</a>
+        </div>
+
         <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{s.recordsTitle}</h2>
         <p className="section-lead mp-lead-center">{s.recordsLead}</p>
         <div className="statute-records">
