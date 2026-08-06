@@ -166,8 +166,7 @@ export function StatutePage() {
         <h1 className="section-title center">{s.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{s.lead}</p>
-        <img className="partnership-photo" src={s.photo} alt="Estatuto Social da Câmara com bandeiras do Brasil e de Omã sobre uma mesa" />
-        <p className="partnership-block-lead" style={{ textAlign: "center" }}>{s.note}</p>
+        <img className="acamara-hero-photo" src={s.photo} alt="Estatuto Social da Câmara com bandeiras do Brasil e de Omã sobre uma mesa" />
 
         <h2 className="mp-subtitle center" style={{ marginTop: 56 }}>{s.recordsTitle}</h2>
         <p className="section-lead mp-lead-center">{s.recordsLead}</p>
@@ -200,7 +199,7 @@ export function CompliancePage() {
         <h1 className="section-title center">{c.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{c.lead}</p>
-        <img className="partnership-photo" src={c.photo} alt="Profissional trabalhando em processos de compliance e integridade" />
+        <img className="acamara-hero-photo" src={c.photo} alt="Profissional trabalhando em processos de compliance e integridade" />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="shieldcheck" /></span>
@@ -296,7 +295,7 @@ export function TransparencyPage() {
         <h1 className="section-title center">{t.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{t.lead}</p>
-        <img className="partnership-photo" src={t.photo} alt="Documentos institucionais e bandeiras do Brasil e de Omã sobre uma mesa" />
+        <img className="acamara-hero-photo" src={t.photo} alt="Documentos institucionais e bandeiras do Brasil e de Omã sobre uma mesa" />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>

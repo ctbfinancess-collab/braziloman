@@ -543,6 +543,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   width: 100%; max-height: 420px; object-fit: cover; border-radius: 8px;
   margin: 22px 0 32px; border: 1px solid var(--border);
 }
+/* foto institucional de A Câmara (Estatuto, Compliance, Transparência) — exibida
+   por inteiro, sem recorte forçado, pra manter profundidade e enquadramento originais */
+.acamara-hero-photo {
+  width: 100%; height: auto; display: block; border-radius: 8px;
+  margin: 22px 0 32px; border: 1px solid var(--border);
+}
 .partnership-lead { display: grid; gap: 16px; max-width: 880px; margin-bottom: 44px; }
 .partnership-lead p { color: var(--fg-muted); font-size: 1.03rem; line-height: 1.65; margin: 0; }
 .partnership-block-lead { color: var(--fg-muted); font-size: 1rem; line-height: 1.6; max-width: 760px; margin: 0 0 20px; }

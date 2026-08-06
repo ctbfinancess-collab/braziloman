@@ -183,7 +183,6 @@ export const content = {
         title: "Estatuto",
         lead: "O Estatuto Social da Câmara de Comércio Brasil–Omã define sua natureza jurídica, seus objetivos institucionais, a estrutura de seus órgãos internos e as normas que regem sua administração, conforme a legislação brasileira aplicável às associações civis sem fins lucrativos.",
         photo: "/a-camara/estatuto/hero.jpg",
-        note: "O conteúdo integral do Estatuto está em preparação para publicação nesta página.",
         recordsTitle: "Atas e Registros",
         recordsLead: "Atos societários já lavrados e registrados junto aos órgãos públicos competentes.",
         records: [
@@ -1106,7 +1105,6 @@ export const content = {
         title: "Statute",
         lead: "The Brazil–Oman Chamber of Commerce's Articles of Association define its legal nature, institutional objectives, the structure of its internal bodies and the rules governing its administration, in accordance with Brazilian legislation applicable to nonprofit civil associations.",
         photo: "/a-camara/estatuto/hero.jpg",
-        note: "The full text of the Statute is being prepared for publication on this page.",
         recordsTitle: "Minutes & Filings",
         recordsLead: "Corporate acts already executed and filed with the competent public registries.",
         records: [
