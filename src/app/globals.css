@@ -830,10 +830,10 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 
 /* ---------- página Associe-se (abas + blocos numerados) ---------- */
 .mp-tabs { position: sticky; top: 76px; z-index: 40; background: var(--bg-2); border-bottom: 1px solid var(--border); }
-.mp-tabs-inner { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.mp-tabs-inner { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .mp-tabs-inner::-webkit-scrollbar { display: none; }
 .mp-tab {
-  flex: 0 0 auto; padding: 14px 16px; font-size: 0.85rem; font-weight: 600; color: var(--fg-muted);
+  flex: 0 0 auto; padding: 13px 10px; font-size: 0.78rem; font-weight: 600; color: var(--fg-muted);
   border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.2s, border-color 0.2s;
 }
 .mp-tab:hover { color: var(--gold-light); }
