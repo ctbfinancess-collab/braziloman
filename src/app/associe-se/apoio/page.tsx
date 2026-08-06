@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MembershipNumberedSection } from "@/components/MembershipPage";
+import { ACamaraTabs } from "@/components/ACamaraPage";
 
 export const metadata: Metadata = {
   title: "Apoio",
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 export default function ApoioPage() {
   return (
     <>
+      <ACamaraTabs active="support" />
       <MembershipNumberedSection index={1} />
     </>
   );

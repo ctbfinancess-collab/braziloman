@@ -6,6 +6,7 @@ import {
   ConsultingClosing,
   ConsultingForm,
 } from "@/components/ConsultingPage";
+import { ACamaraTabs } from "@/components/ACamaraPage";
 
 export const metadata: Metadata = {
   title: "Consultoria Internacional",
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function ConsultoriaPage() {
   return (
     <>
+      <ACamaraTabs active="consulting" />
       <ConsultingHero />
       <ConsultingSolutionsIntro />
       <ConsultingBlocks />
