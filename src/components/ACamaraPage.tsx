@@ -199,6 +199,7 @@ export function CompliancePage() {
         <h1 className="section-title center">{c.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{c.lead}</p>
+        <img className="partnership-photo" src={c.photo} alt="Profissional trabalhando em processos de compliance e integridade" />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="shieldcheck" /></span>
@@ -294,6 +295,7 @@ export function TransparencyPage() {
         <h1 className="section-title center">{t.title}</h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <p className="section-lead mp-lead-center">{t.lead}</p>
+        <img className="partnership-photo" src={t.photo} alt="Documentos institucionais e bandeiras do Brasil e de Omã sobre uma mesa" />
 
         <div className="compliance-highlight">
           <span className="compliance-highlight-icon" aria-hidden="true"><Icon name="certificate" /></span>
