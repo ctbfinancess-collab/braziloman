@@ -764,6 +764,28 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .eco-cta-disabled { opacity: 0.5; cursor: default; }
 
 /* ---------- Parceiros e Associados (/parceiros) ---------- */
+.partners-section { position: relative; z-index: 1; padding-bottom: 96px; }
+.partners-hero {
+  position: relative; overflow: hidden; margin-bottom: 72px; background: var(--footer-bg);
+  display: grid; grid-template-columns: 1.05fr 1fr; align-items: stretch;
+}
+.partners-hero-photo { position: relative; min-height: 420px; }
+.partners-hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: left center; display: block; }
+.partners-hero-photo::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--footer-bg) 0%, transparent 14%);
+}
+.partners-hero-inner { position: relative; z-index: 1; padding: 88px 0; max-width: 520px; display: flex; flex-direction: column; justify-content: center; }
+.partners-hero .section-eyebrow { color: var(--footer-gold); }
+.partners-hero .section-title { color: var(--footer-fg); }
+.partners-hero .section-title .accent { color: var(--footer-gold-light); }
+.partners-hero .section-lead { color: var(--footer-muted); margin-bottom: 0; max-width: none; }
+@media (max-width: 900px) {
+  .partners-hero { grid-template-columns: 1fr; }
+  .partners-hero-photo { min-height: 260px; order: -1; }
+  .partners-hero-photo::before { background: linear-gradient(180deg, transparent 60%, var(--footer-bg) 100%); }
+  .partners-hero-inner { padding: 40px 24px; max-width: none; }
+}
 .partners-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; margin-top: 10px;
 }

@@ -20,15 +20,23 @@ export function PartnersPage({ partners }: { partners: PartnerItem[] }) {
   const p = d.partners;
 
   return (
-    <section className="section partners-section">
-      <div className="container reveal">
-        <p className="section-eyebrow">{p.eyebrow}</p>
-        <h1 className="section-title">
-          <span className="section-title-line">{p.title}</span>
-          <span className="section-title-line accent">{p.titleAccent}</span>
-        </h1>
-        <p className="section-lead">{p.lead}</p>
+    <section className="partners-section">
+      <div className="partners-hero">
+        <div className="container partners-hero-inner reveal">
+          <p className="section-eyebrow">{p.eyebrow}</p>
+          <h1 className="section-title">
+            <span className="section-title-line">{p.title}</span>
+            <span className="section-title-line accent">{p.titleAccent}</span>
+          </h1>
+          <p className="section-lead">{p.lead}</p>
+        </div>
+        <div className="partners-hero-photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/parceiros-hero.jpg" alt="" aria-hidden="true" />
+        </div>
+      </div>
 
+      <div className="container reveal">
         <p className="section-eyebrow center eco-section-label">{p.gridEyebrow}</p>
         <span className="diamond-flourish" aria-hidden="true">
           <span className="df-line" /><span className="df-dot" /><span className="df-line" />
