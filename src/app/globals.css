@@ -1264,18 +1264,30 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 
 /* Programa de Fidelidade (Área do Membro + Admin) */
 .loyalty-grid { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; margin-top: 20px; }
+
+/* Cartão digital — usa as artes reais (frente/verso, Gold/Black/Platinum) como
+   imagem de fundo; ano/número (frente) e QR Code (verso) são sobrepostos por
+   cima, nas posições exatas onde a arte já reserva esse espaço. */
 .loyalty-card {
-  width: 100%; max-width: 380px; aspect-ratio: 1.586 / 1; border-radius: 12px; padding: 24px;
-  position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.35); flex: 1 1 340px;
+  display: block; width: 100%; max-width: 420px; aspect-ratio: 1140 / 715;
+  border-radius: 14px; position: relative; overflow: hidden; container-type: inline-size;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 0; padding: 0; background: none; cursor: pointer;
 }
-.loyalty-card.tier-gold { background: linear-gradient(135deg, #3a2f14, #1a1408); border: 1px solid var(--gold); color: var(--gold-bright); }
-.loyalty-card.tier-black { background: linear-gradient(135deg, #26221a, #050505); border: 1px solid #4a4030; color: var(--gold-bright); }
-.loyalty-card.tier-platinum { background: linear-gradient(135deg, #4a4a4a, #d8d8d8 45%, #4a4a4a); border: 1px solid #e5e5e5; color: #1a1408; }
-.loyalty-card-seal { display: block; width: 30px; height: 30px; margin-bottom: 10px; opacity: 0.9; }
-.loyalty-card-brand { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.08em; margin: 0; }
-.loyalty-card-tier { font-size: 1.35rem; font-family: var(--font-display); margin: 10px 0 4px; }
-.loyalty-card-number, .loyalty-card-since, .loyalty-card-company { font-size: 0.78rem; opacity: 0.85; margin: 2px 0; }
-.loyalty-card-qr { position: absolute; right: 20px; bottom: 20px; width: 64px; height: 64px; border-radius: 4px; background: #fff; padding: 4px; }
+.loyalty-card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.loyalty-card-patch { position: absolute; border-radius: 3px; }
+.loyalty-card-patch-year, .loyalty-card-value-year { left: 53%; top: 61%; width: 11%; height: 8%; }
+.loyalty-card-patch-number, .loyalty-card-value-number { left: 53%; top: 78%; width: 23%; height: 8%; }
+.loyalty-card-value {
+  position: absolute; display: flex; align-items: center; justify-content: flex-start;
+  font-family: var(--font-display); font-weight: 700; white-space: nowrap; line-height: 1;
+}
+.loyalty-card-value-year { font-size: 3.6cqw; }
+.loyalty-card-value-number { font-size: 3.8cqw; }
+.loyalty-card-qr {
+  position: absolute; left: 6.3%; top: 42%; width: 19%; height: 31%;
+  object-fit: contain; border-radius: 4px; background: #fff; padding: 3%;
+}
+.loyalty-card-flip-hint { font-size: 0.76rem; color: var(--fg-dim); text-align: center; margin: 8px 0 0; max-width: 420px; }
 
 .loyalty-tier-badge {
   display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; border-radius: 20px;

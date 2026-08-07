@@ -22,8 +22,9 @@ export async function awardBecomeMemberPoints(applicationId: string): Promise<vo
     if (!app || app.memberNumber) return;
 
     const now = new Date();
+    // Formato numérico simples ("000123"), igual ao gravado nos cartões físicos/digitais.
     const count = await tx.membershipApplication.count({ where: { memberNumber: { not: null } } });
-    const memberNumber = `CTB-${now.getFullYear()}-${String(count + 1).padStart(4, "0")}`;
+    const memberNumber = String(count + 1).padStart(6, "0");
 
     await tx.membershipApplication.update({
       where: { id: applicationId },
