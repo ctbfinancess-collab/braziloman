@@ -1496,6 +1496,29 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .dash-card-widget-qr img { width: 76px; height: 76px; display: block; }
 .dash-card-widget-qr span { display: block; margin-top: 4px; font-size: 0.58rem; letter-spacing: 0.08em; color: #1a1408; font-weight: 700; }
 
+/* Cor do widget muda automaticamente conforme o nível do associado (Gold/Black/Platinum). */
+.dash-card-widget.tier-gold {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
+    linear-gradient(135deg, #cda75e 0%, #9c7935 55%, #6e5322 100%);
+  color: #fff8ea;
+}
+.dash-card-widget.tier-gold .dash-card-widget-head { color: #3a2c10; }
+.dash-card-widget.tier-gold .dash-card-widget-tier { color: #3a2c10; }
+.dash-card-widget.tier-gold .dash-card-widget-line { color: #fffaf0; }
+.dash-card-widget.tier-gold .dash-card-widget-line.dim { color: rgba(255, 250, 240, 0.75); }
+
+.dash-card-widget.tier-platinum {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.25) 0%, transparent 55%),
+    linear-gradient(135deg, #d9dadd 0%, #a9aab0 55%, #75767c 100%);
+  color: #201f22;
+}
+.dash-card-widget.tier-platinum .dash-card-widget-head { color: #3a3a3e; }
+.dash-card-widget.tier-platinum .dash-card-widget-tier { color: #201f22; }
+.dash-card-widget.tier-platinum .dash-card-widget-line { color: #201f22; }
+.dash-card-widget.tier-platinum .dash-card-widget-line.dim { color: rgba(32, 31, 34, 0.65); }
+
 /* anel de pontos */
 .dash-rewards-row { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
 .points-ring { position: relative; flex-shrink: 0; }
@@ -1563,7 +1586,6 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 }
 
 .dash-card-widget.tier-black .dash-card-widget-tier { color: #e8dc8a; }
-.dash-card-widget.tier-platinum .dash-card-widget-tier { color: #f2f2f4; }
 
 /* ---------- Associe-se: hero (CTAs, quick-features, quote) ---------- */
 .membership-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 32px; }
