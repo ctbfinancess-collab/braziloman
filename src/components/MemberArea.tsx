@@ -361,8 +361,25 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 };
 
 /** Tela exibida quando a candidatura não está mais editável, mas também ainda não é associado ativo. */
+const STATUS_TONE: Partial<Record<ApplicationStatus, "positive" | "warning" | "negative">> = {
+  CONDITIONALLY_APPROVED: "positive",
+  APPROVED_PENDING_PAYMENT: "positive",
+  UNDER_REVIEW: "warning",
+  PENDING: "warning",
+  REJECTED: "negative",
+  SUSPENDED: "negative",
+};
+const STATUS_ICON: Record<"positive" | "warning" | "negative", string> = {
+  positive: "shieldcheck",
+  warning: "clock",
+  negative: "question",
+};
+
 export function MemberStatusScreen({ member }: { member: MemberData }) {
+  const { d } = useI18n();
+  const t = d.memberArea.statusScreen;
   const statusLabel = STATUS_LABELS[member.status] ?? member.status;
+  const tone = STATUS_TONE[member.status] ?? "warning";
 
   const messages: Partial<Record<ApplicationStatus, string>> = {
     UNDER_REVIEW: "Sua candidatura está em análise de compliance pela nossa equipe. Avisaremos por e-mail assim que houver uma atualização.",
@@ -374,30 +391,67 @@ export function MemberStatusScreen({ member }: { member: MemberData }) {
   };
 
   return (
-    <section className="section">
-      <div className="container reveal" style={{ maxWidth: 640 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+    <section className="status-hero">
+      <div className="status-hero-overlay" aria-hidden="true" />
+      <div className="container status-hero-inner">
+        <div className="status-hero-top">
           <div>
-            <p className="section-eyebrow">Área do Membro</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Status da candidatura</h1>
+            <p className="section-eyebrow status-hero-eyebrow">{t.eyebrow}</p>
+            <h1 className="section-title status-hero-title">{t.title}</h1>
           </div>
           <LogoutButton />
         </div>
-        <span className="about-flourish" aria-hidden="true" />
+        <span className="about-flourish status-hero-flourish" aria-hidden="true" />
 
-        <div className="about-section-card">
-          <p className="cp-chips-label">Status</p>
-          <p className="gov-role" style={{ marginBottom: 20 }}>{statusLabel}</p>
-          <p className="section-lead" style={{ margin: 0 }}>
-            {messages[member.status] ?? "Acompanhe sua candidatura por aqui."}
-          </p>
-          {member.membershipCategory && (
-            <p style={{ marginTop: 16 }}><b>Categoria:</b> {member.membershipCategory}</p>
-          )}
-          {member.annualContribution != null && (
-            <p><b>Contribuição anual:</b> R$ {member.annualContribution.toLocaleString("pt-BR")}</p>
-          )}
+        <div className={`status-card tone-${tone}`}>
+          <span className="status-card-icon"><Icon name={STATUS_ICON[tone]} /></span>
+          <div className="status-card-body">
+            <p className="cp-chips-label">{t.statusLabel}</p>
+            <p className="status-card-value">{statusLabel}</p>
+            <p className="status-card-lead">{messages[member.status] ?? "Acompanhe sua candidatura por aqui."}</p>
+          </div>
         </div>
+
+        {(member.membershipCategory || member.annualContribution != null) && (
+          <div className="status-card status-card-secondary">
+            {member.membershipCategory && (
+              <div className="status-card-row">
+                <span className="status-card-icon small"><Icon name="user" /></span>
+                <div>
+                  <p className="cp-chips-label">{t.categoryLabel}</p>
+                  <p className="status-card-row-value">{member.membershipCategory}</p>
+                </div>
+              </div>
+            )}
+            {member.annualContribution != null && (
+              <div className="status-card-row">
+                <span className="status-card-icon small"><Icon name="creditcard" /></span>
+                <div>
+                  <p className="cp-chips-label">{t.contributionLabel}</p>
+                  <p className="status-card-row-value">R$ {member.annualContribution.toLocaleString("pt-BR")}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="status-features">
+          {t.features.map((f) => (
+            <div className="status-feature" key={f.h}>
+              <span className="status-feature-icon"><Icon name={f.icon} /></span>
+              <div>
+                <strong>{f.h}</strong>
+                <span>{f.p}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <footer className="dash-motto status-hero-motto">
+          <span className="dash-motto-line" aria-hidden="true" />
+          <span>UNIÃO E PROSPERIDADE | الوحدة والازدهار ✦</span>
+          <span className="dash-motto-line" aria-hidden="true" />
+        </footer>
       </div>
     </section>
   );

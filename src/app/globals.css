@@ -1792,3 +1792,68 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   .dash-network-grid { grid-template-columns: 1fr; }
   .dash-event-card { gap: 12px; }
 }
+
+/* ---------- Status da Candidatura (tela de espera do candidato) ---------- */
+.status-hero {
+  position: relative; overflow: hidden; padding: 56px 0 48px;
+  background: url("/membro/status-hero.jpg") center / cover no-repeat, var(--bg);
+}
+.status-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(245, 242, 235, 0.35) 0%, rgba(245, 242, 235, 0.55) 40%, var(--bg) 88%);
+}
+.status-hero-inner { position: relative; z-index: 1; }
+.status-hero-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.status-hero-eyebrow { text-align: center; width: 100%; }
+.status-hero-title { text-align: center; width: 100%; }
+.status-hero-top > div:first-child { flex: 1; }
+.status-hero-flourish { display: flex; justify-content: center; margin: 18px 0 32px; }
+
+.status-card {
+  position: relative; display: flex; align-items: flex-start; gap: 22px; max-width: 680px; margin: 0 auto 20px;
+  background: rgba(251, 249, 243, 0.88); backdrop-filter: blur(6px); border: 1px solid var(--border);
+  border-radius: 12px; padding: 30px 32px; box-shadow: 0 20px 50px rgba(20, 15, 5, 0.1);
+}
+.status-card-icon {
+  width: 64px; height: 64px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--gold);
+}
+.status-card-icon svg { width: 28px; height: 28px; }
+.status-card-icon.small { width: 40px; height: 40px; }
+.status-card-icon.small svg { width: 18px; height: 18px; }
+.status-card-body { flex: 1; min-width: 0; }
+.status-card-value { font-family: var(--font-display); font-size: 1.4rem; margin: 2px 0 12px; }
+.tone-positive .status-card-value { color: #3f8f5c; }
+.tone-warning .status-card-value { color: var(--gold); }
+.tone-negative .status-card-value { color: #b0473a; }
+.status-card-lead { color: var(--fg-muted); font-size: 0.98rem; line-height: 1.65; margin: 0; }
+
+.status-card-secondary { display: flex; flex-direction: column; gap: 16px; padding: 24px 32px; }
+.status-card-row { display: flex; align-items: center; gap: 16px; }
+.status-card-row-value { font-size: 1.05rem; font-weight: 600; color: var(--fg); margin: 0; }
+.status-card-row + .status-card-row { padding-top: 16px; border-top: 1px solid var(--border); }
+
+.status-features {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 960px; margin: 32px auto 0;
+  background: rgba(251, 249, 243, 0.88); backdrop-filter: blur(6px); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 32px;
+}
+.status-feature { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.status-feature-icon {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg);
+  display: flex; align-items: center; justify-content: center; color: var(--gold);
+}
+.status-feature-icon svg { width: 20px; height: 20px; }
+.status-feature strong { display: block; color: var(--fg); font-size: 0.95rem; margin-bottom: 2px; }
+.status-feature span { color: var(--fg-muted); font-size: 0.84rem; line-height: 1.4; }
+
+.status-hero-motto { padding: 40px 0 0; }
+
+@media (max-width: 900px) {
+  .status-card { flex-direction: column; align-items: center; text-align: center; }
+  .status-features { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .status-features { grid-template-columns: 1fr; }
+  .status-card-row { flex-direction: column; align-items: flex-start; }
+}

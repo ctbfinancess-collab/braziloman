@@ -983,6 +983,20 @@ export const content = {
         genericError: "Não foi possível entrar. Tente novamente.",
         forgotLink: "Esqueceu sua senha?",
       },
+      statusScreen: {
+        eyebrow: "Área do Membro",
+        title: "Status da Candidatura",
+        statusLabel: "Status",
+        categoryLabel: "Categoria",
+        contributionLabel: "Contribuição anual",
+        logout: "Sair",
+        features: [
+          { icon: "handshake", h: "Conecte-se", p: "com empresas e líderes do Brasil e Omã" },
+          { icon: "globe", h: "Expanda", p: "suas oportunidades e alcance novos mercados" },
+          { icon: "shieldcheck", h: "Fortaleça", p: "sua empresa com credibilidade e suporte institucional" },
+          { icon: "people", h: "Faça parte", p: "de uma rede estratégica e exclusiva" },
+        ],
+      },
       forgotPassword: {
         eyebrow: "Área do Membro",
         title: "Esqueci minha senha",
@@ -2146,6 +2160,20 @@ export const content = {
         applyLink: "Apply for membership",
         genericError: "Could not sign in. Please try again.",
         forgotLink: "Forgot your password?",
+      },
+      statusScreen: {
+        eyebrow: "Member Area",
+        title: "Application Status",
+        statusLabel: "Status",
+        categoryLabel: "Category",
+        contributionLabel: "Annual contribution",
+        logout: "Sign out",
+        features: [
+          { icon: "handshake", h: "Connect", p: "with companies and leaders from Brazil and Oman" },
+          { icon: "globe", h: "Expand", p: "your opportunities and reach new markets" },
+          { icon: "shieldcheck", h: "Strengthen", p: "your company with credibility and institutional support" },
+          { icon: "people", h: "Be part", p: "of a strategic, exclusive network" },
+        ],
       },
       forgotPassword: {
         eyebrow: "Member Area",
