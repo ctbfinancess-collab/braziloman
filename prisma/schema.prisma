@@ -72,7 +72,42 @@ model MembershipApplication {
   aiSummary            String?
   aiSummaryGeneratedAt DateTime?
 
+  /// Programa de Fidelidade (Brazil–Oman Chamber Rewards). memberNumber é atribuído
+  /// uma única vez, automaticamente, na primeira vez que o status chega a
+  /// ACTIVE/APPROVED (ver lib/loyaltyServer.ts). pointsTotal é um cache denormalizado
+  /// — a fonte de verdade auditável é a soma de loyaltyTransactions; só deve ser
+  /// alterado através de awardBecomeMemberPoints/awardLoyaltyPoints, nunca pelo PATCH
+  /// genérico de admin.
+  memberNumber String?   @unique
+  memberSince  DateTime?
+  pointsTotal  Int       @default(0)
+
+  loyaltyTransactions LoyaltyTransaction[]
+
   @@index([status])
+}
+
+/// Histórico de pontos do Programa de Fidelidade — cada linha é um lançamento;
+/// a soma de "points" de todas as linhas de um associado deve bater com
+/// MembershipApplication.pointsTotal.
+model LoyaltyTransaction {
+  id            String                @id @default(cuid())
+  applicationId String
+  application   MembershipApplication @relation(fields: [applicationId], references: [id])
+
+  /// Id do catálogo em src/lib/loyalty.ts (ex. "PARTICIPAR_EVENTO"), ou "CUSTOM"
+  /// para lançamentos avulsos digitados pelo admin.
+  actionId String
+  points   Int
+  /// Obrigatório quando actionId = "CUSTOM"; opcional como observação extra nos demais.
+  note     String?
+  /// "system" = concedido automaticamente (ex. virar associado); "admin" = lançado
+  /// manualmente pela equipe da Câmara.
+  source    String   @default("admin")
+  createdAt DateTime @default(now())
+
+  @@index([applicationId])
+  @@index([applicationId, createdAt])
 }
 
 enum ApplicationStatus {

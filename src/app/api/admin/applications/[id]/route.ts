@@ -9,6 +9,7 @@ import {
   sendInfoRequestedEmail,
   sendApprovedPendingPaymentEmail,
 } from "@/lib/email";
+import { awardBecomeMemberPoints } from "@/lib/loyaltyServer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -41,8 +42,23 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const { id } = await params;
-  const application = await prisma.membershipApplication.findUnique({ where: { id } });
+  let application = await prisma.membershipApplication.findUnique({
+    where: { id },
+    include: { loyaltyTransactions: { orderBy: { createdAt: "desc" }, take: 20 } },
+  });
   if (!application) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
+
+  // Backfill preguiçoso: associados que já eram ativos antes do Programa de
+  // Fidelidade existir ainda não têm memberNumber/pontos — concede na primeira
+  // vez que o admin abre o detalhe dessa candidatura.
+  if ((application.status === "ACTIVE" || application.status === "APPROVED") && !application.memberNumber) {
+    await awardBecomeMemberPoints(application.id);
+    application = await prisma.membershipApplication.findUnique({
+      where: { id },
+      include: { loyaltyTransactions: { orderBy: { createdAt: "desc" }, take: 20 } },
+    });
+    if (!application) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
+  }
 
   const documents = ((application.documents as DocumentEntry[] | null) ?? []) as DocumentEntry[];
   const documentsWithUrls = await Promise.all(
@@ -85,7 +101,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   try {
     const before = await prisma.membershipApplication.findUnique({
       where: { id },
-      select: { status: true },
+      select: { status: true, memberNumber: true },
     });
     if (!before) return NextResponse.json({ error: "Associado não encontrado" }, { status: 404 });
 
@@ -107,6 +123,18 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         }
       } catch (err) {
         console.error("[admin/applications] erro ao enviar e-mail:", err);
+      }
+    }
+
+    // Programa de Fidelidade: concede os 1000 pontos de boas-vindas e atribui o
+    // número de associado na primeira vez que o status chega a ACTIVE/APPROVED.
+    // Guardado por !before.memberNumber (não por statusChanged) para ser seguro
+    // mesmo em re-transições (ex. ACTIVE -> SUSPENSO -> ACTIVE de novo).
+    if ((updated.status === "ACTIVE" || updated.status === "APPROVED") && !before.memberNumber) {
+      try {
+        await awardBecomeMemberPoints(updated.id);
+      } catch (err) {
+        console.error("[admin/applications] erro ao conceder pontos de boas-vindas:", err);
       }
     }
 

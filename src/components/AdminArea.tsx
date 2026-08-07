@@ -16,6 +16,7 @@ import type {
 } from "@/lib/candidateSchemas";
 import { COMPLIANCE_QUESTIONS } from "@/lib/candidateSchemas";
 import { PersonalStep, CompanyStep, ProfileStep, ComplianceStep, DocumentsStep } from "@/components/CandidatePortal";
+import { LOYALTY_ACTIONS, LOYALTY_CUSTOM_ACTION_ID, getActionLabel, getTier, TIER_NAMES } from "@/lib/loyalty";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -279,6 +280,10 @@ type FullApplication = Application & {
   annualContribution: number | null;
   aiSummary: string | null;
   aiSummaryGeneratedAt: string | null;
+  memberNumber: string | null;
+  memberSince: string | null;
+  pointsTotal: number;
+  loyaltyTransactions: { id: string; actionId: string; points: number; note: string | null; createdAt: string; source: string }[];
 };
 
 const STATUS_OPTIONS: ApplicationStatus[] = [
@@ -333,6 +338,11 @@ export function AdminApplicationDetail({ id }: { id: string }) {
   const [editingSection, setEditingSection] = useState<
     "personal" | "company" | "profile" | "compliance" | "documents" | null
   >(null);
+  const [loyaltyActionId, setLoyaltyActionId] = useState<string>(LOYALTY_ACTIONS.find((a) => !a.automatic)?.id ?? "");
+  const [customPoints, setCustomPoints] = useState("");
+  const [customNote, setCustomNote] = useState("");
+  const [awarding, setAwarding] = useState(false);
+  const [awardError, setAwardError] = useState("");
 
   function adminFieldSave(
     field: "personalData" | "companyData" | "businessProfile" | "complianceAnswers" | "documents"
@@ -398,6 +408,30 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     } else {
       const json = await res.json().catch(() => ({}));
       setSaveError(json.error || `Não foi possível salvar (HTTP ${res.status}). Confira se a contribuição está entre 1.000 e 1.000.000.`);
+    }
+  }
+
+  async function onAwardPoints() {
+    setAwarding(true);
+    setAwardError("");
+    const isCustom = loyaltyActionId === LOYALTY_CUSTOM_ACTION_ID;
+    const res = await fetch(`/api/admin/applications/${id}/loyalty`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        actionId: loyaltyActionId,
+        points: isCustom ? Number(customPoints) : undefined,
+        note: isCustom ? customNote : undefined,
+      }),
+    });
+    setAwarding(false);
+    if (res.ok) {
+      setCustomPoints("");
+      setCustomNote("");
+      await load();
+    } else {
+      const json = await res.json().catch(() => ({}));
+      setAwardError(json.error || `Não foi possível conceder os pontos (HTTP ${res.status}).`);
     }
   }
 
@@ -529,6 +563,74 @@ export function AdminApplicationDetail({ id }: { id: string }) {
             </button>
           </div>
         </div>
+
+        {(app.status === "ACTIVE" || app.status === "APPROVED") && (
+          <div className="about-section-card">
+            <h3 className="mp-subtitle mp-subtitle-tight">Programa de Fidelidade</h3>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
+              <span className={`loyalty-tier-badge tier-${getTier(app.pointsTotal).toLowerCase()}`}>
+                {TIER_NAMES[getTier(app.pointsTotal)]}
+              </span>
+              <p style={{ margin: 0 }}><b>Pontos:</b> {app.pointsTotal.toLocaleString("pt-BR")}</p>
+              {app.memberNumber && <p style={{ margin: 0 }}><b>Nº de associado:</b> {app.memberNumber}</p>}
+              {app.memberSince && (
+                <p style={{ margin: 0 }}><b>Associado desde:</b> {new Date(app.memberSince).toLocaleDateString()}</p>
+              )}
+            </div>
+
+            <div className="wiz-grid">
+              <label className="wiz-field">
+                Ação
+                <select value={loyaltyActionId} onChange={(e) => setLoyaltyActionId(e.target.value)}>
+                  {LOYALTY_ACTIONS.filter((a) => !a.automatic).map((a) => (
+                    <option key={a.id} value={a.id}>{a.labelPt} (+{a.points})</option>
+                  ))}
+                  <option value={LOYALTY_CUSTOM_ACTION_ID}>Ação personalizada</option>
+                </select>
+              </label>
+              {loyaltyActionId === LOYALTY_CUSTOM_ACTION_ID && (
+                <>
+                  <label className="wiz-field">
+                    Pontos
+                    <input
+                      type="number"
+                      value={customPoints}
+                      onChange={(e) => setCustomPoints(e.target.value)}
+                      placeholder="Ex: 250"
+                    />
+                  </label>
+                  <label className="wiz-field" style={{ gridColumn: "1 / -1" }}>
+                    Observação
+                    <input
+                      type="text"
+                      value={customNote}
+                      onChange={(e) => setCustomNote(e.target.value)}
+                      placeholder="Ex: Palestra especial no fórum de investimentos"
+                    />
+                  </label>
+                </>
+              )}
+            </div>
+            {awardError && <p className="form-note err">{awardError}</p>}
+            <button type="button" className="btn btn-ghost" disabled={awarding} onClick={onAwardPoints} style={{ marginTop: 10 }}>
+              {awarding ? "Concedendo…" : "Conceder pontos"}
+            </button>
+
+            {app.loyaltyTransactions.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <p className="cp-chips-label">Atividade recente</p>
+                <div className="loyalty-activity-list">
+                  {app.loyaltyTransactions.map((tx) => (
+                    <div className="loyalty-activity-item" key={tx.id}>
+                      <span>{tx.actionId === "CUSTOM" && tx.note ? tx.note : getActionLabel(tx.actionId, "pt")}</span>
+                      <span className="loyalty-activity-points">+{tx.points}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="about-section-card">
           <h3 className="mp-subtitle mp-subtitle-tight">Análise detalhada (etapa {app.wizardStep}/7)</h3>

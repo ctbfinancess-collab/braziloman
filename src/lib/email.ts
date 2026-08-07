@@ -9,7 +9,7 @@ const resend = hasEmail ? new Resend(env.RESEND_API_KEY) : null;
 
 const FROM = "Câmara de Comércio Brasil–Omã <contact@brasilomanchamber.org>";
 const ADMIN_EMAIL = "contact@brasilomanchamber.org";
-const SITE_URL = "https://www.brasilomanchamber.org";
+export const SITE_URL = "https://www.brasilomanchamber.org";
 
 function layout(previewText: string, bodyHtml: string): string {
   return `<!doctype html>
