@@ -1357,9 +1357,16 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 0; padding: 0; background: none; cursor: pointer;
 }
 .loyalty-card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.loyalty-card-patch { position: absolute; border-radius: 3px; }
-.loyalty-card-patch-year, .loyalty-card-value-year { left: 53%; top: 61%; width: 11%; height: 8%; }
-.loyalty-card-patch-number, .loyalty-card-value-number { left: 53%; top: 78%; width: 23%; height: 8%; }
+/* A "mancha" que cobre o ano/número de exemplo da arte original: o núcleo continua
+   100% sólido e opaco (garante que nada do texto original escape), e a borda reta
+   contra a textura fotografada do metal é suavizada com box-shadow (nunca com
+   filter:blur — blur reduz a opacidade nas bordas da própria mancha, deixando
+   escapar um resquício do texto de exemplo por baixo). */
+.loyalty-card-patch { position: absolute; border-radius: 3px; box-shadow: 0 0 7px 5px var(--patch-glow); }
+.loyalty-card-patch-year { left: 51%; top: 60.5%; width: 16%; height: 10%; }
+.loyalty-card-patch-number { left: 51%; top: 76%; width: 31%; height: 11.5%; }
+.loyalty-card-value-year { left: 53%; top: 61%; width: 11%; height: 8%; }
+.loyalty-card-value-number { left: 53%; top: 78%; width: 23%; height: 8%; }
 .loyalty-card-value {
   position: absolute; display: flex; align-items: center; justify-content: flex-start;
   font-family: var(--font-display); font-weight: 700; white-space: nowrap; line-height: 1;
@@ -1614,7 +1621,7 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .membership-levels-grid img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
 
 /* ---------- Cards de preço ---------- */
-.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
 .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; }
 .pricing-name { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 8px; }
 .tier-gold .pricing-name { color: var(--gold); }

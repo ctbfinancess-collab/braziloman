@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { type LoyaltyTier } from "@/lib/loyalty";
 
+// "?v=2" força o navegador a buscar a imagem nova em vez de usar uma cópia antiga
+// já guardada em cache (o verso mudou de arte, mas manteve o mesmo nome de arquivo).
 const CARD_ASSETS: Record<LoyaltyTier, { front: string; back: string }> = {
-  GOLD: { front: "/loyalty/gold-front.jpg", back: "/loyalty/gold-back.jpg" },
-  BLACK: { front: "/loyalty/black-front.jpg", back: "/loyalty/black-back.jpg" },
-  PLATINUM: { front: "/loyalty/platinum-front.jpg", back: "/loyalty/platinum-back.jpg" },
+  GOLD: { front: "/loyalty/gold-front.jpg", back: "/loyalty/gold-back.jpg?v=2" },
+  BLACK: { front: "/loyalty/black-front.jpg", back: "/loyalty/black-back.jpg?v=2" },
+  PLATINUM: { front: "/loyalty/platinum-front.jpg", back: "/loyalty/platinum-back.jpg?v=2" },
 };
 
 // Cor do texto gravado e da "mancha" que cobre o número/ano de exemplo da arte
@@ -63,7 +65,7 @@ export function MemberDigitalCard({
           <>
             <span
               className="loyalty-card-patch loyalty-card-patch-year"
-              style={{ background: patchColor }}
+              style={{ background: patchColor, ["--patch-glow" as string]: patchColor }}
               aria-hidden="true"
             />
             <span className="loyalty-card-value loyalty-card-value-year" style={{ color: textColor }}>
@@ -71,7 +73,7 @@ export function MemberDigitalCard({
             </span>
             <span
               className="loyalty-card-patch loyalty-card-patch-number"
-              style={{ background: patchColor }}
+              style={{ background: patchColor, ["--patch-glow" as string]: patchColor }}
               aria-hidden="true"
             />
             <span className="loyalty-card-value loyalty-card-value-number" style={{ color: textColor }}>
