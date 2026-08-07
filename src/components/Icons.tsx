@@ -132,6 +132,18 @@ export const IconLogout = (p: P) => (
 export const IconUserPlus = (p: P) => (
   <svg {...base} {...p}><circle cx="9" cy="8" r="4" /><path d="M2 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /><path d="M19 8v6M16 11h6" /></svg>
 );
+export const IconEdit = (p: P) => (
+  <svg {...base} {...p}><path d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0 0-2.1l-1.9-1.9a1.5 1.5 0 0 0-2.1 0L4 15v5z" /><path d="M13.5 6.5l2.5 2.5" /></svg>
+);
+export const IconClipboard = (p: P) => (
+  <svg {...base} {...p}><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1H9V4z" /><path d="M8.5 13l2 2 4-4" /></svg>
+);
+export const IconCreditCard = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="6" width="18" height="13" rx="2" /><path d="M3 10h18" /><path d="M7 15h4" /></svg>
+);
+export const IconHeadset = (p: P) => (
+  <svg {...base} {...p}><path d="M4 13a8 8 0 0 1 16 0" /><rect x="3" y="13" width="4" height="6" rx="1.5" /><rect x="17" y="13" width="4" height="6" rx="1.5" /><path d="M19 19v1a3 3 0 0 1-3 3h-3" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -174,6 +186,10 @@ const map = {
   check: IconCheck,
   logout: IconLogout,
   userplus: IconUserPlus,
+  edit: IconEdit,
+  clipboard: IconClipboard,
+  creditcard: IconCreditCard,
+  headset: IconHeadset,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

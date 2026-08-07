@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
@@ -462,9 +463,6 @@ export function Ecosystem() {
 
 export function Membership() {
   const { d } = useI18n();
-  const mid = Math.ceil(d.membership.benefits.length / 2);
-  const col1 = d.membership.benefits.slice(0, mid);
-  const col2 = d.membership.benefits.slice(mid);
   return (
     <section className="section" id="associacao">
       <div className="container reveal">
@@ -478,33 +476,175 @@ export function Membership() {
             </h2>
             <span className="about-flourish" aria-hidden="true" />
             <p className="section-lead">{d.membership.lead}</p>
+            <div className="membership-ctas">
+              <a href="/associe-se#mp-form" className="btn btn-primary">
+                {d.membership.cta} <Icon name="arrowright" />
+              </a>
+              <Link href="/contato" className="btn btn-ghost">
+                {d.membership.ctaSecondary} <Icon name="mail" />
+              </Link>
+            </div>
+            <div className="membership-quick-features">
+              {d.membership.quickFeatures.map((f) => (
+                <div className="membership-quick-feature" key={f.text}>
+                  <span className="benefit-icon"><Icon name={f.icon} /></span>
+                  <span>{f.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="membership-map">
-            <img src="/associe-se/mapa.jpg" alt="Cartões de associado da Câmara nas categorias Gold, Black e Platinum" />
+          <div>
+            <div className="membership-map">
+              <img src="/associe-se/mapa.jpg" alt="Cartões de associado da Câmara nas categorias Gold, Black e Platinum" />
+            </div>
+            <blockquote className="membership-quote">
+              <p>{d.membership.quote}</p>
+            </blockquote>
           </div>
         </div>
-        <div className="benefits">
-          <ul>
-            {col1.map((b) => (
-              <li key={b.text}>
-                <span className="benefit-icon"><Icon name={b.icon} /></span>
-                <span>{b.text}</span>
-              </li>
-            ))}
-          </ul>
-          <ul>
-            {col2.map((b) => (
-              <li key={b.text}>
-                <span className="benefit-icon"><Icon name={b.icon} /></span>
-                <span>{b.text}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <a href="#solicitar" className="btn btn-primary">{d.membership.cta}</a>
         <span className="diamond-flourish" aria-hidden="true">
           <span className="df-line" /><span className="df-dot" /><span className="df-line" />
         </span>
+      </div>
+    </section>
+  );
+}
+
+export function MembershipLevels() {
+  const { d } = useI18n();
+  return (
+    <section className="membership-levels">
+      <div className="container reveal">
+        <p className="section-eyebrow center light">{d.membership.levels.eyebrow}</p>
+        <h2 className="section-title center light">{d.membership.levels.title}</h2>
+        <span className="diamond-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
+        <p className="section-lead mp-lead-center light">{d.membership.levels.lead}</p>
+        <div className="membership-levels-grid">
+          <img src="/loyalty/gold-front.jpg" alt="Cartão de associado Gold Member" />
+          <img src="/loyalty/black-front.jpg" alt="Cartão de associado Black Member" />
+          <img src="/loyalty/platinum-front.jpg" alt="Cartão de associado Platinum Member" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function MembershipPricing() {
+  const { d } = useI18n();
+  return (
+    <section className="section membership-pricing">
+      <div className="container reveal">
+        <div className="pricing-grid">
+          {d.membership.pricing.tiers.map((t) => (
+            <div className={`pricing-card tier-${t.tier.toLowerCase()}`} key={t.tier}>
+              <p className="pricing-name">{t.name}</p>
+              <p className="pricing-desc">{t.description}</p>
+              <p className="pricing-starting">{d.membership.pricing.startingAt}</p>
+              <p className="pricing-price">
+                {d.membership.pricing.currency} {t.price.toLocaleString("en-US")}
+                <span>{d.membership.pricing.perYear}</span>
+              </p>
+              <ul className="pricing-features">
+                {t.features.map((f) => (
+                  <li key={f}>
+                    <Icon name="check" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <a href="/associe-se#mp-form" className="btn pricing-cta">
+                {t.cta} <Icon name="arrowright" />
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function MembershipNetworkBand() {
+  const { d } = useI18n();
+  return (
+    <section className="section membership-network-band">
+      <div className="container reveal">
+        <div className="membership-network-grid">
+          {d.membership.network.map((n) => (
+            <div className="membership-network-item" key={n.h}>
+              <span className="benefit-icon"><Icon name={n.icon} /></span>
+              <div>
+                <h3>{n.h}</h3>
+                <p>{n.p}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function MembershipHowItWorks() {
+  const { d } = useI18n();
+  return (
+    <section className="section">
+      <div className="container reveal">
+        <h2 className="section-title center">{d.membership.howItWorks.title}</h2>
+        <span className="diamond-flourish" aria-hidden="true">
+          <span className="df-line" /><span className="df-dot" /><span className="df-line" />
+        </span>
+        <div className="howitworks-row">
+          {d.membership.howItWorks.steps.map((s, i) => (
+            <div className="howitworks-step" key={s.h}>
+              <span className="howitworks-icon"><Icon name={s.icon} /></span>
+              <p className="howitworks-num">{i + 1}. {s.h}</p>
+              <p className="howitworks-lead">{s.p}</p>
+              {i < d.membership.howItWorks.steps.length - 1 && <span className="howitworks-dots" aria-hidden="true" />}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`faq-item${open ? " open" : ""}`}>
+      <button type="button" className="faq-question" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+        <span>{q}</span>
+        <Icon name="chevrondown" />
+      </button>
+      {open && <p className="faq-answer">{a}</p>}
+    </div>
+  );
+}
+
+export function MembershipFAQ() {
+  const { d } = useI18n();
+  const f = d.membership.faq;
+  return (
+    <section className="section section-alt">
+      <div className="container reveal membership-faq-grid">
+        <div>
+          <h2 className="section-title">{f.title}</h2>
+          <span className="about-flourish" aria-hidden="true" />
+          <div className="faq-list">
+            {f.items.map((it) => (
+              <FaqItem key={it.q} q={it.q} a={it.a} />
+            ))}
+          </div>
+        </div>
+        <div className="faq-help-box">
+          <span className="benefit-icon"><Icon name="headset" /></span>
+          <h3>{f.help.title}</h3>
+          <p>{f.help.lead}</p>
+          <Link href="/contato" className="btn btn-primary">
+            {f.help.cta} <Icon name="arrowright" />
+          </Link>
+        </div>
       </div>
     </section>
   );

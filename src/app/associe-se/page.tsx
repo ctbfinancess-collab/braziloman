@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Membership } from "@/components/Sections";
+import { Membership, MembershipLevels, MembershipPricing, MembershipNetworkBand, MembershipHowItWorks, MembershipFAQ } from "@/components/Sections";
 import { MembershipHero, MembershipClosing } from "@/components/MembershipPage";
 
 export const metadata: Metadata = {
@@ -12,6 +12,11 @@ export default function AssocieSePage() {
   return (
     <>
       <Membership />
+      <MembershipLevels />
+      <MembershipPricing />
+      <MembershipNetworkBand />
+      <MembershipHowItWorks />
+      <MembershipFAQ />
       <MembershipHero />
       <MembershipClosing />
     </>

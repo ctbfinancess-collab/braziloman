@@ -515,7 +515,7 @@ export const content = {
       titleLine1: "Uma ponte para",
       titleAccentLine1: "novas",
       titleAccentLine2: "oportunidades",
-      lead: "Torne-se membro e acesse uma rede exclusiva de negócios, inteligência de mercado e segurança jurídica entre o Brasil e Omã.",
+      lead: "Torne-se membro da Câmara de Comércio Brasil–Omã e acesse uma rede exclusiva de negócios, inteligência de mercado e segurança jurídica entre o Brasil e Omã.",
       benefits: [
         { icon: "briefcase", text: "Acesso a rodadas de negócios e missões empresariais" },
         { icon: "trending", text: "Relatórios e análises de mercado exclusivos" },
@@ -525,6 +525,105 @@ export const content = {
         { icon: "megaphone", text: "Divulgação da sua empresa nos canais da Câmara" },
       ],
       cta: "Quero me associar",
+      ctaSecondary: "Falar com nossa equipe",
+      quote: "“Unimos dois mundos de oportunidades para construir relações sólidas, parcerias estratégicas e um futuro próspero para todos.”",
+      quickFeatures: [
+        { icon: "briefcase", text: "Conecte-se com empresários e investidores" },
+        { icon: "chart", text: "Tenha acesso a análises e relatórios exclusivos" },
+        { icon: "scale", text: "Conte com suporte jurídico e de compliance" },
+        { icon: "people", text: "Participe de missões, eventos e rodadas de negócios" },
+      ],
+      levels: {
+        eyebrow: "Níveis de Associação",
+        title: "Níveis de Associação",
+        lead: "Escolha o plano que melhor acompanha o crescimento da sua empresa.",
+      },
+      pricing: {
+        currency: "US$",
+        perYear: "/ ano",
+        startingAt: "A partir de",
+        tiers: [
+          {
+            tier: "GOLD",
+            name: "Gold Member",
+            description: "Ideal para empresas que estão expandindo conexões e visibilidade.",
+            price: 700,
+            features: [
+              "Participação em eventos da Câmara",
+              "Acesso a conteúdos e notícias exclusivas",
+              "Networking qualificado",
+              "Descontos em programas da Câmara",
+            ],
+            cta: "Escolher Gold",
+          },
+          {
+            tier: "BLACK",
+            name: "Black Member",
+            description: "Para empresas que buscam mais conexão, inteligência e oportunidades.",
+            price: 1500,
+            features: [
+              "Todos os benefícios GOLD",
+              "Acesso a relatórios de mercado",
+              "Participação em missões empresariais",
+              "Divulgação da empresa nos canais da Câmara",
+              "Convites para eventos exclusivos",
+            ],
+            cta: "Escolher Black",
+          },
+          {
+            tier: "PLATINUM",
+            name: "Platinum Member",
+            description: "O mais alto nível de benefícios e exposição internacional.",
+            price: 2500,
+            features: [
+              "Todos os benefícios BLACK",
+              "Acompanhamento personalizado",
+              "Prioridade em rodadas de negócios",
+              "Apoio estratégico e institucional",
+              "Visibilidade destacada nos canais oficiais",
+            ],
+            cta: "Escolher Platinum",
+          },
+        ],
+      },
+      network: [
+        { icon: "globe", h: "Rede Global", p: "Conecte-se com empresas e líderes do Brasil, Omã e Golfo." },
+        { icon: "chart", h: "Inteligência e Conteúdo", p: "Receba análises, estudos e informações estratégicas." },
+        { icon: "calendar", h: "Eventos e Missões", p: "Participe de eventos exclusivos e missões empresariais internacionais." },
+        { icon: "shieldcheck", h: "Segurança e Confiança", p: "Tenha suporte jurídico e institucional para seus negócios." },
+      ],
+      howItWorks: {
+        title: "Como Funciona a Associação",
+        steps: [
+          { icon: "edit", h: "Inscrição", p: "Preencha o formulário de associação online." },
+          { icon: "clipboard", h: "Análise", p: "Nossa equipe analisa as informações." },
+          { icon: "handshake", h: "Aprovação", p: "Receba a confirmação e boas-vindas." },
+          { icon: "creditcard", h: "Pagamento", p: "Finalize o pagamento de forma segura." },
+          { icon: "seal", h: "Boas-vindas", p: "Aproveite todos os benefícios da sua associação." },
+        ],
+      },
+      faq: {
+        title: "Perguntas Frequentes",
+        items: [
+          {
+            q: "Quais são os requisitos para se associar?",
+            a: "É preciso ser uma empresa em situação regular, com interesse em fortalecer relações comerciais entre o Brasil e Omã. O processo de análise verifica dados societários, financeiros e de compliance.",
+          },
+          {
+            q: "Como funciona o pagamento da anuidade?",
+            a: "Após a aprovação da candidatura, nossa equipe entra em contato para combinar a forma de pagamento da contribuição anual referente ao nível escolhido.",
+          },
+          {
+            q: "Quais são os benefícios de cada nível?",
+            a: "Os benefícios são progressivos: Black inclui tudo do Gold, e Platinum inclui tudo do Black, além de vantagens exclusivas de cada nível. Veja o detalhamento completo nos planos acima.",
+          },
+        ],
+        help: {
+          title: "Precisa de ajuda?",
+          lead: "Fale com nossa equipe e comece hoje mesmo.",
+          cta: "Falar com nossa equipe",
+        },
+      },
     },
     membershipPage: {
       hero: {
@@ -1537,7 +1636,7 @@ export const content = {
       titleLine1: "A bridge to",
       titleAccentLine1: "new",
       titleAccentLine2: "opportunities",
-      lead: "Become a member and access an exclusive network of business, market intelligence and legal certainty between Brazil and Oman.",
+      lead: "Become a member of the Brazil–Oman Chamber of Commerce and access an exclusive network of business, market intelligence and legal certainty between Brazil and Oman.",
       benefits: [
         { icon: "briefcase", text: "Access to business rounds and corporate missions" },
         { icon: "trending", text: "Exclusive market reports and analyses" },
@@ -1547,6 +1646,105 @@ export const content = {
         { icon: "megaphone", text: "Promotion of your company across the Chamber's channels" },
       ],
       cta: "I want to join",
+      ctaSecondary: "Talk to our team",
+      quote: "“We unite two worlds of opportunity to build solid relationships, strategic partnerships and a prosperous future for all.”",
+      quickFeatures: [
+        { icon: "briefcase", text: "Connect with entrepreneurs and investors" },
+        { icon: "chart", text: "Access exclusive analyses and reports" },
+        { icon: "scale", text: "Count on legal and compliance support" },
+        { icon: "people", text: "Join missions, events and business rounds" },
+      ],
+      levels: {
+        eyebrow: "Membership Tiers",
+        title: "Membership Tiers",
+        lead: "Choose the plan that best matches your company's growth.",
+      },
+      pricing: {
+        currency: "US$",
+        perYear: "/ year",
+        startingAt: "Starting at",
+        tiers: [
+          {
+            tier: "GOLD",
+            name: "Gold Member",
+            description: "Ideal for companies expanding their connections and visibility.",
+            price: 700,
+            features: [
+              "Participation in Chamber events",
+              "Access to exclusive content and news",
+              "Qualified networking",
+              "Discounts on Chamber programs",
+            ],
+            cta: "Choose Gold",
+          },
+          {
+            tier: "BLACK",
+            name: "Black Member",
+            description: "For companies seeking more connection, intelligence and opportunities.",
+            price: 1500,
+            features: [
+              "All GOLD benefits",
+              "Access to market reports",
+              "Participation in corporate missions",
+              "Company promotion across the Chamber's channels",
+              "Invitations to exclusive events",
+            ],
+            cta: "Choose Black",
+          },
+          {
+            tier: "PLATINUM",
+            name: "Platinum Member",
+            description: "The highest level of benefits and international exposure.",
+            price: 2500,
+            features: [
+              "All BLACK benefits",
+              "Personalized support",
+              "Priority in business rounds",
+              "Strategic and institutional support",
+              "Featured visibility on official channels",
+            ],
+            cta: "Choose Platinum",
+          },
+        ],
+      },
+      network: [
+        { icon: "globe", h: "Global Network", p: "Connect with companies and leaders from Brazil, Oman and the Gulf." },
+        { icon: "chart", h: "Intelligence & Content", p: "Receive strategic analyses, studies and information." },
+        { icon: "calendar", h: "Events & Missions", p: "Take part in exclusive events and international business missions." },
+        { icon: "shieldcheck", h: "Security & Trust", p: "Get legal and institutional support for your business." },
+      ],
+      howItWorks: {
+        title: "How Membership Works",
+        steps: [
+          { icon: "edit", h: "Application", p: "Fill out the online membership form." },
+          { icon: "clipboard", h: "Review", p: "Our team reviews the information." },
+          { icon: "handshake", h: "Approval", p: "Receive confirmation and a warm welcome." },
+          { icon: "creditcard", h: "Payment", p: "Complete the payment securely." },
+          { icon: "seal", h: "Welcome", p: "Enjoy all the benefits of your membership." },
+        ],
+      },
+      faq: {
+        title: "Frequently Asked Questions",
+        items: [
+          {
+            q: "What are the requirements to become a member?",
+            a: "Your company must be in good standing and interested in strengthening trade relations between Brazil and Oman. The review process checks corporate, financial and compliance data.",
+          },
+          {
+            q: "How does the annual payment work?",
+            a: "After your application is approved, our team will get in touch to arrange payment of the annual contribution for the chosen tier.",
+          },
+          {
+            q: "What are the benefits of each tier?",
+            a: "Benefits are progressive: Black includes everything in Gold, and Platinum includes everything in Black, plus exclusive advantages at each level. See the full breakdown in the plans above.",
+          },
+        ],
+        help: {
+          title: "Need help?",
+          lead: "Talk to our team and get started today.",
+          cta: "Talk to our team",
+        },
+      },
     },
     membershipPage: {
       hero: {

@@ -631,7 +631,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; }
 
 /* membership */
-.membership-top { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; margin-bottom: 36px; }
+.membership-top { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: start; margin-bottom: 36px; }
 .membership-map { position: relative; }
 .membership-map img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
 
@@ -1564,3 +1564,107 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 
 .dash-card-widget.tier-black .dash-card-widget-tier { color: #e8dc8a; }
 .dash-card-widget.tier-platinum .dash-card-widget-tier { color: #f2f2f4; }
+
+/* ---------- Associe-se: hero (CTAs, quick-features, quote) ---------- */
+.membership-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 32px; }
+.membership-ctas .btn svg { width: 16px; height: 16px; }
+.membership-quick-features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+.membership-quick-feature { display: flex; align-items: center; gap: 12px; color: var(--fg-muted); font-size: 0.85rem; }
+.membership-quote {
+  margin: 20px 0 0; padding: 24px 26px; background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold); border-radius: 6px;
+}
+.membership-quote p { margin: 0; color: var(--fg-muted); font-style: italic; line-height: 1.7; }
+
+/* ---------- Níveis de Associação (banda escura com os cartões) ---------- */
+.membership-levels {
+  padding: 72px 0; position: relative; overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(201, 162, 90, 0.12) 0%, transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(201, 162, 90, 0.1) 0%, transparent 50%),
+    var(--footer-bg);
+}
+.section-eyebrow.light { color: var(--footer-gold); }
+.section-title.light { color: var(--footer-fg); }
+.section-lead.light { color: var(--footer-muted); }
+.membership-levels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px; }
+.membership-levels-grid img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
+
+/* ---------- Cards de preço ---------- */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: start; }
+.pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; }
+.pricing-name { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 8px; }
+.tier-gold .pricing-name { color: var(--gold); }
+.tier-black .pricing-name { color: #1a1408; }
+.tier-platinum .pricing-name { color: #5f5f60; }
+.pricing-desc { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px; min-height: 44px; }
+.pricing-starting { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-dim); margin: 0; }
+.pricing-price { font-family: var(--font-display); font-size: 2.1rem; color: var(--fg); margin: 4px 0 24px; }
+.pricing-price span { font-size: 0.85rem; font-family: var(--font-body); color: var(--fg-dim); font-weight: 400; margin-left: 4px; }
+.pricing-features { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 14px; flex: 1; }
+.pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: var(--fg-muted); }
+.pricing-features li svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+.pricing-cta { justify-content: center; width: 100%; }
+.tier-gold .pricing-cta { background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color: #1a1408; }
+.tier-black .pricing-cta { background: #0a0908; color: #f4f1ea; border-color: #0a0908; }
+.tier-platinum .pricing-cta { background: linear-gradient(135deg, #b8b8bc, #6d6d70); color: #fff; }
+.pricing-cta:hover { filter: brightness(1.1); transform: translateY(-2px); }
+
+/* ---------- banda de 4 ícones (Rede Global etc.) ---------- */
+.membership-network-band { padding-top: 0; }
+.membership-network-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px;
+}
+.membership-network-item { display: flex; align-items: flex-start; gap: 14px; }
+.membership-network-item h3 { font-size: 0.95rem; margin: 0 0 6px; color: var(--fg); }
+.membership-network-item p { font-size: 0.85rem; color: var(--fg-muted); margin: 0; line-height: 1.5; }
+
+/* ---------- Como Funciona a Associação ---------- */
+.howitworks-row { display: flex; align-items: flex-start; justify-content: center; gap: 8px; text-align: center; flex-wrap: wrap; }
+.howitworks-step { display: flex; flex-direction: column; align-items: center; width: 190px; position: relative; }
+.howitworks-icon {
+  width: 60px; height: 60px; border-radius: 50%; border: 1px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center; color: var(--gold); margin-bottom: 14px; flex-shrink: 0;
+}
+.howitworks-icon svg { width: 24px; height: 24px; }
+.howitworks-num { font-weight: 600; color: var(--fg); margin: 0 0 4px; font-size: 0.92rem; }
+.howitworks-lead { color: var(--fg-muted); font-size: 0.82rem; margin: 0; line-height: 1.5; }
+.howitworks-dots {
+  position: absolute; top: 30px; left: calc(50% + 40px); width: calc(100% - 20px); height: 1px;
+  border-top: 2px dotted var(--border-strong);
+}
+
+/* ---------- FAQ ---------- */
+.membership-faq-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: start; }
+.faq-list { display: grid; gap: 12px; margin-top: 24px; }
+.faq-item { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.faq-question {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 18px 22px; background: none; border: none; cursor: pointer; text-align: left;
+  font-size: 0.95rem; color: var(--fg); font-weight: 500;
+}
+.faq-question svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; transition: transform 0.2s; }
+.faq-item.open .faq-question svg { transform: rotate(180deg); }
+.faq-answer { padding: 0 22px 20px; margin: 0; color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6; }
+.faq-help-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px;
+  text-align: center; margin-top: 24px;
+}
+.faq-help-box h3 { font-family: var(--font-display); font-size: 1.1rem; margin: 14px 0 8px; }
+.faq-help-box p { color: var(--fg-muted); font-size: 0.9rem; margin: 0 0 20px; }
+.faq-help-box .btn { width: 100%; justify-content: center; }
+.faq-help-box .btn svg { width: 16px; height: 16px; }
+
+@media (max-width: 900px) {
+  .membership-levels-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .membership-network-grid { grid-template-columns: 1fr 1fr; }
+  .membership-faq-grid { grid-template-columns: 1fr; }
+  .howitworks-dots { display: none; }
+}
+@media (max-width: 560px) {
+  .membership-quick-features { grid-template-columns: 1fr; }
+  .membership-network-grid { grid-template-columns: 1fr; padding: 24px; }
+  .howitworks-row { flex-direction: column; align-items: center; }
+  .howitworks-step { width: 100%; max-width: 280px; }
+}
