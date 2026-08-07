@@ -105,6 +105,33 @@ export const IconArrowRight = (p: P) => (
 export const IconQuestion = (p: P) => (
   <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M9.2 9.5a2.8 2.8 0 1 1 4.4 2.3c-.9.7-1.6 1.2-1.6 2.4" /><path d="M12 17.3v.1" /></svg>
 );
+export const IconTicket = (p: P) => (
+  <svg {...base} {...p}><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8z" /><path d="M10 6v2M10 11v2M10 16v2" /></svg>
+);
+export const IconTie = (p: P) => (
+  <svg {...base} {...p}><path d="M9 4h6l1 3-2 2 2 10-4 3-4-3 2-10-2-2 1-3z" /><path d="M9 4a3 3 0 0 0 6 0" /></svg>
+);
+export const IconBuilding = (p: P) => (
+  <svg {...base} {...p}><rect x="5" y="3" width="14" height="18" rx="1" /><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01" /><path d="M10 21v-4h4v4" /></svg>
+);
+export const IconPhone = (p: P) => (
+  <svg {...base} {...p}><path d="M5 4h3.5l1.5 4.5-2 1.5a11 11 0 0 0 5.5 5.5l1.5-2 4.5 1.5V19a2 2 0 0 1-2 2C10.5 21 3 13.5 3 6a2 2 0 0 1 2-2z" /></svg>
+);
+export const IconBell = (p: P) => (
+  <svg {...base} {...p}><path d="M6 9a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 13 6 9z" /><path d="M10 19a2 2 0 0 0 4 0" /></svg>
+);
+export const IconChevronDown = (p: P) => (
+  <svg {...base} {...p}><path d="M5 8l7 7 7-7" /></svg>
+);
+export const IconCheck = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M8 12.5l2.5 2.5L16 9.5" /></svg>
+);
+export const IconLogout = (p: P) => (
+  <svg {...base} {...p}><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" /><path d="M15 16l4-4-4-4M19 12H9" /></svg>
+);
+export const IconUserPlus = (p: P) => (
+  <svg {...base} {...p}><circle cx="9" cy="8" r="4" /><path d="M2 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /><path d="M19 8v6M16 11h6" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -138,6 +165,15 @@ const map = {
   eyeoff: IconEyeOff,
   arrowright: IconArrowRight,
   question: IconQuestion,
+  ticket: IconTicket,
+  tie: IconTie,
+  building: IconBuilding,
+  phone: IconPhone,
+  bell: IconBell,
+  chevrondown: IconChevronDown,
+  check: IconCheck,
+  logout: IconLogout,
+  userplus: IconUserPlus,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

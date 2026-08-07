@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 
 export default function Footer() {
   const { d } = useI18n();
+  const pathname = usePathname();
   const links = [
     { href: "/a-camara", label: d.nav.about },
     { href: "/brasil-oma", label: d.nav.countries },
@@ -14,6 +16,10 @@ export default function Footer() {
     { href: "/associe-se", label: d.nav.membership },
     { href: "/noticias", label: d.nav.news },
   ];
+
+  // O Painel do Associado (associados ativos) tem seu próprio rodapé, sem o
+  // rodapé institucional do site.
+  if (pathname?.startsWith("/membro/painel/")) return null;
 
   return (
     <footer className="site-footer">

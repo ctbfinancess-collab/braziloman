@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import QRCode from "qrcode";
 import { prisma } from "@/lib/prisma";
 import { verifyMemberSession, MEMBER_COOKIE } from "@/lib/session";
-import { SITE_URL } from "@/lib/email";
-import { awardBecomeMemberPoints } from "@/lib/loyaltyServer";
-import { MemberPanel, MemberStatusScreen } from "@/components/MemberArea";
+import { MemberStatusScreen } from "@/components/MemberArea";
 import { CandidatePortal } from "@/components/CandidatePortal";
 
 export const metadata: Metadata = {
@@ -46,7 +43,7 @@ export default async function MemberPanelPage() {
 
   if (!session) redirect("/membro/login");
 
-  let application = prisma
+  const application = prisma
     ? await prisma.membershipApplication.findUnique({ where: { id: session.sub }, select: memberSelect })
     : null;
 
@@ -56,15 +53,9 @@ export default async function MemberPanelPage() {
     return <CandidatePortal />;
   }
 
-  const isActiveMember = ACTIVE_STATUSES.has(application.status);
-
-  // Backfill preguiçoso: associados que já eram ativos antes do Programa de
-  // Fidelidade existir ainda não têm memberNumber/pontos — concede na primeira
-  // vez que essa pessoa abre o próprio painel.
-  if (isActiveMember && prisma && !application.memberNumber) {
-    await awardBecomeMemberPoints(session.sub);
-    application = await prisma.membershipApplication.findUnique({ where: { id: session.sub }, select: memberSelect });
-    if (!application) redirect("/membro/login");
+  // Associados ativos têm um painel dedicado (menu lateral, cartão, rewards…).
+  if (ACTIVE_STATUSES.has(application.status)) {
+    redirect("/membro/painel/inicio");
   }
 
   const member = {
@@ -73,13 +64,6 @@ export default async function MemberPanelPage() {
     memberSince: application.memberSince ? application.memberSince.toISOString() : null,
     loyaltyTransactions: application.loyaltyTransactions.map((t) => ({ ...t, createdAt: t.createdAt.toISOString() })),
   };
-
-  if (isActiveMember) {
-    const qrDataUrl = member.memberNumber
-      ? await QRCode.toDataURL(`${SITE_URL}/membro/verificar/${member.memberNumber}`, { margin: 1, width: 240 })
-      : null;
-    return <MemberPanel member={member} qrDataUrl={qrDataUrl} />;
-  }
 
   return <MemberStatusScreen member={member} />;
 }

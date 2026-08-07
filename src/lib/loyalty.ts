@@ -23,17 +23,19 @@ export type LoyaltyAction = {
   /** true só para TORNAR_SE_ASSOCIADO — concedida automaticamente, não aparece
    *  como opção selecionável no formulário manual do admin. */
   automatic?: boolean;
+  /** nome do ícone (ver src/components/Icons.tsx) usado no extrato de atividade. */
+  icon: string;
 };
 
 export const LOYALTY_ACTIONS: LoyaltyAction[] = [
-  { id: "TORNAR_SE_ASSOCIADO", labelPt: "Tornar-se associado", labelEn: "Become a member", points: 1000, automatic: true },
-  { id: "RENOVAR_ANUIDADE", labelPt: "Renovar anuidade", labelEn: "Renew annual membership", points: 500 },
-  { id: "PARTICIPAR_EVENTO", labelPt: "Participar de evento", labelEn: "Attend an event", points: 100 },
-  { id: "PARTICIPAR_MISSAO_EMPRESARIAL", labelPt: "Participar de missão empresarial", labelEn: "Join a business mission", points: 500 },
-  { id: "INDICAR_NOVO_ASSOCIADO", labelPt: "Indicar novo associado", labelEn: "Refer a new member", points: 1000 },
-  { id: "PARTICIPAR_RODADA_NEGOCIOS", labelPt: "Participar de rodada de negócios", labelEn: "Join a business roundtable", points: 150 },
-  { id: "MINISTRAR_PALESTRA", labelPt: "Ministrar palestra", labelEn: "Give a talk", points: 300 },
-  { id: "PATROCINAR_EVENTO", labelPt: "Patrocinar evento", labelEn: "Sponsor an event", points: 2000 },
+  { id: "TORNAR_SE_ASSOCIADO", labelPt: "Tornar-se associado", labelEn: "Become a member", points: 1000, automatic: true, icon: "userplus" },
+  { id: "RENOVAR_ANUIDADE", labelPt: "Renovar anuidade", labelEn: "Renew annual membership", points: 500, icon: "clock" },
+  { id: "PARTICIPAR_EVENTO", labelPt: "Participar de evento", labelEn: "Attend an event", points: 100, icon: "calendar" },
+  { id: "PARTICIPAR_MISSAO_EMPRESARIAL", labelPt: "Participar de missão empresarial", labelEn: "Join a business mission", points: 500, icon: "plane" },
+  { id: "INDICAR_NOVO_ASSOCIADO", labelPt: "Indicar novo associado", labelEn: "Refer a new member", points: 1000, icon: "people" },
+  { id: "PARTICIPAR_RODADA_NEGOCIOS", labelPt: "Participar de rodada de negócios", labelEn: "Join a business roundtable", points: 150, icon: "handshake" },
+  { id: "MINISTRAR_PALESTRA", labelPt: "Ministrar palestra", labelEn: "Give a talk", points: 300, icon: "megaphone" },
+  { id: "PATROCINAR_EVENTO", labelPt: "Patrocinar evento", labelEn: "Sponsor an event", points: 2000, icon: "trending" },
 ];
 
 export function getActionById(id: string): LoyaltyAction | undefined {
@@ -45,6 +47,11 @@ export function getActionLabel(actionId: string, locale: "pt" | "en"): string {
   const a = getActionById(actionId);
   if (a) return locale === "pt" ? a.labelPt : a.labelEn;
   return locale === "pt" ? "Ação personalizada" : "Custom action";
+}
+
+/** Ícone de exibição de uma ação no extrato de atividade (ver src/components/Icons.tsx). */
+export function getActionIcon(actionId: string): string {
+  return getActionById(actionId)?.icon ?? "seal";
 }
 
 export type LoyaltyTier = "GOLD" | "BLACK" | "PLATINUM";
@@ -90,21 +97,28 @@ export function getTierProgress(points: number): {
   return { tier, isMaxTier: false, nextTier, pointsToNext, progressPct };
 }
 
-/** Benefícios progressivos: cada nível inclui os benefícios do nível anterior + os novos. */
-const GOLD_BENEFITS = {
-  pt: ["Desconto em eventos", "Desconto em missões empresariais", "Divulgação nas redes da Câmara"],
-  en: ["Discount on events", "Discount on business missions", "Promotion on the Chamber's social channels"],
-};
-const BLACK_BENEFITS = {
-  pt: [...GOLD_BENEFITS.pt, "Acesso VIP", "Salas de reunião", "Destaque no diretório empresarial"],
-  en: [...GOLD_BENEFITS.en, "VIP access", "Meeting rooms", "Featured placement in the business directory"],
-};
-const PLATINUM_BENEFITS = {
-  pt: [...BLACK_BENEFITS.pt, "Consultorias", "Prioridade em agendas institucionais"],
-  en: [...BLACK_BENEFITS.en, "Consulting sessions", "Priority on institutional agendas"],
-};
+export type TierBenefit = { icon: string; pt: string; en: string };
 
-export const TIER_BENEFITS: Record<LoyaltyTier, { pt: string[]; en: string[] }> = {
+/** Benefícios progressivos: cada nível inclui os benefícios do nível anterior + os novos. */
+const GOLD_BENEFITS: TierBenefit[] = [
+  { icon: "ticket", pt: "Desconto em eventos", en: "Discount on events" },
+  { icon: "plane", pt: "Desconto em missões empresariais", en: "Discount on business missions" },
+  { icon: "megaphone", pt: "Divulgação nas redes da Câmara", en: "Promotion on the Chamber's social channels" },
+  { icon: "people", pt: "Acesso a uma rede exclusiva", en: "Access to an exclusive network" },
+];
+const BLACK_BENEFITS: TierBenefit[] = [
+  ...GOLD_BENEFITS,
+  { icon: "seal", pt: "Acesso VIP", en: "VIP access" },
+  { icon: "briefcase", pt: "Salas de reunião", en: "Meeting rooms" },
+  { icon: "idcard", pt: "Destaque no diretório empresarial", en: "Featured placement in the business directory" },
+];
+const PLATINUM_BENEFITS: TierBenefit[] = [
+  ...BLACK_BENEFITS,
+  { icon: "handshake", pt: "Consultorias", en: "Consulting sessions" },
+  { icon: "clock", pt: "Prioridade em agendas institucionais", en: "Priority on institutional agendas" },
+];
+
+export const TIER_BENEFITS: Record<LoyaltyTier, TierBenefit[]> = {
   GOLD: GOLD_BENEFITS,
   BLACK: BLACK_BENEFITS,
   PLATINUM: PLATINUM_BENEFITS,

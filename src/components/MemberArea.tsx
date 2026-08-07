@@ -4,9 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { getActionLabel, getTier, getTierProgress, TIER_BENEFITS, TIER_NAMES } from "@/lib/loyalty";
-import { MemberDigitalCard } from "./MemberDigitalCard";
-import { MemberCertificate } from "./MemberCertificate";
 import { Icon } from "./Icons";
 
 export function MemberLoginForm() {
@@ -330,7 +327,7 @@ type LoyaltyTransactionData = {
   source: string;
 };
 
-type MemberData = {
+export type MemberData = {
   name: string;
   email: string;
   company: string;
@@ -349,7 +346,7 @@ type MemberData = {
   loyaltyTransactions: LoyaltyTransactionData[];
 };
 
-const STATUS_LABELS: Record<ApplicationStatus, string> = {
+export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   PENDING: "Em análise",
   APPROVED: "Aprovado",
   INCOMPLETE: "Cadastro incompleto",
@@ -362,128 +359,6 @@ const STATUS_LABELS: Record<ApplicationStatus, string> = {
   REJECTED: "Não aprovado",
   SUSPENDED: "Associação suspensa",
 };
-
-export function MemberPanel({ member, qrDataUrl }: { member: MemberData; qrDataUrl?: string | null }) {
-  const { d, lang } = useI18n();
-  const t = d.memberArea.panel;
-  const lt = d.memberArea.loyalty;
-  const statusLabel = STATUS_LABELS[member.status] ?? member.status;
-  const tier = getTier(member.pointsTotal);
-  const progress = getTierProgress(member.pointsTotal);
-  const sinceYear = member.memberSince ? new Date(member.memberSince).getFullYear() : null;
-  const benefits = TIER_BENEFITS[tier][lang];
-  const statusClass =
-    member.status === "ACTIVE" || member.status === "APPROVED"
-      ? "gov-role"
-      : member.status === "REJECTED" || member.status === "SUSPENDED"
-        ? "form-note err"
-        : "form-note";
-
-  const rows: [string, string | null][] = [
-    [t.fields.name, member.name],
-    [t.fields.email, member.email],
-    [t.fields.company, member.company],
-    [t.fields.role, member.role],
-    [t.fields.sector, member.sector],
-    [t.fields.country, member.country],
-    [t.fields.phone, member.phone],
-    [t.fields.since, new Date(member.createdAt).toLocaleDateString()],
-  ];
-
-  return (
-    <section className="section">
-      <div className="container reveal">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <p className="section-eyebrow">{t.eyebrow}</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>{t.title}</h1>
-          </div>
-          <LogoutButton />
-        </div>
-        <span className="about-flourish" aria-hidden="true" />
-
-        <div className="about-section-card" style={{ maxWidth: 640 }}>
-          <p className="cp-chips-label">{t.statusLabel}</p>
-          <p className={statusClass} style={{ marginBottom: 20 }}>{statusLabel}</p>
-          <ul className="why-list about-why-list">
-            {rows.map(([label, value]) => (
-              <li key={label}><b>{label}:</b> {value || "—"}</li>
-            ))}
-          </ul>
-        </div>
-
-        {member.memberNumber ? (
-          <>
-            <h2 className="mp-subtitle" style={{ marginTop: 48 }}>{lt.title}</h2>
-            <div className="loyalty-grid">
-              <MemberDigitalCard
-                tier={tier}
-                company={member.company}
-                memberNumber={member.memberNumber}
-                sinceYear={sinceYear}
-                qrDataUrl={qrDataUrl}
-              />
-              <div className="about-section-card" style={{ maxWidth: 420 }}>
-                <span className={`loyalty-tier-badge tier-${tier.toLowerCase()}`}>{TIER_NAMES[tier]}</span>
-                <p style={{ marginTop: 12, marginBottom: 4 }}>
-                  <b>{lt.pointsLabel}:</b> {member.pointsTotal.toLocaleString(lang === "pt" ? "pt-BR" : "en-US")}
-                </p>
-                {progress.isMaxTier ? (
-                  <p className="cp-chips-label" style={{ marginTop: 8 }}>{lt.maxTierReached}</p>
-                ) : (
-                  <>
-                    <p className="cp-chips-label" style={{ marginTop: 8 }}>
-                      {lt.progressToNext
-                        .replace("{n}", String(progress.pointsToNext))
-                        .replace("{tier}", progress.nextTier ? TIER_NAMES[progress.nextTier] : "")}
-                    </p>
-                    <div className="loyalty-progress-track">
-                      <div className="loyalty-progress-fill" style={{ width: `${progress.progressPct}%` }} />
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginTop: 32 }}>{lt.benefitsTitle}</h3>
-            <ul className="why-list about-why-list loyalty-benefits-list">
-              {benefits.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-
-            <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginTop: 32 }}>{lt.activityTitle}</h3>
-            {member.loyaltyTransactions.length === 0 ? (
-              <p className="section-lead">{lt.noActivity}</p>
-            ) : (
-              <div className="loyalty-activity-list">
-                {member.loyaltyTransactions.map((tx) => (
-                  <div className="loyalty-activity-item" key={tx.id}>
-                    <span>{tx.actionId === "CUSTOM" && tx.note ? tx.note : getActionLabel(tx.actionId, lang)}</span>
-                    <span className="loyalty-activity-points">+{tx.points}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div style={{ marginTop: 24 }}>
-              <MemberCertificate
-                name={member.name}
-                company={member.company}
-                tier={tier}
-                memberNumber={member.memberNumber}
-                memberSince={member.memberSince}
-                qrDataUrl={qrDataUrl}
-              />
-            </div>
-          </>
-        ) : (
-          <p className="partnership-block-lead">{t.comingSoon}</p>
-        )}
-      </div>
-    </section>
-  );
-}
 
 /** Tela exibida quando a candidatura não está mais editável, mas também ainda não é associado ativo. */
 export function MemberStatusScreen({ member }: { member: MemberData }) {

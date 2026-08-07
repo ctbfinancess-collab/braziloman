@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 
@@ -10,6 +11,10 @@ export default function Header() {
   const { d, lang, toggle } = useI18n();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+  const pathname = usePathname();
+  // O Painel do Associado (associados ativos) tem seu próprio menu/topbar —
+  // sem o header institucional do site.
+  if (pathname?.startsWith("/membro/painel/")) return null;
 
   const links = [
     { href: "/a-camara", label: d.nav.about },
