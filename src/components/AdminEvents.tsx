@@ -14,6 +14,7 @@ type ChamberEvent = {
   date: string;
   location: string | null;
   imageUrl: string | null;
+  priceCents: number | null;
 };
 
 const KIND_LABEL: Record<EventKind, string> = { EVENTO: "Evento", MISSAO: "Missão empresarial" };
@@ -26,9 +27,16 @@ type FormState = {
   date: string;
   location: string;
   imageUrl: string;
+  /** Valor em reais, como texto (ex.: "150.00") — convertido pra centavos só ao salvar. */
+  price: string;
 };
 
-const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "", imageUrl: "" };
+const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "", imageUrl: "", price: "" };
+
+function formatPriceLabel(cents: number | null) {
+  if (!cents) return "Gratuito";
+  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
 
 type Registration = {
   id: string;
@@ -82,6 +90,7 @@ export function AdminEvents() {
       date: ev.date.slice(0, 10),
       location: ev.location || "",
       imageUrl: ev.imageUrl || "",
+      price: ev.priceCents ? (ev.priceCents / 100).toFixed(2) : "",
     });
   }
 
@@ -110,6 +119,12 @@ export function AdminEvents() {
     setSaving(true);
     setError("");
     try {
+      const priceValue = form.price.trim().replace(",", ".");
+      const priceCents = priceValue ? Math.round(parseFloat(priceValue) * 100) : null;
+      if (priceValue && (Number.isNaN(priceCents) || priceCents! < 0)) {
+        setError("Valor da inscrição inválido.");
+        return;
+      }
       const payload = {
         kind: form.kind,
         title: form.title,
@@ -117,6 +132,7 @@ export function AdminEvents() {
         date: form.date,
         location: form.location || null,
         imageUrl: form.imageUrl || null,
+        priceCents,
       };
       const res = await fetch(form.id ? `/api/admin/events/${form.id}` : "/api/admin/events", {
         method: form.id ? "PATCH" : "POST",
@@ -211,6 +227,19 @@ export function AdminEvents() {
               <input type="text" maxLength={200} value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
             </label>
             <label>
+              Valor da inscrição (R$)
+              <input
+                type="text"
+                inputMode="decimal"
+                placeholder="Deixe em branco se for gratuito"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value })}
+              />
+            </label>
+            <p className="cp-chips-label" style={{ marginTop: -10 }}>
+              Campo pronto para a cobrança automática via Stripe (ainda não integrada) — por enquanto é só informativo pro associado.
+            </p>
+            <label>
               Descrição
               <textarea rows={4} maxLength={4000} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </label>
@@ -262,6 +291,7 @@ export function AdminEvents() {
                       </p>
                       <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
                       {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
+                      <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{formatPriceLabel(ev.priceCents)}</p>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8 }}>

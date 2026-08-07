@@ -1156,6 +1156,7 @@ export const content = {
         changeLogo: "Trocar logo",
         removeLogo: "Remover",
         uploadingLogo: "Enviando…",
+        eventFree: "Gratuito",
       },
     },
     contact: {
@@ -2342,6 +2343,7 @@ export const content = {
         changeLogo: "Change logo",
         removeLogo: "Remove",
         uploadingLogo: "Uploading…",
+        eventFree: "Free",
       },
     },
     contact: {

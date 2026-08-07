@@ -13,6 +13,7 @@ const updateSchema = z.object({
   date: z.string().min(1).optional(),
   location: z.string().max(200).optional().nullable(),
   imageUrl: z.string().max(500).optional().nullable(),
+  priceCents: z.number().int().min(0).max(100000000).optional().nullable(),
 });
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {

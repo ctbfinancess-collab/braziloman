@@ -27,6 +27,7 @@ export default async function DashboardMissionsPage() {
     date: e.date.toISOString(),
     location: e.location,
     imageUrl: e.imageUrl,
+    priceCents: e.priceCents,
     registered: e.registrations.length > 0,
   }));
 
