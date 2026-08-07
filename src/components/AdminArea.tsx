@@ -299,8 +299,20 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
   "SUSPENDED",
 ];
 
-function renderPeopleList(rows: { name: string; [key: string]: unknown }[] | undefined, fields: string[]): React.ReactNode {
-  if (!rows || rows.length === 0) return null;
+// Candidaturas enviadas por uma versão mais antiga do Portal do Candidato salvaram
+// esses campos como texto livre (string), não como lista estruturada — aceitar os
+// dois formatos aqui evita que o detalhe da candidatura quebre pra registros antigos.
+function renderPeopleList(
+  rows: { name: string; [key: string]: unknown }[] | string | undefined,
+  fields: string[]
+): React.ReactNode {
+  if (!rows) return null;
+  if (typeof rows === "string") {
+    // O texto é exibido dentro de um <p> (ver Row abaixo) — usa pre-line em vez de
+    // <p> por linha para preservar as quebras sem aninhar blocos inválidos.
+    return <span style={{ whiteSpace: "pre-line" }}>{rows}</span>;
+  }
+  if (rows.length === 0) return null;
   return (
     <ul className="why-list about-why-list">
       {rows.map((r, i) => (
