@@ -65,7 +65,7 @@ export function MemberDigitalCard({
           <>
             <span
               className="loyalty-card-patch loyalty-card-patch-year"
-              style={{ background: patchColor, ["--patch-glow" as string]: patchColor }}
+              style={{ backgroundColor: patchColor, ["--patch-glow" as string]: patchColor }}
               aria-hidden="true"
             />
             <span className="loyalty-card-value loyalty-card-value-year" style={{ color: textColor }}>
@@ -73,7 +73,7 @@ export function MemberDigitalCard({
             </span>
             <span
               className="loyalty-card-patch loyalty-card-patch-number"
-              style={{ background: patchColor, ["--patch-glow" as string]: patchColor }}
+              style={{ backgroundColor: patchColor, ["--patch-glow" as string]: patchColor }}
               aria-hidden="true"
             />
             <span className="loyalty-card-value loyalty-card-value-number" style={{ color: textColor }}>

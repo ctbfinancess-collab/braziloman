@@ -1362,7 +1362,13 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
    contra a textura fotografada do metal é suavizada com box-shadow (nunca com
    filter:blur — blur reduz a opacidade nas bordas da própria mancha, deixando
    escapar um resquício do texto de exemplo por baixo). */
-.loyalty-card-patch { position: absolute; border-radius: 3px; box-shadow: 0 0 7px 5px var(--patch-glow); }
+/* Textura sutil (listras finas) por cima da cor sólida — sem ela, a mancha fica
+   "chapada" contra o metal escovado fotografado, que tem grão visível. */
+.loyalty-card-patch {
+  position: absolute; border-radius: 3px; box-shadow: 0 0 7px 5px var(--patch-glow);
+  background-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 3px, rgba(0, 0, 0, 0.05) 3px, rgba(0, 0, 0, 0.05) 4px, transparent 4px, transparent 6px);
+  background-blend-mode: overlay;
+}
 .loyalty-card-patch-year { left: 51%; top: 60.5%; width: 16%; height: 10%; }
 .loyalty-card-patch-number { left: 51%; top: 76%; width: 31%; height: 11.5%; }
 .loyalty-card-value-year { left: 53%; top: 61%; width: 11%; height: 8%; }
