@@ -13,6 +13,7 @@ export default function Footer() {
     { href: "/brasil-oma", label: d.nav.countries },
     { href: "/atuacao", label: d.nav.services },
     { href: "/ecossistema", label: d.nav.ecosystem },
+    { href: "/parceiros", label: d.nav.partners },
     { href: "/associe-se", label: d.nav.membership },
     { href: "/noticias", label: d.nav.news },
   ];

@@ -79,6 +79,7 @@ export function AdminNotices() {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
             <Link href="/admin/eventos" className="btn btn-ghost">Eventos e Missões</Link>
+            <Link href="/admin/parceiros" className="btn btn-ghost">Parceiros</Link>
             <button type="button" className="btn btn-primary" onClick={() => setForm({ title: "", message: "", important: false })}>+ Novo aviso</button>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>

@@ -231,6 +231,7 @@ export function AdminEvents() {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
             <Link href="/admin/avisos" className="btn btn-ghost">Avisos</Link>
+            <Link href="/admin/parceiros" className="btn btn-ghost">Parceiros</Link>
             <button type="button" className="btn btn-primary" onClick={openNew}>+ Novo</button>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>

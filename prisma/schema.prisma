@@ -213,6 +213,23 @@ model ChamberNotice {
   @@index([createdAt])
 }
 
+/// Parceiro/associado em destaque na página pública "Parceiros e Associados"
+/// (/parceiros). Curada manualmente pelo admin — nunca preenchida automaticamente
+/// com base nos associados pagantes, pra nunca sugerir uma parceria que não existe.
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String?
+  sector    String?
+  website   String?
+  /// Ordem de exibição no grid (menor primeiro); empates ficam por nome.
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
 /// Substituições de conteúdo do site (textos/imagens editados pelo admin).
 /// Uma única linha (id fixo "singleton"): "data" é um objeto profundo, no mesmo
 /// formato de content.ts, contendo só os campos que o admin alterou. O site
