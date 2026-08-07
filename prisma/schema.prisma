@@ -160,6 +160,11 @@ model ChamberEvent {
   /// (amount), então o campo já fica pronto pra virar um Stripe Checkout Session
   /// quando a cobrança automática for integrada.
   priceCents  Int?
+  /// Moeda do valor acima. Sem conversão automática entre BRL/USD — o admin
+  /// escolhe a moeda de cobrança de cada evento diretamente (é assim que o
+  /// Stripe funciona: cada Checkout Session cobra numa moeda só, sem a Câmara
+  /// precisar manter taxa de câmbio própria).
+  currency    EventCurrency    @default(BRL)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
@@ -171,6 +176,11 @@ model ChamberEvent {
 enum RegistrationStatus {
   CONFIRMED
   CANCELLED
+}
+
+enum EventCurrency {
+  BRL
+  USD
 }
 
 /// Inscrição de um associado em um evento/missão — alimenta "Próximos compromissos"

@@ -461,12 +461,13 @@ export type EventListItem = {
   location: string | null;
   imageUrl: string | null;
   priceCents: number | null;
+  currency: "BRL" | "USD";
   registered: boolean;
 };
 
-function formatEventPrice(cents: number | null, lang: "pt" | "en", freeLabel: string) {
+function formatEventPrice(cents: number | null, currency: "BRL" | "USD", freeLabel: string) {
   if (!cents) return freeLabel;
-  return (cents / 100).toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { style: "currency", currency: "BRL" });
+  return (cents / 100).toLocaleString(currency === "USD" ? "en-US" : "pt-BR", { style: "currency", currency });
 }
 
 function EventCard({ ev }: { ev: EventListItem }) {
@@ -512,7 +513,7 @@ function EventCard({ ev }: { ev: EventListItem }) {
         <p className="dash-event-title">{ev.title}</p>
         {ev.location && <p className="dash-event-location"><Icon name="pin" />{ev.location}</p>}
         <p className={`dash-event-price${ev.priceCents ? "" : " dash-event-price-free"}`}>
-          {formatEventPrice(ev.priceCents, lang, t.eventFree)}
+          {formatEventPrice(ev.priceCents, ev.currency, t.eventFree)}
         </p>
         {ev.description && <p className="dash-event-desc">{ev.description}</p>}
       </div>

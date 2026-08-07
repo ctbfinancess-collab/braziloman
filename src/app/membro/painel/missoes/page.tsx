@@ -28,6 +28,7 @@ export default async function DashboardMissionsPage() {
     location: e.location,
     imageUrl: e.imageUrl,
     priceCents: e.priceCents,
+    currency: e.currency,
     registered: e.registrations.length > 0,
   }));
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type EventKind = "EVENTO" | "MISSAO";
+type EventCurrency = "BRL" | "USD";
 
 type ChamberEvent = {
   id: string;
@@ -15,9 +16,11 @@ type ChamberEvent = {
   location: string | null;
   imageUrl: string | null;
   priceCents: number | null;
+  currency: EventCurrency;
 };
 
 const KIND_LABEL: Record<EventKind, string> = { EVENTO: "Evento", MISSAO: "Missão empresarial" };
+const CURRENCY_LABEL: Record<EventCurrency, string> = { BRL: "R$ — Real", USD: "US$ — Dólar" };
 
 type FormState = {
   id: string | null;
@@ -27,15 +30,46 @@ type FormState = {
   date: string;
   location: string;
   imageUrl: string;
-  /** Valor em reais, como texto (ex.: "150.00") — convertido pra centavos só ao salvar. */
+  /** Valor como texto, do jeito que o admin digitou (ex.: "150", "50.000", "1.500,90") — convertido pra centavos só ao salvar. */
   price: string;
+  currency: EventCurrency;
 };
 
-const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "", imageUrl: "", price: "" };
+const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "", imageUrl: "", price: "", currency: "BRL" };
 
-function formatPriceLabel(cents: number | null) {
+/**
+ * Interpreta valores digitados em formato brasileiro (ponto de milhar, vírgula
+ * decimal — ex.: "50.000" = cinquenta mil) OU americano (vírgula de milhar,
+ * ponto decimal — ex.: "1,500.00"), sem depender do admin escolher um formato.
+ * Regra: o ÚLTIMO separador só é tratado como decimal se tiver exatamente 2
+ * dígitos depois dele; senão é milhar e é descartado. Retorna centavos.
+ */
+function parsePriceInput(raw: string): number | null {
+  const s = raw.trim().replace(/[^\d.,]/g, "");
+  if (!s) return null;
+
+  const lastComma = s.lastIndexOf(",");
+  const lastDot = s.lastIndexOf(".");
+  const lastSepIdx = Math.max(lastComma, lastDot);
+
+  let intPart: string;
+  let decPart: string;
+  if (lastSepIdx !== -1 && s.length - lastSepIdx - 1 === 2) {
+    intPart = s.slice(0, lastSepIdx).replace(/[.,]/g, "");
+    decPart = s.slice(lastSepIdx + 1);
+  } else {
+    intPart = s.replace(/[.,]/g, "");
+    decPart = "00";
+  }
+  if (!intPart) return null;
+
+  const cents = parseInt(intPart, 10) * 100 + parseInt(decPart, 10);
+  return Number.isFinite(cents) ? cents : null;
+}
+
+function formatPriceLabel(cents: number | null, currency: EventCurrency) {
   if (!cents) return "Gratuito";
-  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return (cents / 100).toLocaleString(currency === "USD" ? "en-US" : "pt-BR", { style: "currency", currency });
 }
 
 type Registration = {
@@ -91,6 +125,7 @@ export function AdminEvents() {
       location: ev.location || "",
       imageUrl: ev.imageUrl || "",
       price: ev.priceCents ? (ev.priceCents / 100).toFixed(2) : "",
+      currency: ev.currency,
     });
   }
 
@@ -119,9 +154,8 @@ export function AdminEvents() {
     setSaving(true);
     setError("");
     try {
-      const priceValue = form.price.trim().replace(",", ".");
-      const priceCents = priceValue ? Math.round(parseFloat(priceValue) * 100) : null;
-      if (priceValue && (Number.isNaN(priceCents) || priceCents! < 0)) {
+      const priceCents = form.price.trim() ? parsePriceInput(form.price) : null;
+      if (form.price.trim() && (priceCents === null || priceCents < 0)) {
         setError("Valor da inscrição inválido.");
         return;
       }
@@ -133,6 +167,7 @@ export function AdminEvents() {
         location: form.location || null,
         imageUrl: form.imageUrl || null,
         priceCents,
+        currency: form.currency,
       };
       const res = await fetch(form.id ? `/api/admin/events/${form.id}` : "/api/admin/events", {
         method: form.id ? "PATCH" : "POST",
@@ -226,18 +261,36 @@ export function AdminEvents() {
               Local
               <input type="text" maxLength={200} value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
             </label>
-            <label>
-              Valor da inscrição (R$)
-              <input
-                type="text"
-                inputMode="decimal"
-                placeholder="Deixe em branco se for gratuito"
-                value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
-              />
-            </label>
+            <div style={{ display: "flex", gap: 10 }}>
+              <label style={{ flex: 2 }}>
+                Valor da inscrição
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="Deixe em branco se for gratuito"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                />
+              </label>
+              <label style={{ flex: 1 }}>
+                Moeda
+                <select value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value as EventCurrency })}>
+                  {(Object.keys(CURRENCY_LABEL) as EventCurrency[]).map((c) => (
+                    <option key={c} value={c}>{CURRENCY_LABEL[c]}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {form.price.trim() && (
+              <p className="cp-chips-label" style={{ marginTop: -10 }}>
+                {parsePriceInput(form.price) !== null
+                  ? `Isso será salvo como ${formatPriceLabel(parsePriceInput(form.price), form.currency)}`
+                  : "Valor não reconhecido — use só números."}
+              </p>
+            )}
             <p className="cp-chips-label" style={{ marginTop: -10 }}>
               Campo pronto para a cobrança automática via Stripe (ainda não integrada) — por enquanto é só informativo pro associado.
+              Sem conversão automática: escolha diretamente a moeda em que a inscrição será cobrada.
             </p>
             <label>
               Descrição
@@ -291,7 +344,7 @@ export function AdminEvents() {
                       </p>
                       <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
                       {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
-                      <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{formatPriceLabel(ev.priceCents)}</p>
+                      <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{formatPriceLabel(ev.priceCents, ev.currency)}</p>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 8 }}>

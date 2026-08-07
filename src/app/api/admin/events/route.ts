@@ -14,6 +14,7 @@ const createSchema = z.object({
   location: z.string().max(200).optional().nullable(),
   imageUrl: z.string().max(500).optional().nullable(),
   priceCents: z.number().int().min(0).max(100000000).optional().nullable(),
+  currency: z.enum(["BRL", "USD"]).optional(),
 });
 
 /** Lista todos os eventos/missões (admin) — mais recentes primeiro. */
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
       location: parsed.data.location || null,
       imageUrl: parsed.data.imageUrl || null,
       priceCents: parsed.data.priceCents || null,
+      currency: parsed.data.currency || "BRL",
     },
   });
 
