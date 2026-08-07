@@ -1088,7 +1088,7 @@ export const content = {
         contact: "Contato",
         motto: "União e Prosperidade",
         statusTitle: "Status da Associação",
-        statusApproved: "Aprovado",
+        statusApproved: "Ativo",
         fields: {
           name: "Nome",
           email: "E-mail",
@@ -2275,7 +2275,7 @@ export const content = {
         contact: "Contact",
         motto: "Union and Prosperity",
         statusTitle: "Membership Status",
-        statusApproved: "Approved",
+        statusApproved: "Active",
         fields: {
           name: "Name",
           email: "Email",

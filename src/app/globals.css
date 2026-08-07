@@ -1869,7 +1869,7 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 /* ---------- Upload de logo da empresa (LogoUploader) ---------- */
 .logo-uploader { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .logo-uploader-preview {
-  width: 76px; height: 76px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg);
+  width: 76px; height: 76px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg);
   display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--fg-dim);
 }
 .logo-uploader-preview img { width: 100%; height: 100%; object-fit: contain; }
