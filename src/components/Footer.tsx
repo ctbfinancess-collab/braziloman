@@ -55,6 +55,12 @@ export default function Footer() {
             <p>Brasília, Brasil</p>
             <p>Mascate, Omã</p>
             <p>CNPJ: 68.398.637/0001-11</p>
+            <p style={{ marginTop: 10 }}>
+              <strong style={{ color: "var(--footer-gold-light)", display: "block", marginBottom: 2, fontSize: "0.82rem" }}>
+                {d.footer.branchLabel}
+              </strong>
+              {d.footer.branchAddress}
+            </p>
           </div>
         </div>
 
