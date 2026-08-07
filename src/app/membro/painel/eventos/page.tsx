@@ -14,7 +14,11 @@ export default async function DashboardEventsPage() {
   const tier = getTier(member.pointsTotal);
 
   const rows = prisma
-    ? await prisma.chamberEvent.findMany({ where: { kind: "EVENTO" }, orderBy: { date: "asc" } })
+    ? await prisma.chamberEvent.findMany({
+        where: { kind: "EVENTO" },
+        orderBy: { date: "asc" },
+        include: { registrations: { where: { applicationId: member.id, status: "CONFIRMED" } } },
+      })
     : [];
   const events = rows.map((e) => ({
     id: e.id,
@@ -22,6 +26,7 @@ export default async function DashboardEventsPage() {
     description: e.description,
     date: e.date.toISOString(),
     location: e.location,
+    registered: e.registrations.length > 0,
   }));
 
   return (

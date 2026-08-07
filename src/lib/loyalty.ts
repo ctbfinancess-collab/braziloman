@@ -28,7 +28,7 @@ export type LoyaltyAction = {
 };
 
 export const LOYALTY_ACTIONS: LoyaltyAction[] = [
-  { id: "TORNAR_SE_ASSOCIADO", labelPt: "Tornar-se associado", labelEn: "Become a member", points: 1000, automatic: true, icon: "userplus" },
+  { id: "TORNAR_SE_ASSOCIADO", labelPt: "Adesão à Câmara — Crédito de boas-vindas", labelEn: "Chamber membership — Welcome credit", points: 1000, automatic: true, icon: "userplus" },
   { id: "RENOVAR_ANUIDADE", labelPt: "Renovar anuidade", labelEn: "Renew annual membership", points: 500, icon: "clock" },
   { id: "PARTICIPAR_EVENTO", labelPt: "Participar de evento", labelEn: "Attend an event", points: 100, icon: "calendar" },
   { id: "PARTICIPAR_MISSAO_EMPRESARIAL", labelPt: "Participar de missão empresarial", labelEn: "Join a business mission", points: 500, icon: "plane" },

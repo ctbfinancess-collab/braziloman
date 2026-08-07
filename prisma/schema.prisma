@@ -83,6 +83,7 @@ model MembershipApplication {
   pointsTotal  Int       @default(0)
 
   loyaltyTransactions LoyaltyTransaction[]
+  eventRegistrations  EventRegistration[]
 
   @@index([status])
 }
@@ -150,7 +151,44 @@ model ChamberEvent {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
+  registrations EventRegistration[]
+
   @@index([kind, date])
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+/// Inscrição de um associado em um evento/missão — alimenta "Próximos compromissos"
+/// no Painel do Associado. Autoatendida pelo associado (botão "Inscrever-me"), com
+/// status CONFIRMED por padrão; o admin pode cancelar/alterar em /admin/eventos.
+model EventRegistration {
+  id            String                @id @default(cuid())
+  eventId       String
+  event         ChamberEvent          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  applicationId String
+  application   MembershipApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        RegistrationStatus    @default(CONFIRMED)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  @@unique([eventId, applicationId])
+  @@index([applicationId])
+  @@index([eventId])
+}
+
+/// Avisos institucionais da Câmara, exibidos no sino de notificações do Painel do
+/// Associado. Cadastrados pelo admin em /admin/avisos.
+model ChamberNotice {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  important Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
 }
 
 /// Substituições de conteúdo do site (textos/imagens editados pelo admin).

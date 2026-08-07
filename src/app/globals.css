@@ -1437,12 +1437,22 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .dash-topbar-subtitle { color: var(--gold-light); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 4px 0 0; }
 .dash-topbar-actions { display: flex; align-items: center; gap: 14px; }
 .dash-icon-btn {
-  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--surface);
+  position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--surface);
   display: flex; align-items: center; justify-content: center; color: var(--fg-muted); cursor: pointer;
 }
 .dash-icon-btn svg { width: 18px; height: 18px; }
 .dash-icon-btn:hover { border-color: var(--gold); color: var(--gold); }
 .dash-lang-btn { width: auto; padding: 0 14px; gap: 6px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; }
+.dash-notice-badge { position: absolute; top: 6px; right: 7px; width: 8px; height: 8px; border-radius: 50%; background: #d0563a; border: 1.5px solid var(--surface); }
+.dash-notice-menu { min-width: 320px; max-width: 360px; padding: 4px 0; }
+.dash-notice-menu-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-dim); padding: 12px 16px 8px; margin: 0; }
+.dash-notice-empty { padding: 8px 16px 16px; color: var(--fg-muted); font-size: 0.88rem; margin: 0; }
+.dash-notice-list { max-height: 340px; overflow-y: auto; }
+.dash-notice-item { padding: 10px 16px; border-top: 1px solid var(--border); }
+.dash-notice-item.important { background: rgba(201, 90, 58, 0.06); }
+.dash-notice-item-title { font-size: 0.88rem; font-weight: 600; color: var(--fg); margin: 0 0 3px; }
+.dash-notice-item-message { font-size: 0.82rem; color: var(--fg-muted); margin: 0 0 4px; line-height: 1.4; }
+.dash-notice-item-date { font-size: 0.7rem; color: var(--fg-dim); margin: 0; }
 
 .dash-avatar-wrap { position: relative; }
 .dash-avatar-btn { display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; padding: 4px; border-radius: 8px; }
@@ -1745,8 +1755,15 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 
 /* ---------- Eventos / Missões ---------- */
 .dash-event-list { display: flex; flex-direction: column; gap: 4px; }
-.dash-event-card { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.dash-event-card { display: flex; align-items: center; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
 .dash-event-card:last-child { border-bottom: none; }
+.dash-event-card .dash-doc-btn { flex-shrink: 0; }
+.dash-commitment-status { display: inline-flex; align-items: center; gap: 5px; color: #3f8f5c; font-size: 0.78rem; font-weight: 600; }
+.dash-commitment-status svg { width: 14px; height: 14px; }
+.dash-commitments-empty { text-align: center; padding: 12px 0; }
+.dash-network-highlight { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.dash-network-highlight-btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; margin-left: auto; }
+.dash-network-highlight-btn svg { width: 15px; height: 15px; }
 .dash-event-date {
   width: 56px; height: 56px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border-strong);
   display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; color: var(--gold);

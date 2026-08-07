@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 import type { LoyaltyTier } from "@/lib/loyalty";
 import { TIER_NAMES } from "@/lib/loyalty";
+
+type Notice = { id: string; title: string; message: string; important: boolean; createdAt: string };
 
 type NavKey =
   | "painel"
@@ -59,6 +61,15 @@ export function MemberDashboardShell({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [notices, setNotices] = useState<Notice[] | null>(null);
+  const [noticesOpen, setNoticesOpen] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/member/notices")
+      .then((r) => (r.ok ? r.json() : { notices: [] }))
+      .then((json) => setNotices(json.notices || []))
+      .catch(() => setNotices([]));
+  }, []);
 
   async function onLogout() {
     setLoggingOut(true);
@@ -104,9 +115,35 @@ export function MemberDashboardShell({
             {subtitle && <p className="dash-topbar-subtitle">{subtitle}</p>}
           </div>
           <div className="dash-topbar-actions">
-            <button type="button" className="dash-icon-btn" aria-label="Notificações">
-              <Icon name="bell" />
-            </button>
+            <div className="dash-avatar-wrap">
+              <button
+                type="button"
+                className="dash-icon-btn"
+                aria-label={t.notificationsTitle}
+                onClick={() => setNoticesOpen((v) => !v)}
+              >
+                <Icon name="bell" />
+                {notices && notices.length > 0 && <span className="dash-notice-badge" aria-hidden="true" />}
+              </button>
+              {noticesOpen && (
+                <div className="dash-avatar-menu dash-notice-menu">
+                  <p className="dash-notice-menu-title">{t.notificationsTitle}</p>
+                  {!notices || notices.length === 0 ? (
+                    <p className="dash-notice-empty">{t.noNotifications}</p>
+                  ) : (
+                    <div className="dash-notice-list">
+                      {notices.map((n) => (
+                        <div className={`dash-notice-item${n.important ? " important" : ""}`} key={n.id}>
+                          <p className="dash-notice-item-title">{n.title}</p>
+                          <p className="dash-notice-item-message">{n.message}</p>
+                          <p className="dash-notice-item-date">{new Date(n.createdAt).toLocaleDateString(lang === "pt" ? "pt-BR" : "en-US")}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <button type="button" className="dash-icon-btn dash-lang-btn" onClick={toggle} aria-label="Idioma">
               <Icon name="globe" />
               <span>{lang.toUpperCase()}</span>

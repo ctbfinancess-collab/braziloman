@@ -28,6 +28,12 @@ type FormState = {
 
 const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "" };
 
+type Registration = {
+  id: string;
+  status: "CONFIRMED" | "CANCELLED";
+  application: { id: string; name: string; company: string; email: string };
+};
+
 /** Painel admin de Eventos e Missões — lista, cria, edita e remove (usado nas
  *  páginas /admin/eventos e /membro/painel/eventos e /missoes lêem os mesmos dados). */
 export function AdminEvents() {
@@ -112,6 +118,34 @@ export function AdminEvents() {
     if (res.ok) await load();
   }
 
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [registrations, setRegistrations] = useState<Registration[] | null>(null);
+
+  async function toggleRegistrations(id: string) {
+    if (expandedId === id) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(id);
+    setRegistrations(null);
+    const res = await fetch(`/api/admin/events/${id}/registrations`);
+    const json = await res.json();
+    if (res.ok) setRegistrations(json.registrations);
+  }
+
+  async function updateRegistration(eventId: string, registrationId: string, status: "CONFIRMED" | "CANCELLED") {
+    const res = await fetch(`/api/admin/events/${eventId}/registrations`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ registrationId, status }),
+    });
+    if (res.ok) {
+      const refreshed = await fetch(`/api/admin/events/${eventId}/registrations`);
+      const json = await refreshed.json();
+      if (refreshed.ok) setRegistrations(json.registrations);
+    }
+  }
+
   return (
     <section className="section">
       <div className="container reveal">
@@ -122,6 +156,7 @@ export function AdminEvents() {
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
+            <Link href="/admin/avisos" className="btn btn-ghost">Avisos</Link>
             <button type="button" className="btn btn-primary" onClick={openNew}>+ Novo</button>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>
@@ -170,18 +205,54 @@ export function AdminEvents() {
         ) : (
           <div style={{ display: "grid", gap: 14 }}>
             {events.map((ev) => (
-              <div key={ev.id} className="about-section-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, marginBottom: 0 }}>
-                <div>
-                  <p className="cp-chips-label" style={{ marginBottom: 4 }}>
-                    {KIND_LABEL[ev.kind]} · {new Date(ev.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
-                  </p>
-                  <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
-                  {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
+              <div key={ev.id} className="about-section-card" style={{ marginBottom: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+                  <div>
+                    <p className="cp-chips-label" style={{ marginBottom: 4 }}>
+                      {KIND_LABEL[ev.kind]} · {new Date(ev.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                    </p>
+                    <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
+                    {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button type="button" className="btn btn-ghost" onClick={() => toggleRegistrations(ev.id)}>
+                      {expandedId === ev.id ? "Ocultar inscritos" : "Ver inscritos"}
+                    </button>
+                    <button type="button" className="btn btn-ghost" onClick={() => openEdit(ev)}>Editar</button>
+                    <button type="button" className="btn btn-ghost" onClick={() => onDelete(ev.id)}>Remover</button>
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button type="button" className="btn btn-ghost" onClick={() => openEdit(ev)}>Editar</button>
-                  <button type="button" className="btn btn-ghost" onClick={() => onDelete(ev.id)}>Remover</button>
-                </div>
+
+                {expandedId === ev.id && (
+                  <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--border)" }}>
+                    {registrations === null ? (
+                      <p className="cp-chips-label">Carregando inscritos…</p>
+                    ) : registrations.length === 0 ? (
+                      <p className="cp-chips-label">Nenhum associado inscrito ainda.</p>
+                    ) : (
+                      <div style={{ display: "grid", gap: 10 }}>
+                        {registrations.map((r) => (
+                          <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+                            <div>
+                              <p style={{ margin: 0, fontWeight: 600 }}>{r.application.company}</p>
+                              <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--fg-muted)" }}>{r.application.name} · {r.application.email}</p>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <span className={`loyalty-tier-badge${r.status === "CONFIRMED" ? "" : " tier-black"}`}>
+                                {r.status === "CONFIRMED" ? "Confirmado" : "Cancelado"}
+                              </span>
+                              {r.status === "CONFIRMED" ? (
+                                <button type="button" className="btn btn-ghost" onClick={() => updateRegistration(ev.id, r.id, "CANCELLED")}>Cancelar</button>
+                              ) : (
+                                <button type="button" className="btn btn-ghost" onClick={() => updateRegistration(ev.id, r.id, "CONFIRMED")}>Confirmar</button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

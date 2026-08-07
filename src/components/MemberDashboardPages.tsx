@@ -237,6 +237,15 @@ function QuickAccess() {
   );
 }
 
+export type UpcomingCommitment = {
+  registrationId: string;
+  eventId: string;
+  kind: "EVENTO" | "MISSAO";
+  title: string;
+  date: string;
+  location: string | null;
+};
+
 export type DashboardMemberInfo = {
   member: ProfileFields;
   tier: LoyaltyTier;
@@ -249,7 +258,61 @@ export type DashboardMemberInfo = {
   progress: Progress;
   benefits: TierBenefit[];
   activity: ActivityItem[];
+  upcoming?: UpcomingCommitment[];
+  networkCount?: number;
 };
+
+/** Widget "Próximos Compromissos" — eventos/missões em que o associado se inscreveu. */
+function UpcomingCommitmentsWidget({ upcoming }: { upcoming: UpcomingCommitment[] }) {
+  const { t, lang } = useDashboardText();
+  return (
+    <div className="dash-card">
+      <h2 className="dash-card-title">{t.upcomingCommitmentsTitle}</h2>
+      {upcoming.length === 0 ? (
+        <div className="dash-commitments-empty">
+          <p className="section-lead" style={{ margin: "0 0 14px" }}>{t.noCommitments}</p>
+          <Link href="/membro/painel/eventos" className="btn btn-ghost">{t.exploreEvents}</Link>
+        </div>
+      ) : (
+        <div className="dash-event-list">
+          {upcoming.map((c) => (
+            <div className="dash-event-card" key={c.registrationId}>
+              <div className="dash-event-date">
+                <strong>{new Date(c.date).getUTCDate()}</strong>
+                <span>{new Date(c.date).toLocaleDateString(lang === "pt" ? "pt-BR" : "en-US", { month: "short", timeZone: "UTC" }).replace(".", "")}</span>
+              </div>
+              <div className="dash-event-body">
+                <p className="dash-event-title">{c.title}</p>
+                {c.location && <p className="dash-event-location"><Icon name="pin" />{c.location}</p>}
+                <span className="dash-commitment-status"><Icon name="check" /> {t.registered}</span>
+              </div>
+              <Link href={c.kind === "EVENTO" ? "/membro/painel/eventos" : "/membro/painel/missoes"} className="btn btn-ghost dash-doc-btn">
+                {t.viewDetails}
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Widget de destaque da Rede de Associados. */
+function NetworkHighlightWidget({ networkCount }: { networkCount: number }) {
+  const { t } = useDashboardText();
+  return (
+    <div className="dash-card dash-network-highlight">
+      <span className="dash-benefit-icon"><Icon name="people" /></span>
+      <div>
+        <h2 className="dash-card-title" style={{ marginBottom: 6 }}>{t.networkHighlightTitle}</h2>
+        <p className="section-lead" style={{ margin: 0 }}>{t.networkHighlightText.replace("{n}", String(networkCount))}</p>
+      </div>
+      <Link href="/membro/painel/rede" className="btn btn-ghost dash-network-highlight-btn">
+        {t.viewDetails} <Icon name="arrowright" />
+      </Link>
+    </div>
+  );
+}
 
 /** Página "Painel" — visão geral do associado, igual ao mockup enviado. */
 export function DashboardHome(props: DashboardMemberInfo) {
@@ -276,6 +339,11 @@ export function DashboardHome(props: DashboardMemberInfo) {
       <div className="dash-grid dash-grid-rewards">
         <RewardsWidget tier={props.tier} pointsTotal={props.pointsTotal} progress={props.progress} />
         <BenefitsGrid benefits={props.benefits} />
+      </div>
+
+      <div className="dash-grid dash-grid-status">
+        <UpcomingCommitmentsWidget upcoming={props.upcoming ?? []} />
+        <NetworkHighlightWidget networkCount={props.networkCount ?? 0} />
       </div>
 
       <div className="dash-grid dash-grid-activity">
@@ -379,15 +447,38 @@ export function DashboardRewards(props: DashboardMemberInfo) {
 
 /* ---------- Eventos / Missões / Rede / Documentos / Configurações ---------- */
 
-export type EventListItem = { id: string; title: string; description: string | null; date: string; location: string | null };
+export type EventListItem = {
+  id: string;
+  title: string;
+  description: string | null;
+  date: string;
+  location: string | null;
+  registered: boolean;
+};
 
 function EventCard({ ev }: { ev: EventListItem }) {
-  const { lang } = useDashboardText();
+  const { t, lang } = useDashboardText();
+  const [registered, setRegistered] = useState(ev.registered);
+  const [loading, setLoading] = useState(false);
   // Datas de evento são "dia de calendário" puro (input type=date, sem hora) — usar
   // sempre métodos UTC para exibir, senão o fuso horário do navegador pode mostrar
   // o dia anterior (ex.: 15/09 salvo como meia-noite UTC vira 14/09 em UTC-3).
   const d = new Date(ev.date);
   const monthLabel = d.toLocaleDateString(lang === "pt" ? "pt-BR" : "en-US", { month: "short", timeZone: "UTC" }).replace(".", "");
+  // Date.now() é impuro pra chamar direto no corpo do render — calcula uma vez, na
+  // montagem (a data do evento não muda durante a vida do componente).
+  const [isPast] = useState(() => d.getTime() < Date.now());
+
+  async function onToggle() {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/member/events/${ev.id}/register`, { method: registered ? "DELETE" : "POST" });
+      if (res.ok) setRegistered((v) => !v);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="dash-event-card">
       <div className="dash-event-date">
@@ -399,6 +490,19 @@ function EventCard({ ev }: { ev: EventListItem }) {
         {ev.location && <p className="dash-event-location"><Icon name="pin" />{ev.location}</p>}
         {ev.description && <p className="dash-event-desc">{ev.description}</p>}
       </div>
+      {!isPast && (
+        <button
+          type="button"
+          className={`btn ${registered ? "btn-ghost" : "btn-primary"} dash-doc-btn`}
+          onClick={onToggle}
+          disabled={loading}
+        >
+          {loading
+            ? (registered ? t.cancellingRegistration : t.registering)
+            : (registered ? t.cancelRegistration : t.register)}
+        </button>
+      )}
+      {isPast && registered && <span className="dash-commitment-status"><Icon name="check" /> {t.registered}</span>}
     </div>
   );
 }

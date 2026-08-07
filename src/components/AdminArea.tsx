@@ -154,6 +154,7 @@ export function AdminApplicationsList() {
             <Link href="/admin/mensagens" className="btn btn-ghost">Mensagens de contato</Link>
             <Link href="/admin/conteudo" className="btn btn-ghost">Conteúdo do site</Link>
             <Link href="/admin/eventos" className="btn btn-ghost">Eventos e Missões</Link>
+            <Link href="/admin/avisos" className="btn btn-ghost">Avisos</Link>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>
         </div>

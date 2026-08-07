@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import QRCode from "qrcode";
+import { prisma } from "@/lib/prisma";
 import { requireActiveMember } from "@/lib/memberDashboard";
 import { SITE_URL } from "@/lib/email";
 import { getTier, getTierProgress, TIER_BENEFITS, TIER_NAMES, getActionLabel, getActionIcon } from "@/lib/loyalty";
@@ -37,8 +38,31 @@ export default async function DashboardHomePage() {
     createdAt: tx.createdAt,
   }));
 
+  const upcomingRows = prisma
+    ? await prisma.eventRegistration.findMany({
+        where: { applicationId: member.id, status: "CONFIRMED", event: { date: { gte: new Date() } } },
+        orderBy: { event: { date: "asc" } },
+        take: 5,
+        include: { event: true },
+      })
+    : [];
+  const upcoming = upcomingRows.map((r) => ({
+    registrationId: r.id,
+    eventId: r.event.id,
+    kind: r.event.kind,
+    title: r.event.title,
+    date: r.event.date.toISOString(),
+    location: r.event.location,
+  }));
+
+  const networkCount = prisma
+    ? await prisma.membershipApplication.count({ where: { status: { in: ["ACTIVE", "APPROVED"] }, id: { not: member.id } } })
+    : 0;
+
   return (
     <DashboardHome
+      upcoming={upcoming}
+      networkCount={networkCount}
       member={{
         name: member.name,
         email: member.email,
