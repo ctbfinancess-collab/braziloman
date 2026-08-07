@@ -12,6 +12,7 @@ const updateSchema = z.object({
   description: z.string().max(4000).optional().nullable(),
   date: z.string().min(1).optional(),
   location: z.string().max(200).optional().nullable(),
+  imageUrl: z.string().max(500).optional().nullable(),
 });
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {

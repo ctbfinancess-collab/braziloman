@@ -1770,6 +1770,8 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 }
 .dash-event-date strong { font-family: var(--font-display); font-size: 1.3rem; line-height: 1; }
 .dash-event-date span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.dash-event-photo { width: 72px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-strong); flex-shrink: 0; }
+.dash-event-date-inline { font-size: 0.7rem; letter-spacing: 0.06em; color: var(--gold); font-weight: 600; margin: 0 0 3px; }
 .dash-event-body { flex: 1; min-width: 0; }
 .dash-event-title { font-weight: 600; color: var(--fg); margin: 0 0 4px; }
 .dash-event-location { display: flex; align-items: center; gap: 6px; color: var(--gold-light); font-size: 0.82rem; margin: 0 0 6px; }
@@ -1857,3 +1859,21 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   .status-features { grid-template-columns: 1fr; }
   .status-card-row { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------- Upload de logo da empresa (LogoUploader) ---------- */
+.logo-uploader { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.logo-uploader-preview {
+  width: 76px; height: 76px; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; color: var(--fg-dim);
+}
+.logo-uploader-preview img { width: 100%; height: 100%; object-fit: contain; }
+.logo-uploader-preview svg { width: 28px; height: 28px; }
+.logo-uploader-controls { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.logo-uploader-btn { cursor: pointer; padding: 8px 18px; font-size: 0.82rem; }
+.logo-uploader-remove {
+  background: none; border: none; color: var(--fg-dim); font-size: 0.78rem; text-decoration: underline;
+  cursor: pointer; padding: 2px 0;
+}
+.logo-uploader-remove:hover { color: var(--gold); }
+.logo-uploader-hint { color: var(--fg-dim); font-size: 0.74rem; margin: 2px 0 0; }
+.dash-network-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: contain; background: var(--bg); border: 1px solid var(--border); }

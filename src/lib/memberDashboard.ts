@@ -25,6 +25,7 @@ export const memberDashboardSelect = {
   memberSince: true,
   pointsTotal: true,
   documents: true,
+  logoUrl: true,
   loyaltyTransactions: {
     orderBy: { createdAt: "desc" as const },
     take: 10,

@@ -16,7 +16,7 @@ export default async function DashboardNetworkPage() {
   const rows = prisma
     ? await prisma.membershipApplication.findMany({
         where: { status: { in: ["ACTIVE", "APPROVED"] }, id: { not: member.id } },
-        select: { company: true, sector: true, pointsTotal: true },
+        select: { company: true, sector: true, pointsTotal: true, logoUrl: true },
         orderBy: { company: "asc" },
       })
     : [];

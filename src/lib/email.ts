@@ -26,8 +26,8 @@ function layout(previewText: string, bodyHtml: string): string {
         <td align="center">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; background-color:#f5f2eb; border:1px solid rgba(150,116,52,0.28);">
             <tr>
-              <td style="background-color:#1a1408; padding: 28px 36px; text-align:center;">
-                <img src="${SITE_URL}/logo-ctb-transparent.png" width="84" height="84" alt="Câmara de Comércio Brasil–Omã" style="display:block; margin: 0 auto 12px;" />
+              <td style="background-color:#1a1408; padding: 32px 36px; text-align:center;">
+                <img src="${SITE_URL}/email-seal.png" width="88" height="88" alt="Câmara de Comércio Brasil–Omã" style="display:block; width:88px; height:88px; margin: 0 auto 14px; border:0; outline:none; border-radius:50%;" />
                 <div style="font-family: Georgia, serif; letter-spacing: 0.02em; color:#c19a4b; font-size: 16px; font-weight:bold;">
                   Câmara de Comércio Brasil–Omã
                 </div>

@@ -26,6 +26,7 @@ export default async function DashboardEventsPage() {
     description: e.description,
     date: e.date.toISOString(),
     location: e.location,
+    imageUrl: e.imageUrl,
     registered: e.registrations.length > 0,
   }));
 

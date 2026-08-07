@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { LogoUploader } from "./LogoUploader";
 import {
   WIZARD_STEPS,
   COMPLIANCE_QUESTIONS,
@@ -45,6 +46,7 @@ type UploadedDoc = DocumentEntry & { url: string };
 type AppData = {
   status: string;
   wizardStep: number;
+  logoUrl: string | null;
   personalData: PersonalData | null;
   companyData: (CompanyData & Record<string, unknown>) | null;
   businessProfile: (BusinessProfile & Record<string, unknown>) | null;
@@ -600,11 +602,18 @@ function BeneficialOwnersTable({ rows, onChange }: { rows: BeneficialOwnerEntry[
 
 export function CompanyStep({
   initial,
+  logoUrl = null,
+  showLogoUpload = false,
   onNext,
   onSave = (data) => saveStep(2, data),
   submitLabel,
 }: {
   initial: CompanyData | null;
+  logoUrl?: string | null;
+  /** Só true no fluxo real do próprio candidato — a mesma etapa é reaproveitada
+   *  na visão do admin (edição de candidatura), onde não faz sentido oferecer
+   *  upload (o admin não tem sessão de associado pra autenticar o envio). */
+  showLogoUpload?: boolean;
   onNext: () => void;
   onSave?: StepSaveFn;
   submitLabel?: string;
@@ -640,6 +649,11 @@ export function CompanyStep({
   return (
     <form className="contact-form wiz-form" onSubmit={onSubmit} noValidate>
       <h2 className="mp-subtitle">Dados da empresa</h2>
+      {showLogoUpload && (
+        <div style={{ marginBottom: 8 }}>
+          <LogoUploader initialUrl={logoUrl} />
+        </div>
+      )}
       <Field label="Tipo de empresa">
         <select value={data.entityType ?? "br"} onChange={(e) => set("entityType", e.target.value as "br" | "foreign")}>
           <option value="br">Empresa brasileira</option>
@@ -1383,7 +1397,7 @@ export function CandidatePortal() {
         <StepNav current={step} maxReached={maxReached} onGo={setStep} />
 
         {step === 1 && <PersonalStep initial={data.personalData} onNext={() => { setStep(2); load(); }} />}
-        {step === 2 && <CompanyStep initial={data.companyData} onNext={() => { setStep(3); load(); }} />}
+        {step === 2 && <CompanyStep initial={data.companyData} logoUrl={data.logoUrl} showLogoUpload onNext={() => { setStep(3); load(); }} />}
         {step === 3 && <ProfileStep initial={data.businessProfile} onNext={() => { setStep(4); load(); }} />}
         {step === 4 && <ComplianceStep initial={data.complianceAnswers} onNext={() => { setStep(5); load(); }} />}
         {step === 5 && (

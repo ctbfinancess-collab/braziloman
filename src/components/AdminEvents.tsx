@@ -13,6 +13,7 @@ type ChamberEvent = {
   description: string | null;
   date: string;
   location: string | null;
+  imageUrl: string | null;
 };
 
 const KIND_LABEL: Record<EventKind, string> = { EVENTO: "Evento", MISSAO: "Missão empresarial" };
@@ -24,9 +25,10 @@ type FormState = {
   description: string;
   date: string;
   location: string;
+  imageUrl: string;
 };
 
-const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "" };
+const EMPTY_FORM: FormState = { id: null, kind: "EVENTO", title: "", description: "", date: "", location: "", imageUrl: "" };
 
 type Registration = {
   id: string;
@@ -79,7 +81,27 @@ export function AdminEvents() {
       description: ev.description || "",
       date: ev.date.slice(0, 10),
       location: ev.location || "",
+      imageUrl: ev.imageUrl || "",
     });
+  }
+
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  async function onUploadImage(file: File) {
+    setUploadingImage(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Falha no upload");
+      setForm((f) => (f ? { ...f, imageUrl: json.url } : f));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha no upload da imagem.");
+    } finally {
+      setUploadingImage(false);
+    }
   }
 
   async function onSave(e: React.FormEvent<HTMLFormElement>) {
@@ -94,6 +116,7 @@ export function AdminEvents() {
         description: form.description || null,
         date: form.date,
         location: form.location || null,
+        imageUrl: form.imageUrl || null,
       };
       const res = await fetch(form.id ? `/api/admin/events/${form.id}` : "/api/admin/events", {
         method: form.id ? "PATCH" : "POST",
@@ -191,6 +214,27 @@ export function AdminEvents() {
               Descrição
               <textarea rows={4} maxLength={4000} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </label>
+            <label>
+              Imagem (card/propaganda)
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onUploadImage(file);
+                }}
+              />
+            </label>
+            {uploadingImage && <p className="cp-chips-label">Enviando imagem…</p>}
+            {form.imageUrl && (
+              <div style={{ marginTop: -8 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={form.imageUrl} alt="" style={{ width: "100%", maxWidth: 280, borderRadius: 6, border: "1px solid var(--border)" }} />
+                <button type="button" className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => setForm({ ...form, imageUrl: "" })}>
+                  Remover imagem
+                </button>
+              </div>
+            )}
             <div style={{ display: "flex", gap: 10 }}>
               <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</button>
               <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancelar</button>
@@ -207,12 +251,18 @@ export function AdminEvents() {
             {events.map((ev) => (
               <div key={ev.id} className="about-section-card" style={{ marginBottom: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-                  <div>
-                    <p className="cp-chips-label" style={{ marginBottom: 4 }}>
-                      {KIND_LABEL[ev.kind]} · {new Date(ev.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
-                    </p>
-                    <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
-                    {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
+                  <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                    {ev.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={ev.imageUrl} alt="" style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 6, border: "1px solid var(--border)", flexShrink: 0 }} />
+                    )}
+                    <div>
+                      <p className="cp-chips-label" style={{ marginBottom: 4 }}>
+                        {KIND_LABEL[ev.kind]} · {new Date(ev.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                      </p>
+                      <p style={{ fontWeight: 600, margin: 0 }}>{ev.title}</p>
+                      {ev.location && <p style={{ margin: "4px 0 0", color: "var(--fg-muted)", fontSize: "0.9rem" }}>{ev.location}</p>}
+                    </div>
                   </div>
                   <div style={{ display: "flex", gap: 8 }}>
                     <button type="button" className="btn btn-ghost" onClick={() => toggleRegistrations(ev.id)}>

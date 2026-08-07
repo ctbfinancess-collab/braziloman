@@ -8,6 +8,7 @@ import { PointsRing } from "./PointsRing";
 import { MemberDigitalCard } from "./MemberDigitalCard";
 import { MemberCertificate } from "./MemberCertificate";
 import { MemberDashboardShell } from "./MemberDashboardShell";
+import { LogoUploader } from "./LogoUploader";
 import { TIER_NAMES, getTier, type LoyaltyTier, type TierBenefit } from "@/lib/loyalty";
 
 type ProfileFields = {
@@ -355,10 +356,15 @@ export function DashboardHome(props: DashboardMemberInfo) {
 }
 
 /** Página "Meu Perfil" — dados cadastrais em tela cheia. */
-export function DashboardProfile({ member, tier }: { member: ProfileFields; tier: LoyaltyTier }) {
+export function DashboardProfile({ member, tier, logoUrl }: { member: ProfileFields; tier: LoyaltyTier; logoUrl: string | null }) {
   const { t } = useDashboardText();
   return (
     <MemberDashboardShell member={member} tier={tier} title={t.profileTitle} subtitle={t.profileLead}>
+      <div className="dash-grid-single">
+        <div className="dash-card">
+          <LogoUploader initialUrl={logoUrl} />
+        </div>
+      </div>
       <div className="dash-grid-single">
         <StatusCard member={member} />
       </div>
@@ -453,6 +459,7 @@ export type EventListItem = {
   description: string | null;
   date: string;
   location: string | null;
+  imageUrl: string | null;
   registered: boolean;
 };
 
@@ -481,11 +488,21 @@ function EventCard({ ev }: { ev: EventListItem }) {
 
   return (
     <div className="dash-event-card">
-      <div className="dash-event-date">
-        <strong>{d.getUTCDate()}</strong>
-        <span>{monthLabel}</span>
-      </div>
+      {ev.imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="dash-event-photo" src={ev.imageUrl} alt="" />
+      ) : (
+        <div className="dash-event-date">
+          <strong>{d.getUTCDate()}</strong>
+          <span>{monthLabel}</span>
+        </div>
+      )}
       <div className="dash-event-body">
+        {ev.imageUrl && (
+          <p className="dash-event-date-inline">
+            {d.getUTCDate()} {monthLabel.toUpperCase()}
+          </p>
+        )}
         <p className="dash-event-title">{ev.title}</p>
         {ev.location && <p className="dash-event-location"><Icon name="pin" />{ev.location}</p>}
         {ev.description && <p className="dash-event-desc">{ev.description}</p>}
@@ -547,7 +564,7 @@ export function DashboardMissions({ member, tier, missions }: { member: ProfileF
   );
 }
 
-export type NetworkMember = { company: string; sector: string | null; pointsTotal: number };
+export type NetworkMember = { company: string; sector: string | null; pointsTotal: number; logoUrl: string | null };
 
 /** Página "Rede de Associados" — só empresa, setor e nível (nunca dados pessoais). */
 export function DashboardNetwork({ member, tier, members }: { member: ProfileFields; tier: LoyaltyTier; members: NetworkMember[] }) {
@@ -565,7 +582,12 @@ export function DashboardNetwork({ member, tier, members }: { member: ProfileFie
               const mTier = getTier(m.pointsTotal);
               return (
                 <div className="dash-card dash-network-card" key={m.company + m.sector}>
-                  <span className="dash-benefit-icon"><Icon name="briefcase" /></span>
+                  {m.logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="dash-network-logo" src={m.logoUrl} alt="" />
+                  ) : (
+                    <span className="dash-benefit-icon"><Icon name="briefcase" /></span>
+                  )}
                   <p className="dash-network-company">{m.company}</p>
                   {m.sector && <p className="dash-network-sector">{m.sector}</p>}
                   <span className={`loyalty-tier-badge tier-${mTier.toLowerCase()}`}>{TIER_NAMES[mTier]}</span>

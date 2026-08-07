@@ -12,6 +12,7 @@ const createSchema = z.object({
   description: z.string().max(4000).optional().nullable(),
   date: z.string().datetime().or(z.string().min(1)),
   location: z.string().max(200).optional().nullable(),
+  imageUrl: z.string().max(500).optional().nullable(),
 });
 
 /** Lista todos os eventos/missões (admin) — mais recentes primeiro. */
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
       description: parsed.data.description || null,
       date: new Date(parsed.data.date),
       location: parsed.data.location || null,
+      imageUrl: parsed.data.imageUrl || null,
     },
   });
 

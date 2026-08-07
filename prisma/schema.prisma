@@ -43,6 +43,10 @@ model MembershipApplication {
   status       ApplicationStatus @default(INCOMPLETE)
   createdAt    DateTime          @default(now())
 
+  /// Logo/ícone da empresa, enviado pelo próprio associado (no cadastro ou depois
+  /// em "Meu Perfil"). Exibido no painel e na Rede de Associados.
+  logoUrl String?
+
   /// Etapa atual do Portal do Candidato (1 a 7), para salvar/continuar depois.
   wizardStep  Int       @default(1)
   submittedAt DateTime?
@@ -148,6 +152,9 @@ model ChamberEvent {
   description String?
   date        DateTime
   location    String?
+  /// Imagem de destaque (card/propaganda) exibida pro associado, enviada via
+  /// upload de mídia do admin (mesma infraestrutura do editor de conteúdo).
+  imageUrl    String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
