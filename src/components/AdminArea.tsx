@@ -153,6 +153,7 @@ export function AdminApplicationsList() {
           <div style={{ display: "flex", gap: 10 }}>
             <Link href="/admin/mensagens" className="btn btn-ghost">Mensagens de contato</Link>
             <Link href="/admin/conteudo" className="btn btn-ghost">Conteúdo do site</Link>
+            <Link href="/admin/eventos" className="btn btn-ghost">Eventos e Missões</Link>
             <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
           </div>
         </div>

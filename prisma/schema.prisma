@@ -133,6 +133,26 @@ enum ApplicationStatus {
   SUSPENDED
 }
 
+enum ChamberEventKind {
+  EVENTO
+  MISSAO
+}
+
+/// Eventos e missões empresariais da Câmara, cadastrados pelo admin e exibidos
+/// para os associados no Painel do Associado (/membro/painel/eventos e /missoes).
+model ChamberEvent {
+  id          String           @id @default(cuid())
+  kind        ChamberEventKind
+  title       String
+  description String?
+  date        DateTime
+  location    String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([kind, date])
+}
+
 /// Substituições de conteúdo do site (textos/imagens editados pelo admin).
 /// Uma única linha (id fixo "singleton"): "data" é um objeto profundo, no mesmo
 /// formato de content.ts, contendo só os campos que o admin alterou. O site

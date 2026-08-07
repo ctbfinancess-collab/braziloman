@@ -8,7 +8,17 @@ import { Icon } from "./Icons";
 import type { LoyaltyTier } from "@/lib/loyalty";
 import { TIER_NAMES } from "@/lib/loyalty";
 
-type NavKey = "painel" | "perfil" | "certificado" | "carteirinha" | "rewards";
+type NavKey =
+  | "painel"
+  | "perfil"
+  | "certificado"
+  | "carteirinha"
+  | "rewards"
+  | "eventos"
+  | "missoes"
+  | "rede"
+  | "documentos"
+  | "configuracoes";
 
 const NAV_ITEMS: { key: NavKey; href: string; icon: string }[] = [
   { key: "painel", href: "/membro/painel/inicio", icon: "monitor" },
@@ -16,6 +26,11 @@ const NAV_ITEMS: { key: NavKey; href: string; icon: string }[] = [
   { key: "certificado", href: "/membro/painel/certificado", icon: "certificate" },
   { key: "carteirinha", href: "/membro/painel/carteirinha", icon: "idcard" },
   { key: "rewards", href: "/membro/painel/rewards", icon: "ticket" },
+  { key: "eventos", href: "/membro/painel/eventos", icon: "calendar" },
+  { key: "missoes", href: "/membro/painel/missoes", icon: "plane" },
+  { key: "rede", href: "/membro/painel/rede", icon: "people" },
+  { key: "documentos", href: "/membro/painel/documentos", icon: "folder" },
+  { key: "configuracoes", href: "/membro/painel/configuracoes", icon: "settings" },
 ];
 
 function initials(name: string): string {

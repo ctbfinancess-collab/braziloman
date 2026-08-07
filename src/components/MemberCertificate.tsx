@@ -94,7 +94,33 @@ export function MemberCertificate({
 
   return (
     <div>
-      {/* Fora da tela (não usa display:none, pois html2canvas não captura elementos ocultos assim). */}
+      {/* Prévia visível na página — posições em % (não em px), responsiva como o cartão digital. */}
+      <div className="member-cert-preview">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="member-cert-preview-img" src="/loyalty/certificate.jpg" alt="" />
+        <span className="member-cert-patch member-cert-patch-company" aria-hidden="true" />
+        <span className="member-cert-value-company">{company}</span>
+
+        <span className="member-cert-patch member-cert-patch-value member-cert-patch-date" aria-hidden="true" />
+        <span className="member-cert-value-row member-cert-value-date">{formatDate(memberSince)}</span>
+
+        <span className="member-cert-patch member-cert-patch-value member-cert-patch-number" aria-hidden="true" />
+        <span className="member-cert-value-row member-cert-value-number">CCBO-{memberNumber}</span>
+
+        <span className="member-cert-patch member-cert-patch-value member-cert-patch-category" aria-hidden="true" />
+        <span className="member-cert-value-row member-cert-value-category">{TIER_NAMES[tier]}</span>
+
+        {qrDataUrl && (
+          <>
+            <span className="member-cert-qr-patch" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="member-cert-qr-img" src={qrDataUrl} alt="QR Code de verificação do associado" />
+          </>
+        )}
+      </div>
+
+      {/* Fora da tela (não usa display:none, pois html2canvas não captura elementos ocultos assim) —
+          usada só para gerar o PDF em resolução total; a prévia visível é a versão acima. */}
       <div style={{ position: "fixed", left: -9999, top: 0 }} aria-hidden="true">
         <div
           ref={ref}
@@ -161,7 +187,7 @@ export function MemberCertificate({
           )}
         </div>
       </div>
-      <button type="button" className="btn btn-ghost" onClick={onDownload} disabled={loading}>
+      <button type="button" className="btn btn-ghost" style={{ marginTop: 24 }} onClick={onDownload} disabled={loading}>
         {loading ? t.generatingCertificate : t.downloadCertificate}
       </button>
     </div>

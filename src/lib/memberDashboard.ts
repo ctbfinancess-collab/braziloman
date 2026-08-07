@@ -9,6 +9,7 @@ import { verifyMemberSession, MEMBER_COOKIE } from "./session";
 import { awardBecomeMemberPoints } from "./loyaltyServer";
 
 export const memberDashboardSelect = {
+  id: true,
   name: true,
   email: true,
   company: true,
@@ -23,6 +24,7 @@ export const memberDashboardSelect = {
   memberNumber: true,
   memberSince: true,
   pointsTotal: true,
+  documents: true,
   loyaltyTransactions: {
     orderBy: { createdAt: "desc" as const },
     take: 10,

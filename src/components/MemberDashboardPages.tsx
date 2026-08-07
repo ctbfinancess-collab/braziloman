@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
@@ -7,7 +8,7 @@ import { PointsRing } from "./PointsRing";
 import { MemberDigitalCard } from "./MemberDigitalCard";
 import { MemberCertificate } from "./MemberCertificate";
 import { MemberDashboardShell } from "./MemberDashboardShell";
-import { TIER_NAMES, type LoyaltyTier, type TierBenefit } from "@/lib/loyalty";
+import { TIER_NAMES, getTier, type LoyaltyTier, type TierBenefit } from "@/lib/loyalty";
 
 type ProfileFields = {
   name: string;
@@ -211,11 +212,11 @@ function ActivityList({ activity }: { activity: ActivityItem[] }) {
   );
 }
 
-const QUICK_ACCESS: { href: string; icon: string; key: "certificado" | "carteirinha" | "rewards" | "perfil" }[] = [
+const QUICK_ACCESS: { href: string; icon: string; key: "eventos" | "missoes" | "documentos" | "certificado" }[] = [
+  { href: "/membro/painel/eventos", icon: "calendar", key: "eventos" },
+  { href: "/membro/painel/missoes", icon: "plane", key: "missoes" },
+  { href: "/membro/painel/documentos", icon: "folder", key: "documentos" },
   { href: "/membro/painel/certificado", icon: "certificate", key: "certificado" },
-  { href: "/membro/painel/carteirinha", icon: "idcard", key: "carteirinha" },
-  { href: "/membro/painel/rewards", icon: "ticket", key: "rewards" },
-  { href: "/membro/painel/perfil", icon: "user", key: "perfil" },
 ];
 
 /** Grid "Acessos Rápidos" — atalhos para as demais seções do painel. */
@@ -316,14 +317,16 @@ export function DashboardCertificate({
     <MemberDashboardShell member={member} tier={tier} title={t.certificateTitle} subtitle={t.certificateLead}>
       <div className="dash-grid-single">
         <div className="dash-card dash-card-center">
-          <MemberCertificate
-            name={member.name}
-            company={member.company}
-            tier={tier}
-            memberNumber={memberNumber}
-            memberSince={memberSince}
-            qrDataUrl={qrDataUrl}
-          />
+          <div style={{ width: "100%", maxWidth: 820 }}>
+            <MemberCertificate
+              name={member.name}
+              company={member.company}
+              tier={tier}
+              memberNumber={memberNumber}
+              memberSince={memberSince}
+              qrDataUrl={qrDataUrl}
+            />
+          </div>
         </div>
       </div>
     </MemberDashboardShell>
@@ -369,6 +372,228 @@ export function DashboardRewards(props: DashboardMemberInfo) {
       </div>
       <div className="dash-grid-single">
         <ActivityList activity={props.activity} />
+      </div>
+    </MemberDashboardShell>
+  );
+}
+
+/* ---------- Eventos / Missões / Rede / Documentos / Configurações ---------- */
+
+export type EventListItem = { id: string; title: string; description: string | null; date: string; location: string | null };
+
+function EventCard({ ev }: { ev: EventListItem }) {
+  const { lang } = useDashboardText();
+  // Datas de evento são "dia de calendário" puro (input type=date, sem hora) — usar
+  // sempre métodos UTC para exibir, senão o fuso horário do navegador pode mostrar
+  // o dia anterior (ex.: 15/09 salvo como meia-noite UTC vira 14/09 em UTC-3).
+  const d = new Date(ev.date);
+  const monthLabel = d.toLocaleDateString(lang === "pt" ? "pt-BR" : "en-US", { month: "short", timeZone: "UTC" }).replace(".", "");
+  return (
+    <div className="dash-event-card">
+      <div className="dash-event-date">
+        <strong>{d.getUTCDate()}</strong>
+        <span>{monthLabel}</span>
+      </div>
+      <div className="dash-event-body">
+        <p className="dash-event-title">{ev.title}</p>
+        {ev.location && <p className="dash-event-location"><Icon name="pin" />{ev.location}</p>}
+        {ev.description && <p className="dash-event-desc">{ev.description}</p>}
+      </div>
+    </div>
+  );
+}
+
+/** Página "Eventos". */
+export function DashboardEvents({ member, tier, events }: { member: ProfileFields; tier: LoyaltyTier; events: EventListItem[] }) {
+  const { t } = useDashboardText();
+  return (
+    <MemberDashboardShell member={member} tier={tier} title={t.eventsTitle} subtitle={t.eventsLead}>
+      <div className="dash-grid-single">
+        <div className="dash-card">
+          {events.length === 0 ? (
+            <p className="section-lead" style={{ margin: 0 }}>{t.noEvents}</p>
+          ) : (
+            <div className="dash-event-list">
+              {events.map((ev) => <EventCard ev={ev} key={ev.id} />)}
+            </div>
+          )}
+        </div>
+      </div>
+    </MemberDashboardShell>
+  );
+}
+
+/** Página "Missões". */
+export function DashboardMissions({ member, tier, missions }: { member: ProfileFields; tier: LoyaltyTier; missions: EventListItem[] }) {
+  const { t } = useDashboardText();
+  return (
+    <MemberDashboardShell member={member} tier={tier} title={t.missionsTitle} subtitle={t.missionsLead}>
+      <div className="dash-grid-single">
+        <div className="dash-card">
+          {missions.length === 0 ? (
+            <p className="section-lead" style={{ margin: 0 }}>{t.noMissions}</p>
+          ) : (
+            <div className="dash-event-list">
+              {missions.map((ev) => <EventCard ev={ev} key={ev.id} />)}
+            </div>
+          )}
+        </div>
+      </div>
+    </MemberDashboardShell>
+  );
+}
+
+export type NetworkMember = { company: string; sector: string | null; pointsTotal: number };
+
+/** Página "Rede de Associados" — só empresa, setor e nível (nunca dados pessoais). */
+export function DashboardNetwork({ member, tier, members }: { member: ProfileFields; tier: LoyaltyTier; members: NetworkMember[] }) {
+  const { t } = useDashboardText();
+  return (
+    <MemberDashboardShell member={member} tier={tier} title={t.networkTitle} subtitle={t.networkLead}>
+      <div className="dash-grid-single">
+        {members.length === 0 ? (
+          <div className="dash-card">
+            <p className="section-lead" style={{ margin: 0 }}>{t.noNetworkMembers}</p>
+          </div>
+        ) : (
+          <div className="dash-network-grid">
+            {members.map((m) => {
+              const mTier = getTier(m.pointsTotal);
+              return (
+                <div className="dash-card dash-network-card" key={m.company + m.sector}>
+                  <span className="dash-benefit-icon"><Icon name="briefcase" /></span>
+                  <p className="dash-network-company">{m.company}</p>
+                  {m.sector && <p className="dash-network-sector">{m.sector}</p>}
+                  <span className={`loyalty-tier-badge tier-${mTier.toLowerCase()}`}>{TIER_NAMES[mTier]}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </MemberDashboardShell>
+  );
+}
+
+export type DocumentListItem = { key: string; label: string; fileName?: string; url: string };
+
+/** Página "Documentos" — documentos enviados na candidatura, com download. */
+export function DashboardDocuments({ member, tier, documents }: { member: ProfileFields; tier: LoyaltyTier; documents: DocumentListItem[] }) {
+  const { t } = useDashboardText();
+  return (
+    <MemberDashboardShell member={member} tier={tier} title={t.documentsTitle} subtitle={t.documentsLead}>
+      <div className="dash-grid-single">
+        <div className="dash-card">
+          {documents.length === 0 ? (
+            <p className="section-lead" style={{ margin: 0 }}>{t.noDocuments}</p>
+          ) : (
+            <div className="dash-activity-list">
+              {documents.map((doc) => (
+                <div className="dash-activity-item" key={doc.key}>
+                  <span className="dash-activity-icon"><Icon name="folder" /></span>
+                  <span className="dash-activity-body">
+                    <strong>{doc.label}</strong>
+                    {doc.fileName && <small>{doc.fileName}</small>}
+                  </span>
+                  {doc.url ? (
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost dash-doc-btn">{t.download}</a>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </MemberDashboardShell>
+  );
+}
+
+function ChangePasswordForm() {
+  const { t } = useDashboardText();
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  const [error, setError] = useState("");
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+    if (data.newPassword !== data.confirmNewPassword) {
+      setError(t.passwordMismatch);
+      setStatus("err");
+      return;
+    }
+    setStatus("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/member/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: data.currentPassword, newPassword: data.newPassword }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        setError(json?.error || t.passwordChangeError);
+        setStatus("err");
+        return;
+      }
+      setStatus("ok");
+      form.reset();
+    } catch {
+      setError(t.passwordChangeError);
+      setStatus("err");
+    }
+  }
+
+  return (
+    <form className="contact-form mp-form" onSubmit={onSubmit} noValidate>
+      <h3 className="mp-form-title">{t.passwordTitle}</h3>
+      <label>
+        {t.currentPassword}
+        <input type="password" name="currentPassword" required autoComplete="current-password" maxLength={72} />
+      </label>
+      <label>
+        {t.newPassword}
+        <input type="password" name="newPassword" required minLength={8} autoComplete="new-password" maxLength={72} />
+      </label>
+      <label>
+        {t.confirmNewPassword}
+        <input type="password" name="confirmNewPassword" required minLength={8} autoComplete="new-password" maxLength={72} />
+      </label>
+      <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+        {status === "sending" ? t.changingPassword : t.changePassword}
+      </button>
+      {status === "ok" && <p className="form-note ok" role="status" aria-live="polite">{t.passwordChanged}</p>}
+      {status === "err" && <p className="form-note err" role="status" aria-live="polite">{error}</p>}
+    </form>
+  );
+}
+
+/** Página "Configurações" — dados da conta + troca de senha. */
+export function DashboardSettings({ member, tier }: { member: ProfileFields; tier: LoyaltyTier }) {
+  const { t } = useDashboardText();
+  return (
+    <MemberDashboardShell member={member} tier={tier} title={t.settingsTitle} subtitle={t.settingsLead}>
+      <div className="dash-grid dash-grid-status">
+        <div className="dash-card">
+          <h2 className="dash-card-title">{t.accountInfoTitle}</h2>
+          <div className="dash-fields-grid">
+            <div className="dash-field">
+              <span className="dash-field-icon"><Icon name="user" /></span>
+              <span><b>{t.fields.name}</b><span>{member.name}</span></span>
+            </div>
+            <div className="dash-field">
+              <span className="dash-field-icon"><Icon name="mail" /></span>
+              <span><b>{t.fields.email}</b><span>{member.email}</span></span>
+            </div>
+            <div className="dash-field">
+              <span className="dash-field-icon"><Icon name="briefcase" /></span>
+              <span><b>{t.fields.company}</b><span>{member.company}</span></span>
+            </div>
+          </div>
+        </div>
+        <div className="dash-card">
+          <ChangePasswordForm />
+        </div>
       </div>
     </MemberDashboardShell>
   );
