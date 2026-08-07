@@ -329,6 +329,19 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return <p><b>{label}:</b> {value}</p>;
 }
 
+/** Junta uma lista pra exibição, removendo duplicatas e limitando o tamanho —
+ *  proteção contra dado legado corrompido (ex.: um bug antigo do wizard que
+ *  duplicava itens a cada clique, chegando a centenas de milhares de entradas
+ *  e travando a página de detalhe do admin ao tentar renderizar tudo). */
+function joinList(arr: string[] | undefined, max = 50): string | undefined {
+  if (!arr || arr.length === 0) return undefined;
+  const unique = Array.from(new Set(arr));
+  if (unique.length > max) {
+    return `${unique.slice(0, max).join(", ")} (+${unique.length - max} mais — lista com dado corrompido)`;
+  }
+  return unique.join(", ");
+}
+
 function renderMarkdown(text: string): string {
   const html = marked.parse(text, { async: false }) as string;
   return DOMPurify.sanitize(html);
@@ -774,7 +787,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                 <Row label="Quadro societário" value={renderPeopleList(c.shareholderStructure, ["stake", "nationality"])} />
                 <Row label="Beneficiários finais" value={renderPeopleList(c.beneficialOwners, ["stake", "relatedCompany"])} />
                 <Row label="Grupo econômico" value={c.belongsToEconomicGroup ? (c.economicGroupName as string) || "Sim" : undefined} />
-                <Row label="Certificações" value={(c.certificationTypes as string[] | undefined)?.join(", ")} />
+                <Row label="Certificações" value={joinList(c.certificationTypes as string[] | undefined)} />
                 <Row label="Receita anual consolidada" value={c.consolidatedAnnualRevenueRange ? `${c.consolidatedAnnualRevenueRange} (${c.revenueCurrency ?? ""})` : undefined} />
               </>
             )}
@@ -804,15 +817,15 @@ export function AdminApplicationDetail({ id }: { id: string }) {
                 <Row label="O que pretende fazer em Omã" value={b.omanProjectDescription as string} />
                 <Row label="Objetivo da associação" value={b.membershipGoal} />
                 <Row label="O que faria a associação ser um sucesso" value={b.expectationFromChamber} />
-                <Row label="Categorias de produto" value={(b.productCategories as string[] | undefined)?.join(", ")} />
+                <Row label="Categorias de produto" value={joinList(b.productCategories as string[] | undefined)} />
                 <Row label="Descrição do produto" value={b.productDescription as string} />
-                <Row label="Objetivo principal na Câmara" value={(b.mainGoals as string[] | undefined)?.join(", ")} />
-                <Row label="Mercado-alvo" value={(b.targetMarkets as string[] | undefined)?.join(", ")} />
+                <Row label="Objetivo principal na Câmara" value={joinList(b.mainGoals as string[] | undefined)} />
+                <Row label="Mercado-alvo" value={joinList(b.targetMarkets as string[] | undefined)} />
                 <Row label="Já exporta/importa" value={b.exportsOrImports ? "Sim" : "Não"} />
                 <Row label="Precisa de financiamento" value={b.needsFinancing ? "Sim" : "Não"} />
                 <Row label="Pretende abrir filial" value={b.plansToOpenBranch ? "Sim" : "Não"} />
-                <Row label="Desafios esperados" value={(b.expectedChallenges as string[] | undefined)?.join(", ")} />
-                <Row label="Áreas de apoio esperado" value={(b.chamberSupportAreas as string[] | undefined)?.join(", ")} />
+                <Row label="Desafios esperados" value={joinList(b.expectedChallenges as string[] | undefined)} />
+                <Row label="Áreas de apoio esperado" value={joinList(b.chamberSupportAreas as string[] | undefined)} />
                 <Row label="Outras dificuldades" value={b.mainDifficulties as string} />
               </>
             )}

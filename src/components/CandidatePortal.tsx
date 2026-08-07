@@ -987,7 +987,7 @@ export function ProfileStep({
           <p className="wiz-compliance-question">{group.group}</p>
           <CheckboxGroup
             options={group.items}
-            selected={data.expectedChallenges ?? []}
+            selected={(data.expectedChallenges ?? []).filter((i) => (group.items as readonly string[]).includes(i))}
             onChange={(v) => {
               const others = (data.expectedChallenges ?? []).filter((i) => !(group.items as readonly string[]).includes(i));
               set("expectedChallenges", [...others, ...v]);
