@@ -1770,7 +1770,24 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 }
 .dash-event-date strong { font-family: var(--font-display); font-size: 1.3rem; line-height: 1; }
 .dash-event-date span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
-.dash-event-photo { width: 72px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-strong); flex-shrink: 0; }
+.dash-event-photo { width: 72px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-strong); flex-shrink: 0; display: block; }
+.dash-event-photo-btn {
+  padding: 0; border: none; background: none; cursor: zoom-in; flex-shrink: 0; border-radius: 8px;
+  transition: opacity 0.15s;
+}
+.dash-event-photo-btn:hover { opacity: 0.85; }
+.dash-lightbox {
+  position: fixed; inset: 0; z-index: 200; background: rgba(10, 8, 4, 0.88);
+  display: flex; align-items: center; justify-content: center; padding: 32px; cursor: zoom-out;
+}
+.dash-lightbox-img { max-width: min(90vw, 900px); max-height: 85vh; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); cursor: default; }
+.dash-lightbox-close {
+  position: absolute; top: 22px; right: 26px; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: #fff;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.dash-lightbox-close svg { width: 18px; height: 18px; }
+.dash-lightbox-close:hover { background: rgba(255,255,255,0.2); }
 .dash-event-date-inline { font-size: 0.7rem; letter-spacing: 0.06em; color: var(--gold); font-weight: 600; margin: 0 0 3px; }
 .dash-event-body { flex: 1; min-width: 0; }
 .dash-event-title { font-weight: 600; color: var(--fg); margin: 0 0 4px; }

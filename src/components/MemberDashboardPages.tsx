@@ -474,6 +474,7 @@ function EventCard({ ev }: { ev: EventListItem }) {
   const { t, lang } = useDashboardText();
   const [registered, setRegistered] = useState(ev.registered);
   const [loading, setLoading] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   // Datas de evento são "dia de calendário" puro (input type=date, sem hora) — usar
   // sempre métodos UTC para exibir, senão o fuso horário do navegador pode mostrar
   // o dia anterior (ex.: 15/09 salvo como meia-noite UTC vira 14/09 em UTC-3).
@@ -496,8 +497,10 @@ function EventCard({ ev }: { ev: EventListItem }) {
   return (
     <div className="dash-event-card">
       {ev.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img className="dash-event-photo" src={ev.imageUrl} alt="" />
+        <button type="button" className="dash-event-photo-btn" onClick={() => setLightboxOpen(true)} aria-label={ev.title}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="dash-event-photo" src={ev.imageUrl} alt="" />
+        </button>
       ) : (
         <div className="dash-event-date">
           <strong>{d.getUTCDate()}</strong>
@@ -530,6 +533,15 @@ function EventCard({ ev }: { ev: EventListItem }) {
         </button>
       )}
       {isPast && registered && <span className="dash-commitment-status"><Icon name="check" /> {t.registered}</span>}
+      {lightboxOpen && ev.imageUrl && (
+        <div className="dash-lightbox" onClick={() => setLightboxOpen(false)}>
+          <button type="button" className="dash-lightbox-close" onClick={() => setLightboxOpen(false)} aria-label={t.close}>
+            <Icon name="close" />
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="dash-lightbox-img" src={ev.imageUrl} alt={ev.title} onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
     </div>
   );
 }

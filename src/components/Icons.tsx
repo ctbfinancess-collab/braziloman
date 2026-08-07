@@ -150,6 +150,9 @@ export const IconFolder = (p: P) => (
 export const IconSettings = (p: P) => (
   <svg {...base} {...p}><circle cx="12" cy="12" r="3" /><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" /></svg>
 );
+export const IconClose = (p: P) => (
+  <svg {...base} {...p}><path d="M5 5l14 14M19 5L5 19" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -198,6 +201,7 @@ const map = {
   headset: IconHeadset,
   folder: IconFolder,
   settings: IconSettings,
+  close: IconClose,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
