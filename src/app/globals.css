@@ -1699,9 +1699,13 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .member-cert-preview-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .member-cert-patch { position: absolute; background: #0a0a09; }
 .member-cert-patch-company { left: 25.61%; top: 46.23%; width: 48.52%; height: 8.02%; }
+/* Sempre centralizado com flexbox dentro da própria caixa (nunca transform:translate) —
+   mantém a mesma técnica usada no nó de captura do html2canvas, evitando qualquer
+   divergência entre a prévia na tela e o PDF exportado. */
 .member-cert-value-company {
-  position: absolute; left: 50%; top: 49.91%; transform: translate(-50%, -50%); max-width: 90%;
-  text-align: center; font-family: Georgia, "Times New Roman", serif; font-weight: 700;
+  position: absolute; left: 25.61%; top: 46.23%; width: 48.52%; height: 8.02%;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: Georgia, "Times New Roman", serif; font-weight: 700;
   letter-spacing: 0.1cqw; color: #f3ede1; text-transform: uppercase; white-space: nowrap; font-size: 3.2cqw;
 }
 .member-cert-patch-value { top: 77.83%; height: 5.19%; }
@@ -1709,17 +1713,18 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .member-cert-patch-number { left: 32.35%; width: 16.17%; }
 .member-cert-patch-category { left: 51.21%; width: 12.13%; }
 .member-cert-value-row {
-  position: absolute; top: 80.19%; transform: translate(-50%, -50%);
+  position: absolute; top: 77.83%; height: 5.19%;
+  display: flex; align-items: center; justify-content: center;
   font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter-spacing: 0.07cqw;
   color: #fdfaf3; text-transform: uppercase; white-space: nowrap; font-size: 1.75cqw;
 }
-.member-cert-value-date { left: 23.99%; }
-.member-cert-value-number { left: 39.56%; }
-.member-cert-value-category { left: 57.21%; }
+.member-cert-value-date { left: 13.48%; width: 18.87%; }
+.member-cert-value-number { left: 32.35%; width: 16.17%; }
+.member-cert-value-category { left: 51.21%; width: 12.13%; }
 .member-cert-qr-patch { position: absolute; left: 70.89%; top: 70.66%; width: 8.76%; height: 12.26%; background: #fff; }
 .member-cert-qr-img {
-  position: absolute; left: 75.27%; top: 76.79%; width: 7.75%; height: 10.85%;
-  transform: translate(-50%, -50%); object-fit: contain;
+  position: absolute; left: 70.89%; top: 70.66%; width: 8.76%; height: 12.26%;
+  padding: 6%; box-sizing: border-box; object-fit: contain;
 }
 
 /* ---------- Eventos / Missões ---------- */

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useI18n } from "@/lib/i18n";
-import { TIER_NAMES, type LoyaltyTier } from "@/lib/loyalty";
+import { TIER_NAMES, formatMemberNumber, type LoyaltyTier } from "@/lib/loyalty";
 
 // Dimensões naturais da arte (public/loyalty/certificate.jpg) — o nó capturado
 // pelo html2canvas usa esse tamanho fixo em pixels, então as posições abaixo
@@ -26,6 +26,11 @@ function formatDate(iso: string | null): string {
  * tela) com nome da empresa, data de associação, número de associado e
  * categoria sobrepostos dinamicamente, e exporta em PDF. Reaproveita o mesmo
  * padrão de AdminArea.tsx (onDownloadPdf: html2canvas -> jsPDF -> addImage).
+ *
+ * Todo o texto sobreposto é centralizado com flexbox (nunca com
+ * `transform: translate(-50%,-50%)`) — o html2canvas nem sempre respeita
+ * transforms de posicionamento, o que já causou QR code e textos desalinhados
+ * no PDF exportado mesmo com a prévia na tela parecendo correta.
  */
 export function MemberCertificate({
   name,
@@ -46,6 +51,7 @@ export function MemberCertificate({
   const t = d.memberArea.loyalty;
   const ref = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+  const displayNumber = formatMemberNumber(memberNumber);
 
   async function onDownload() {
     if (!ref.current) return;
@@ -73,16 +79,15 @@ export function MemberCertificate({
   // (nome/data/número/categoria fictícios) antes de escrever os dados reais.
   const PATCH_COLOR = "#0a0a09";
 
-  const valuePatchStyle: React.CSSProperties = {
+  const valueBoxStyle: React.CSSProperties = {
     position: "absolute",
     top: 825,
     height: 55,
-    background: PATCH_COLOR,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
-  const valueStyle: React.CSSProperties = {
-    position: "absolute",
-    top: 850,
-    transform: "translate(-50%, -50%)",
+  const valueTextStyle: React.CSSProperties = {
     fontFamily: "Arial, Helvetica, sans-serif",
     fontWeight: 700,
     fontSize: 26,
@@ -105,7 +110,7 @@ export function MemberCertificate({
         <span className="member-cert-value-row member-cert-value-date">{formatDate(memberSince)}</span>
 
         <span className="member-cert-patch member-cert-patch-value member-cert-patch-number" aria-hidden="true" />
-        <span className="member-cert-value-row member-cert-value-number">CCBO-{memberNumber}</span>
+        <span className="member-cert-value-row member-cert-value-number">{displayNumber}</span>
 
         <span className="member-cert-patch member-cert-patch-value member-cert-patch-category" aria-hidden="true" />
         <span className="member-cert-value-row member-cert-value-category">{TIER_NAMES[tier]}</span>
@@ -141,10 +146,13 @@ export function MemberCertificate({
           <div
             style={{
               position: "absolute",
-              left: "50%",
-              top: 529,
-              transform: "translate(-50%, -50%)",
-              maxWidth: 1100,
+              left: 380,
+              top: 490,
+              width: 720,
+              height: 85,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               textAlign: "center",
               fontSize: 48,
               fontWeight: 700,
@@ -157,14 +165,20 @@ export function MemberCertificate({
             {company}
           </div>
 
-          <div style={{ ...valuePatchStyle, left: 200, width: 280 }} />
-          <div style={{ ...valueStyle, left: 356 }}>{formatDate(memberSince)}</div>
+          <div style={{ position: "absolute", left: 200, top: 825, width: 280, height: 55, background: PATCH_COLOR }} />
+          <div style={{ ...valueBoxStyle, left: 200, width: 280 }}>
+            <span style={valueTextStyle}>{formatDate(memberSince)}</span>
+          </div>
 
-          <div style={{ ...valuePatchStyle, left: 480, width: 240 }} />
-          <div style={{ ...valueStyle, left: 587 }}>CCBO-{memberNumber}</div>
+          <div style={{ position: "absolute", left: 480, top: 825, width: 240, height: 55, background: PATCH_COLOR }} />
+          <div style={{ ...valueBoxStyle, left: 480, width: 240 }}>
+            <span style={valueTextStyle}>{displayNumber}</span>
+          </div>
 
-          <div style={{ ...valuePatchStyle, left: 760, width: 180 }} />
-          <div style={{ ...valueStyle, left: 849 }}>{TIER_NAMES[tier]}</div>
+          <div style={{ position: "absolute", left: 760, top: 825, width: 180, height: 55, background: PATCH_COLOR }} />
+          <div style={{ ...valueBoxStyle, left: 760, width: 180 }}>
+            <span style={valueTextStyle}>{TIER_NAMES[tier]}</span>
+          </div>
 
           {qrDataUrl && (
             <>
@@ -175,11 +189,12 @@ export function MemberCertificate({
                 alt=""
                 style={{
                   position: "absolute",
-                  left: 1117,
-                  top: 814,
-                  transform: "translate(-50%, -50%)",
-                  width: 115,
-                  height: 115,
+                  left: 1052,
+                  top: 749,
+                  width: 130,
+                  height: 130,
+                  padding: 10,
+                  boxSizing: "border-box",
                   objectFit: "contain",
                 }}
               />

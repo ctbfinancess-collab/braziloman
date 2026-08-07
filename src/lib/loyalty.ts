@@ -54,6 +54,16 @@ export function getActionIcon(actionId: string): string {
   return getActionById(actionId)?.icon ?? "seal";
 }
 
+/**
+ * Formata o número de associado para exibição no certificado ("CCBO-000123").
+ * Números novos são só dígitos e recebem o prefixo "CCBO-". Números antigos,
+ * atribuídos antes desse formato existir (ex. "CTB-2026-0001"), já têm seu
+ * próprio prefixo — mostrados como estão, para não duplicar ("CCBO-CTB-...").
+ */
+export function formatMemberNumber(memberNumber: string): string {
+  return /^\d+$/.test(memberNumber) ? `CCBO-${memberNumber}` : memberNumber;
+}
+
 export type LoyaltyTier = "GOLD" | "BLACK" | "PLATINUM";
 
 export const TIER_NAMES: Record<LoyaltyTier, string> = {
