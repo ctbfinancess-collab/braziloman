@@ -412,7 +412,8 @@ export function MemberPanel({ member, qrDataUrl }: { member: MemberData; qrDataU
                 company={member.company}
                 tier={tier}
                 memberNumber={member.memberNumber}
-                sinceYear={sinceYear}
+                memberSince={member.memberSince}
+                qrDataUrl={qrDataUrl}
               />
             </div>
           </>
