@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { getActionLabel, getTier, getTierProgress, TIER_BENEFITS, TIER_NAMES } from "@/lib/loyalty";
 import { MemberDigitalCard } from "./MemberDigitalCard";
 import { MemberCertificate } from "./MemberCertificate";
+import { Icon } from "./Icons";
 
 export function MemberLoginForm() {
   const { d } = useI18n();
@@ -14,6 +15,7 @@ export function MemberLoginForm() {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "sending" | "err">("idle");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,36 +44,94 @@ export function MemberLoginForm() {
   }
 
   return (
-    <section className="section">
-      <div className="container reveal" style={{ maxWidth: 420 }}>
-        <p className="section-eyebrow center">{t.eyebrow}</p>
-        <h1 className="section-title center">{t.title}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead mp-lead-center">{t.lead}</p>
+    <section className="section member-login-section">
+      <div className="container reveal member-login-grid">
+        <div className="member-login-hero">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="member-login-hero-map" src="/hero-map-dots.png" alt="" aria-hidden="true" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="member-login-hero-seal" src="/hero-seal.png" alt="" aria-hidden="true" />
+          <div className="member-login-hero-content">
+            <p className="section-eyebrow">{t.eyebrow}</p>
+            <h1 className="member-login-hero-title">
+              <span>{t.heroTitleLine1}</span>
+              <span className="member-login-hero-title-gold">{t.heroTitleLine2}</span>
+            </h1>
+            <span className="about-flourish" aria-hidden="true" />
+            <p className="member-login-hero-lead">{t.heroLead}</p>
+            <div className="member-login-features">
+              {t.features.map((f) => (
+                <div className="member-login-feature" key={f.label}>
+                  <Icon name={f.icon} />
+                  <span>{f.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
-        <form className="contact-form mp-form" onSubmit={onSubmit} noValidate>
-          <label>
-            {t.email}
-            <input type="email" name="email" required autoComplete="email" maxLength={160} />
-          </label>
-          <label>
-            {t.password}
-            <input type="password" name="password" required autoComplete="current-password" maxLength={72} />
-          </label>
-          <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
-            {status === "sending" ? t.submitting : t.submit}
-          </button>
-          {status === "err" && (
-            <p className="form-note err" role="status" aria-live="polite">{error}</p>
-          )}
-        </form>
+        <div className="member-login-card-col">
+          <div className="member-login-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="member-login-seal" src="/logo-ctb-transparent.png" alt="" aria-hidden="true" />
+            <h2 className="member-login-card-title">{t.title}</h2>
+            <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+            <p className="member-login-card-lead">{t.lead}</p>
 
-        <p className="mp-lead-center" style={{ marginTop: 14, fontSize: "0.9rem" }}>
-          <Link href="/membro/esqueci-senha" className="launch-back" style={{ display: "inline" }}>{t.forgotLink}</Link>
-        </p>
-        <p className="mp-lead-center" style={{ marginTop: 10, fontSize: "0.9rem" }}>
-          {t.noAccount} <Link href="/associe-se#mp-form" className="launch-back" style={{ display: "inline" }}>{t.applyLink}</Link>
-        </p>
+            <form className="member-login-form" onSubmit={onSubmit} noValidate>
+              <label className="member-login-label">
+                {t.email}
+                <div className="member-login-input-wrap">
+                  <Icon name="user" />
+                  <input type="email" name="email" placeholder={t.emailPlaceholder} required autoComplete="email" maxLength={160} />
+                </div>
+              </label>
+              <label className="member-login-label">
+                {t.password}
+                <div className="member-login-input-wrap">
+                  <Icon name="lock" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    required
+                    autoComplete="current-password"
+                    maxLength={72}
+                  />
+                  <button
+                    type="button"
+                    className="member-login-eye-toggle"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  >
+                    <Icon name={showPassword ? "eyeoff" : "eye"} />
+                  </button>
+                </div>
+              </label>
+
+              <div className="member-login-forgot">
+                <Link href="/membro/esqueci-senha" className="launch-back" style={{ display: "inline" }}>{t.forgotLink}</Link>
+              </div>
+
+              <button type="submit" className="btn btn-primary member-login-submit" disabled={status === "sending"}>
+                {status === "sending" ? t.submitting : t.submit}
+              </button>
+              {status === "err" && (
+                <p className="form-note err" role="status" aria-live="polite">{error}</p>
+              )}
+            </form>
+          </div>
+
+          <div className="member-login-cta">
+            <span className="member-login-cta-icon" aria-hidden="true"><Icon name="question" /></span>
+            <div className="member-login-cta-text">
+              <strong>{t.noAccount}</strong>
+              <p>{t.noAccountLead}</p>
+            </div>
+            <Link href="/associe-se#mp-form" className="btn btn-ghost member-login-cta-btn">
+              {t.applyLink} <Icon name="arrowright" />
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );

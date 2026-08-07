@@ -87,6 +87,24 @@ export const IconLeaf = (p: P) => (
 export const IconClock = (p: P) => (
   <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
 );
+export const IconUser = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" /></svg>
+);
+export const IconLock = (p: P) => (
+  <svg {...base} {...p}><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+);
+export const IconEye = (p: P) => (
+  <svg {...base} {...p}><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>
+);
+export const IconEyeOff = (p: P) => (
+  <svg {...base} {...p}><path d="M3 3l18 18" /><path d="M10.6 5.2A10.4 10.4 0 0 1 12 5c6.2 0 10 7 10 7a17.7 17.7 0 0 1-3.4 4.3M6.6 6.6C4 8.3 2 12 2 12s3.8 7 10 7c1.5 0 2.8-.4 4-1" /><path d="M9.5 9.8a3 3 0 0 0 4.2 4.2" /></svg>
+);
+export const IconArrowRight = (p: P) => (
+  <svg {...base} {...p}><path d="M4 12h16M13 5l7 7-7 7" /></svg>
+);
+export const IconQuestion = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M9.2 9.5a2.8 2.8 0 1 1 4.4 2.3c-.9.7-1.6 1.2-1.6 2.4" /><path d="M12 17.3v.1" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -114,6 +132,12 @@ const map = {
   shieldcheck: IconShieldCheck,
   leaf: IconLeaf,
   clock: IconClock,
+  user: IconUser,
+  lock: IconLock,
+  eye: IconEye,
+  eyeoff: IconEyeOff,
+  arrowright: IconArrowRight,
+  question: IconQuestion,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
