@@ -10,11 +10,13 @@ const CARD_ASSETS: Record<LoyaltyTier, { front: string; back: string }> = {
 };
 
 // Cor do texto gravado e da "mancha" que cobre o número/ano de exemplo da arte
-// original, amostradas diretamente de cada cartão.
+// original, amostradas diretamente de cada cartão. Gold e Platinum usam texto
+// preto para imitar o relevo gravado do metal (como "MEMBER SINCE" na própria
+// arte); Black mantém o dourado claro, legível sobre o fundo escuro.
 const TEXT_COLOR: Record<LoyaltyTier, string> = {
-  GOLD: "#f5e6b3",
+  GOLD: "#1a1408",
   BLACK: "#e8dc8a",
-  PLATINUM: "#f5f5f6",
+  PLATINUM: "#1a1a1c",
 };
 const PATCH_COLOR: Record<LoyaltyTier, string> = {
   GOLD: "#b0914f",
@@ -79,8 +81,11 @@ export function MemberDigitalCard({
         )}
 
         {showBack && qrDataUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img className="loyalty-card-qr" src={qrDataUrl} alt="QR Code de verificação do associado" />
+          <>
+            <span className="loyalty-card-qr-patch" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="loyalty-card-qr" src={qrDataUrl} alt="QR Code de verificação do associado" />
+          </>
         )}
       </button>
       <p className="loyalty-card-flip-hint">Toque no cartão para ver {showBack ? "a frente" : "o verso"}</p>

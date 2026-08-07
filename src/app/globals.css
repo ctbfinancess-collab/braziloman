@@ -1364,12 +1364,13 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
   position: absolute; display: flex; align-items: center; justify-content: flex-start;
   font-family: var(--font-display); font-weight: 700; white-space: nowrap; line-height: 1;
 }
-.loyalty-card-value-year { font-size: 3.6cqw; }
-.loyalty-card-value-number { font-size: 3.8cqw; }
-.loyalty-card-qr {
-  position: absolute; left: 6.3%; top: 42%; width: 19%; height: 31%;
-  object-fit: contain; border-radius: 4px; background: #fff; padding: 3%;
-}
+.loyalty-card-value-year { font-size: 2cqw; font-weight: 600; }
+.loyalty-card-value-number { font-size: 2cqw; font-weight: 600; }
+.loyalty-card-qr-patch { position: absolute; left: 6.3%; top: 42%; width: 19%; height: 31%; border-radius: 4px; background: #fff; }
+/* Caixa levemente menor que o patch branco, com folga fixa proporcional — não usar
+   padding em %, que é sempre relativo à largura do cartão (não da própria caixa,
+   pequena) e pode reduzir a área útil da imagem a quase zero. */
+.loyalty-card-qr { position: absolute; left: 7.53%; top: 43.96%; width: 16.54%; height: 27.09%; object-fit: contain; }
 .loyalty-card-flip-hint { font-size: 0.76rem; color: var(--fg-dim); text-align: center; margin: 8px 0 0; max-width: 420px; }
 
 .loyalty-tier-badge {
@@ -1722,10 +1723,12 @@ a.eco-cta:hover { background: rgba(201, 164, 90, 0.1); border-color: var(--gold)
 .member-cert-value-number { left: 32.35%; width: 16.17%; }
 .member-cert-value-category { left: 51.21%; width: 12.13%; }
 .member-cert-qr-patch { position: absolute; left: 70.89%; top: 70.66%; width: 8.76%; height: 12.26%; background: #fff; }
-.member-cert-qr-img {
-  position: absolute; left: 70.89%; top: 70.66%; width: 8.76%; height: 12.26%;
-  padding: 6%; box-sizing: border-box; object-fit: contain;
-}
+/* Caixa levemente menor que o patch branco (~10px de folga em cada lado no espaço
+   de referência 1484x1060) — NÃO usar padding em %: como padding percentual é
+   sempre relativo à LARGURA do contêiner (não da própria caixa, que aqui já é
+   pequena), qualquer valor razoável "comia" praticamente toda a área da imagem
+   e o QR sumia. */
+.member-cert-qr-img { position: absolute; left: 71.56%; top: 71.6%; width: 7.41%; height: 10.38%; object-fit: contain; }
 
 /* ---------- Eventos / Missões ---------- */
 .dash-event-list { display: flex; flex-direction: column; gap: 4px; }
