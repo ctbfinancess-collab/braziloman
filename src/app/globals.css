@@ -886,6 +886,10 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .footer-col a, .footer-col p { display: block; color: var(--footer-muted); font-size: 0.9rem; margin-bottom: 10px; }
 .footer-col a:hover { color: var(--footer-gold-light); }
 .footer-bottom { border-top: 1px solid var(--footer-border); margin-top: 40px; padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--footer-dim); font-size: 0.8rem; }
+.footer-social { display: flex; gap: 10px; margin-top: 20px; }
+.footer-social a { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--footer-border-strong); color: var(--footer-muted); transition: border-color 0.2s, color 0.2s, background 0.2s; }
+.footer-social a svg { width: 18px; height: 18px; }
+.footer-social a:hover { color: var(--footer-gold-light); border-color: var(--footer-gold); background: rgba(212, 175, 55, 0.08); }
 
 /* reveal animation */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }

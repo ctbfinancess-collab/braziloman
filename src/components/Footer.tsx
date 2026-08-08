@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import { Icon } from "./Icons";
 
 export default function Footer() {
   const { d } = useI18n();
@@ -41,6 +42,15 @@ export default function Footer() {
             <p style={{ color: "var(--footer-muted)", fontSize: "0.88rem", marginTop: 18, maxWidth: 320 }}>
               {d.footer.about}
             </p>
+            {d.footer.social?.some((s) => s.url) && (
+              <div className="footer-social">
+                {d.footer.social.filter((s) => s.url).map((s) => (
+                  <a key={s.icon} href={s.url} target="_blank" rel="noreferrer" aria-label={s.label}>
+                    <Icon name={s.icon} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="footer-col">

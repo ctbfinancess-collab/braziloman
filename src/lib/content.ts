@@ -1208,6 +1208,12 @@ export const content = {
       branchLabel: "Sucursal",
       branchAddress: "Rua 240, nº 360, salas 07 e 08, Edifício Time Square, esquina com a segunda avenida, Itapema, Santa Catarina",
       rights: "Todos os direitos reservados.",
+      social: [
+        { icon: "instagram", label: "Instagram", url: "https://www.instagram.com/camaradecomerciobrasiloman" },
+        { icon: "facebook", label: "Facebook", url: "" },
+        { icon: "linkedin", label: "LinkedIn", url: "" },
+        { icon: "whatsapp", label: "WhatsApp", url: "https://wa.me/5561999529219" },
+      ],
     },
   },
 
@@ -2413,6 +2419,12 @@ export const content = {
       branchLabel: "Branch office",
       branchAddress: "Rua 240, 360, suites 07 and 08, Time Square Building, corner of the second avenue, Itapema, Santa Catarina, Brazil",
       rights: "All rights reserved.",
+      social: [
+        { icon: "instagram", label: "Instagram", url: "https://www.instagram.com/camaradecomerciobrasiloman" },
+        { icon: "facebook", label: "Facebook", url: "" },
+        { icon: "linkedin", label: "LinkedIn", url: "" },
+        { icon: "whatsapp", label: "WhatsApp", url: "https://wa.me/5561999529219" },
+      ],
     },
   },
 };

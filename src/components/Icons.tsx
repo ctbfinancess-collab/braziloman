@@ -186,6 +186,18 @@ export const IconXCircle = (p: P) => (
 export const IconMenu = (p: P) => (
   <svg {...base} {...p}><path d="M4 6h16M4 12h16M4 18h16" /></svg>
 );
+export const IconInstagram = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" /></svg>
+);
+export const IconFacebook = (p: P) => (
+  <svg {...base} {...p}><path d="M15 4h-2.5A3.5 3.5 0 0 0 9 7.5V10H6.5v3.5H9V21h3.5v-7.5h2.6l.4-3.5h-3V7.8c0-.9.3-1.3 1.3-1.3H15V4z" /></svg>
+);
+export const IconLinkedin = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="3" width="18" height="18" rx="2.5" /><circle cx="7.7" cy="8.2" r="1" fill="currentColor" stroke="none" /><path d="M7.7 11v7" /><path d="M12 18v-4.2c0-1.7 1-2.8 2.5-2.8 1.4 0 2 1 2 2.8V18M12 11v7" /></svg>
+);
+export const IconWhatsapp = (p: P) => (
+  <svg {...base} {...p}><path d="M6 19l1.2-3.5A7.5 7.5 0 1 1 10 18.3L6 19z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1-.5.8-1l-.4-1a.8.8 0 0 0-1-.5l-.7.3a4.4 4.4 0 0 1-2.5-2.5l.3-.7a.8.8 0 0 0-.5-1l-1-.4c-.5-.2-1 .2-1 .8z" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -246,6 +258,10 @@ const map = {
   plus: IconPlus,
   xcircle: IconXCircle,
   menu: IconMenu,
+  instagram: IconInstagram,
+  facebook: IconFacebook,
+  linkedin: IconLinkedin,
+  whatsapp: IconWhatsapp,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
