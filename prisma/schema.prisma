@@ -208,9 +208,23 @@ model ChamberNotice {
   title     String
   message   String
   important Boolean  @default(false)
+  /// Imagem opcional do aviso (mesma infraestrutura de upload dos outros
+  /// cards com imagem — eventos, parceiros).
+  imageUrl  String?
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+/// Conta individual de administrador (aba "Usuários" do painel admin). Convive
+/// com o login por senha única (ADMIN_PASSWORD, ver /api/admin/login) — esse
+/// segue funcionando como acesso "mestre", pra nunca travar o acesso ao admin.
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
 }
 
 /// Parceiro/associado em destaque na página pública "Parceiros e Associados"

@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { AdminLayout } from "./AdminLayout";
+import { Icon } from "./Icons";
 
 type Partner = {
   id: string;
@@ -51,12 +52,6 @@ export function AdminPartners() {
   useEffect(() => {
     load();
   }, [load]);
-
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
-  }
 
   function openNew() {
     setForm({ ...EMPTY_FORM, order: String((partners?.length ?? 0) * 10) });
@@ -130,27 +125,12 @@ export function AdminPartners() {
   }
 
   return (
-    <section className="section">
-      <div className="container reveal">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <p className="section-eyebrow">Administração</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Parceiros e Associados</h1>
-          </div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
-            <Link href="/admin/eventos" className="btn btn-ghost">Eventos e Missões</Link>
-            <Link href="/admin/avisos" className="btn btn-ghost">Avisos</Link>
-            <button type="button" className="btn btn-primary" onClick={openNew}>+ Novo</button>
-            <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
-          </div>
-        </div>
-        <span className="about-flourish" aria-hidden="true" />
-        <p className="section-lead" style={{ marginTop: -12, marginBottom: 32 }}>
-          Aparece na página pública <strong>brasilomanchamber.org/parceiros</strong>. Cadastre só parceiros
-          reais e confirmados — nunca use logo de empresa sem uma parceria de fato combinada com ela.
-        </p>
-
+    <AdminLayout
+      active="parceiros"
+      title="Parceiros e Associados"
+      lead={<>Aparece na página pública <strong>brasilomanchamber.org/parceiros</strong>. Cadastre só parceiros reais e confirmados — nunca use logo de empresa sem uma parceria de fato combinada com ela.</>}
+      actions={<button type="button" className="btn btn-primary" onClick={openNew}><Icon name="plus" /> Novo</button>}
+    >
         {error && <p className="form-note err">{error}</p>}
 
         {form && (
@@ -204,7 +184,10 @@ export function AdminPartners() {
         {partners === null ? (
           <p className="section-lead">Carregando…</p>
         ) : partners.length === 0 ? (
-          <p className="section-lead">Nenhum parceiro cadastrado ainda.</p>
+          <div className="admin-empty">
+            <Icon name="briefcase" />
+            <p>Nenhum parceiro cadastrado ainda.</p>
+          </div>
         ) : (
           <div style={{ display: "grid", gap: 14 }}>
             {partners.map((p) => (
@@ -232,7 +215,6 @@ export function AdminPartners() {
             ))}
           </div>
         )}
-      </div>
-    </section>
+    </AdminLayout>
   );
 }

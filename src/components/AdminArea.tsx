@@ -17,6 +17,8 @@ import type {
 import { COMPLIANCE_QUESTIONS } from "@/lib/candidateSchemas";
 import { PersonalStep, CompanyStep, ProfileStep, ComplianceStep, DocumentsStep } from "@/components/CandidatePortal";
 import { LOYALTY_ACTIONS, LOYALTY_CUSTOM_ACTION_ID, getActionLabel, getTier, TIER_NAMES } from "@/lib/loyalty";
+import { AdminLayout, AdminBackLink } from "@/components/AdminLayout";
+import { Icon } from "@/components/Icons";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -26,7 +28,10 @@ export function AdminLoginForm() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    const raw = Object.fromEntries(new FormData(form).entries());
+    // Campo de e-mail é opcional (login "mestre" por senha única quando vazio)
+    // — não manda string vazia, senão falha a validação de e-mail no servidor.
+    const data = raw.email ? raw : { password: raw.password };
     setStatus("sending");
     setError("");
     try {
@@ -57,7 +62,11 @@ export function AdminLoginForm() {
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
         <form className="contact-form mp-form" onSubmit={onSubmit} noValidate>
           <label>
-            Senha de administrador
+            E-mail (opcional — deixe em branco pra usar a senha mestre)
+            <input type="email" name="email" autoComplete="username" maxLength={200} />
+          </label>
+          <label>
+            Senha
             <input type="password" name="password" required autoComplete="current-password" maxLength={200} />
           </label>
           <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
@@ -113,9 +122,68 @@ const statusLabel: Record<ApplicationStatus, string> = {
   SUSPENDED: "Suspenso",
 };
 
-export function AdminApplicationsList() {
+const NEW_STATUSES: ApplicationStatus[] = ["INCOMPLETE", "PENDING"];
+const REVIEW_STATUSES: ApplicationStatus[] = ["AWAITING_DOCUMENTS", "UNDER_REVIEW", "INFO_REQUESTED", "CONDITIONALLY_APPROVED", "APPROVED_PENDING_PAYMENT"];
+export const ACTIVE_STATUSES: ApplicationStatus[] = ["ACTIVE", "APPROVED"];
+export const INACTIVE_STATUSES: ApplicationStatus[] = ["REJECTED", "SUSPENDED"];
+
+const STATUS_TONE: Record<ApplicationStatus, string> = {
+  PENDING: "tone-warning",
+  INCOMPLETE: "tone-warning",
+  AWAITING_DOCUMENTS: "tone-info",
+  UNDER_REVIEW: "tone-info",
+  INFO_REQUESTED: "tone-info",
+  CONDITIONALLY_APPROVED: "tone-info",
+  APPROVED_PENDING_PAYMENT: "tone-info",
+  APPROVED: "tone-positive",
+  ACTIVE: "tone-positive",
+  REJECTED: "tone-negative",
+  SUSPENDED: "tone-negative",
+};
+
+const COUNTRY_FLAG: Record<string, string> = {
+  brasil: "🇧🇷", brazil: "🇧🇷", "omã": "🇴🇲", oma: "🇴🇲", oman: "🇴🇲",
+};
+
+function countryFlag(country: string | null): string {
+  if (!country) return "";
+  return COUNTRY_FLAG[country.trim().toLowerCase()] || "";
+}
+
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function isThisYear(iso: string): boolean {
+  return new Date(iso).getFullYear() === new Date().getFullYear();
+}
+
+/** Lista de pedidos de associação — também reaproveitada (com statusFilter) pelas
+ *  páginas "Associados Ativos" e "Associados Inativos", que mostram o mesmo
+ *  layout filtrado por um subconjunto fixo de status. */
+export function AdminApplicationsList({
+  statusFilter,
+  navKey = "associados",
+  pageTitle = "Pedidos de Associação",
+  pageLead = "Gerencie e acompanhe todas as solicitações de associação recebidas.",
+}: {
+  statusFilter?: ApplicationStatus[];
+  navKey?: string;
+  pageTitle?: string;
+  pageLead?: string;
+} = {}) {
   const [applications, setApplications] = useState<Application[] | null>(null);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusPick, setStatusPick] = useState("");
+  const [sectorPick, setSectorPick] = useState("");
+  const [countryPick, setCountryPick] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const router = useRouter();
 
   const load = useCallback(async () => {
@@ -136,66 +204,212 @@ export function AdminApplicationsList() {
     load();
   }, [load]);
 
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
+  const base = statusFilter ? (applications ?? []).filter((a) => statusFilter.includes(a.status)) : applications ?? [];
+
+  const sectors = Array.from(new Set(base.map((a) => a.sector).filter((s): s is string => Boolean(s)))).sort();
+  const countries = Array.from(new Set(base.map((a) => a.country).filter((c): c is string => Boolean(c)))).sort();
+
+  const filtered = base.filter((a) => {
+    if (statusPick && a.status !== statusPick) return false;
+    if (sectorPick && a.sector !== sectorPick) return false;
+    if (countryPick && a.country !== countryPick) return false;
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      if (!a.name.toLowerCase().includes(q) && !a.company.toLowerCase().includes(q) && !a.email.toLowerCase().includes(q)) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const pageRows = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const stats = {
+    novos: (applications ?? []).filter((a) => NEW_STATUSES.includes(a.status)).length,
+    emAnalise: (applications ?? []).filter((a) => REVIEW_STATUSES.includes(a.status)).length,
+    aprovados: (applications ?? []).filter((a) => ACTIVE_STATUSES.includes(a.status) && isThisYear(a.createdAt)).length,
+    recusados: (applications ?? []).filter((a) => a.status === "REJECTED" && isThisYear(a.createdAt)).length,
+    totalAssociados: (applications ?? []).filter((a) => ACTIVE_STATUSES.includes(a.status)).length,
+  };
+
+  async function onDelete(id: string) {
+    setOpenMenuId(null);
+    if (!confirm("Remover este pedido de associação? Essa ação não pode ser desfeita.")) return;
+    const res = await fetch(`/api/admin/applications/${id}`, { method: "DELETE" });
+    if (res.ok) await load();
+    else alert("Não foi possível remover.");
   }
 
   return (
-    <section className="section">
-      <div className="container reveal">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <p className="section-eyebrow">Administração</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Pedidos de Associação</h1>
+    <AdminLayout active={navKey} title={pageTitle} lead={pageLead}>
+      {error && <p className="form-note err">{error}</p>}
+
+      {!statusFilter && (
+        <div className="admin-stats">
+          <div className="admin-stat-card">
+            <span className="admin-stat-icon tone-neutral"><Icon name="userplus" /></span>
+            <div>
+              <p className="admin-stat-value">{stats.novos}</p>
+              <p className="admin-stat-label">Novos Pedidos</p>
+              <p className="admin-stat-sub"><span className="dot" style={{ background: "#a9750f" }} />Aguardando análise</p>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <Link href="/admin/mensagens" className="btn btn-ghost">Mensagens de contato</Link>
-            <Link href="/admin/conteudo" className="btn btn-ghost">Conteúdo do site</Link>
-            <Link href="/admin/eventos" className="btn btn-ghost">Eventos e Missões</Link>
-            <Link href="/admin/avisos" className="btn btn-ghost">Avisos</Link>
-            <Link href="/admin/parceiros" className="btn btn-ghost">Parceiros</Link>
-            <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
+          <div className="admin-stat-card">
+            <span className="admin-stat-icon tone-warning"><Icon name="clipboard" /></span>
+            <div>
+              <p className="admin-stat-value">{stats.emAnalise}</p>
+              <p className="admin-stat-label">Em Análise</p>
+              <p className="admin-stat-sub"><span className="dot" style={{ background: "#3c6eb4" }} />Em avaliação</p>
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <span className="admin-stat-icon tone-positive"><Icon name="check" /></span>
+            <div>
+              <p className="admin-stat-value">{stats.aprovados}</p>
+              <p className="admin-stat-label">Aprovados</p>
+              <p className="admin-stat-sub"><span className="dot" style={{ background: "#3f8f5c" }} />Neste ano</p>
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <span className="admin-stat-icon tone-negative"><Icon name="xcircle" /></span>
+            <div>
+              <p className="admin-stat-value">{stats.recusados}</p>
+              <p className="admin-stat-label">Recusados</p>
+              <p className="admin-stat-sub"><span className="dot" style={{ background: "#b0473a" }} />Neste ano</p>
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <span className="admin-stat-icon tone-info"><Icon name="people" /></span>
+            <div>
+              <p className="admin-stat-value">{stats.totalAssociados}</p>
+              <p className="admin-stat-label">Total de Associados</p>
+              <p className="admin-stat-sub"><span className="dot" style={{ background: "#3c6eb4" }} />Ativos</p>
+            </div>
           </div>
         </div>
-        <span className="about-flourish" aria-hidden="true" />
+      )}
 
-        {error && <p className="form-note err">{error}</p>}
-        {!applications && !error && <p className="section-lead">Carregando…</p>}
-        {applications && applications.length === 0 && (
-          <p className="section-lead">Nenhum pedido de associação ainda.</p>
-        )}
-
-        <div style={{ display: "grid", gap: 20 }}>
-          {applications?.map((a) => (
-            <div key={a.id} className="about-section-card">
-              <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-                <div>
-                  <h3 className="mp-subtitle mp-subtitle-tight" style={{ marginBottom: 4 }}>{a.name}</h3>
-                  <p className="gov-role" style={{ marginBottom: 0 }}>{statusLabel[a.status]}</p>
-                </div>
-                <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-                  <Link href={`/admin/associados/${a.id}`} className="btn btn-primary">
-                    Ver detalhes
-                  </Link>
-                </div>
-              </div>
-              <p><b>E-mail:</b> {a.email}</p>
-              <p><b>Empresa:</b> {a.company}</p>
-              {a.role && <p><b>Cargo:</b> {a.role}</p>}
-              {a.sector && <p><b>Setor:</b> {a.sector}</p>}
-              {a.country && <p><b>País:</b> {a.country}</p>}
-              {a.phone && <p><b>Telefone:</b> {a.phone}</p>}
-              {a.message && <p><b>Mensagem:</b> {a.message}</p>}
-              <p style={{ color: "var(--fg-dim)", fontSize: "0.82rem" }}>
-                Enviado em {new Date(a.createdAt).toLocaleString()}
-              </p>
-            </div>
-          ))}
+      <div className="admin-filter-bar">
+        <div className="admin-filter-search">
+          <Icon name="search" />
+          <input
+            type="text"
+            placeholder="Buscar por nome, empresa ou e-mail…"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          />
+        </div>
+        <div className="admin-filter-field">
+          <label>Status</label>
+          <select value={statusPick} onChange={(e) => { setStatusPick(e.target.value); setPage(1); }}>
+            <option value="">Todos</option>
+            {(statusFilter ?? (Object.keys(statusLabel) as ApplicationStatus[])).map((s) => (
+              <option key={s} value={s}>{statusLabel[s]}</option>
+            ))}
+          </select>
+        </div>
+        <div className="admin-filter-field">
+          <label>Setor</label>
+          <select value={sectorPick} onChange={(e) => { setSectorPick(e.target.value); setPage(1); }}>
+            <option value="">Todos</option>
+            {sectors.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <div className="admin-filter-field">
+          <label>País</label>
+          <select value={countryPick} onChange={(e) => { setCountryPick(e.target.value); setPage(1); }}>
+            <option value="">Todos</option>
+            {countries.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
         </div>
       </div>
-    </section>
+
+      {!applications && !error ? (
+        <p className="section-lead">Carregando…</p>
+      ) : filtered.length === 0 ? (
+        <div className="admin-empty">
+          <Icon name="userplus" />
+          <p>Nenhum pedido de associação encontrado com esses filtros.</p>
+        </div>
+      ) : (
+        <div className="admin-table-wrap">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Associado</th>
+                <th>Empresa</th>
+                <th>Setor</th>
+                <th>País</th>
+                <th>Status</th>
+                <th>Data do Pedido</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pageRows.map((a) => {
+                const d = new Date(a.createdAt);
+                return (
+                  <tr key={a.id}>
+                    <td>
+                      <div className="admin-table-person">
+                        <span className="admin-table-avatar">{initials(a.name)}</span>
+                        <span>
+                          <strong>{a.name}</strong>
+                          <small>{a.email}</small>
+                        </span>
+                      </div>
+                    </td>
+                    <td>{a.company}</td>
+                    <td>{a.sector || "—"}</td>
+                    <td>{countryFlag(a.country)} {a.country || "—"}</td>
+                    <td><span className={`admin-badge ${STATUS_TONE[a.status]}`}>{statusLabel[a.status]}</span></td>
+                    <td>{d.toLocaleDateString("pt-BR")}<br /><small style={{ color: "var(--fg-dim)" }}>{d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</small></td>
+                    <td>
+                      <div className="admin-table-actions">
+                        <Link href={`/admin/associados/${a.id}`} className="btn btn-ghost" style={{ padding: "7px 14px", fontSize: "0.82rem" }}>
+                          Ver Detalhes
+                        </Link>
+                        <div className="admin-table-actions-wrap">
+                          <button type="button" className="admin-kebab-btn" onClick={() => setOpenMenuId(openMenuId === a.id ? null : a.id)} aria-label="Mais ações">
+                            <Icon name="dots" />
+                          </button>
+                          {openMenuId === a.id && (
+                            <div className="admin-kebab-menu">
+                              <button type="button" onClick={() => onDelete(a.id)}>Remover</button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className="admin-pagination">
+            <p className="admin-pagination-info">
+              Mostrando {filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filtered.length)} de {filtered.length} pedidos
+            </p>
+            <div className="admin-pagination-pages">
+              <button type="button" className="admin-page-btn" disabled={currentPage <= 1} onClick={() => setPage(currentPage - 1)}><Icon name="chevronleft" /></button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 6).map((n) => (
+                <button key={n} type="button" className={`admin-page-btn${n === currentPage ? " active" : ""}`} onClick={() => setPage(n)}>{n}</button>
+              ))}
+              <button type="button" className="admin-page-btn" disabled={currentPage >= totalPages} onClick={() => setPage(currentPage + 1)}><Icon name="chevronright" /></button>
+            </div>
+            <div className="admin-page-size">
+              <select value={pageSize} onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}>
+                <option value={10}>10 por página</option>
+                <option value={25}>25 por página</option>
+                <option value={50}>50 por página</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
+    </AdminLayout>
   );
 }
 
@@ -232,23 +446,14 @@ export function AdminContactMessagesList() {
   }, [load]);
 
   return (
-    <section className="section">
-      <div className="container reveal">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <p className="section-eyebrow">Administração</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Mensagens de Contato</h1>
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
-          </div>
-        </div>
-        <span className="about-flourish" aria-hidden="true" />
-
+    <AdminLayout active="mensagens" title="Mensagens de Contato" lead="Mensagens enviadas pelo formulário de contato do site.">
         {error && <p className="form-note err">{error}</p>}
         {!messages && !error && <p className="section-lead">Carregando…</p>}
         {messages && messages.length === 0 && (
-          <p className="section-lead">Nenhuma mensagem recebida ainda.</p>
+          <div className="admin-empty">
+            <Icon name="mail" />
+            <p>Nenhuma mensagem recebida ainda.</p>
+          </div>
         )}
 
         <div style={{ display: "grid", gap: 20 }}>
@@ -264,8 +469,7 @@ export function AdminContactMessagesList() {
             </div>
           ))}
         </div>
-      </div>
-    </section>
+    </AdminLayout>
   );
 }
 
@@ -520,25 +724,16 @@ export function AdminApplicationDetail({ id }: { id: string }) {
     }
   }
 
-  if (error) return <section className="section"><div className="container reveal"><p className="form-note err">{error}</p></div></section>;
-  if (!app) return <section className="section"><div className="container reveal"><p className="section-lead">Carregando…</p></div></section>;
+  if (error) return <AdminLayout active="associados" title="Erro"><p className="form-note err">{error}</p></AdminLayout>;
+  if (!app) return <AdminLayout active="associados" title="Carregando…"><p className="section-lead">Carregando…</p></AdminLayout>;
 
   const p = app.personalData;
   const c = app.companyData;
   const b = app.businessProfile;
 
   return (
-    <section className="section">
-      <div className="container reveal">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <p className="section-eyebrow">Administração</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>{app.name}</h1>
-            <p className="gov-role" style={{ marginBottom: 0 }}>{statusLabel[app.status]}</p>
-          </div>
-          <Link href="/admin/associados" className="btn btn-ghost">Voltar à lista</Link>
-        </div>
-        <span className="about-flourish" aria-hidden="true" />
+    <AdminLayout active="associados" title={app.name} lead={statusLabel[app.status]}>
+      <AdminBackLink href="/admin/associados" label="Voltar à lista" />
 
         <div className="about-section-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
@@ -902,7 +1097,6 @@ export function AdminApplicationDetail({ id }: { id: string }) {
             <Row label="IP" value={app.declarations.signatureIp as string} />
           </div>
         )}
-      </div>
-    </section>
+    </AdminLayout>
   );
 }

@@ -22,7 +22,10 @@ function getSecretKey(): Uint8Array {
 }
 
 export type MemberSessionPayload = { type: "member"; sub: string };
-export type AdminSessionPayload = { type: "admin" };
+/** `sub` = id do AdminUser, quando o login foi feito com conta individual
+ *  (aba "Usuários"). Ausente nas sessões do login "mestre" (ADMIN_PASSWORD
+ *  compartilhada) — mantido por compatibilidade, nunca removido. */
+export type AdminSessionPayload = { type: "admin"; sub?: string };
 export type PasswordResetPayload = { type: "password-reset"; sub: string };
 
 const PASSWORD_RESET_MAX_AGE = 60 * 60; // 1 hora
@@ -36,12 +39,13 @@ export async function signMemberSession(applicationId: string): Promise<string> 
     .sign(getSecretKey());
 }
 
-export async function signAdminSession(): Promise<string> {
-  return new SignJWT({ type: "admin" } satisfies AdminSessionPayload)
+export async function signAdminSession(userId?: string): Promise<string> {
+  let jwt = new SignJWT({ type: "admin" } satisfies Omit<AdminSessionPayload, "sub">)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(`${ADMIN_MAX_AGE}s`)
-    .sign(getSecretKey());
+    .setExpirationTime(`${ADMIN_MAX_AGE}s`);
+  if (userId) jwt = jwt.setSubject(userId);
+  return jwt.sign(getSecretKey());
 }
 
 export async function signPasswordResetToken(applicationId: string): Promise<string> {
@@ -77,7 +81,7 @@ export async function verifyAdminSession(token: string): Promise<AdminSessionPay
   try {
     const { payload } = await jwtVerify(token, getSecretKey());
     if (payload.type !== "admin") return null;
-    return { type: "admin" };
+    return { type: "admin", sub: typeof payload.sub === "string" ? payload.sub : undefined };
   } catch {
     return null;
   }

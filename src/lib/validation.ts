@@ -46,6 +46,9 @@ export const memberLoginSchema = z.object({
 /** Schema de validação do login do admin. */
 export const adminLoginSchema = z.object({
   password: z.string().min(1, "Informe a senha").max(200),
+  // Opcional: login por conta individual (aba "Usuários"). Sem e-mail, cai no
+  // login "mestre" por senha única (ADMIN_PASSWORD), como sempre funcionou.
+  email: z.string().email().optional(),
 });
 
 /** Schema de validação do pedido de "esqueci minha senha". */

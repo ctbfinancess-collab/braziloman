@@ -18,6 +18,7 @@ const createSchema = z.object({
   title: z.string().min(1).max(200),
   message: z.string().min(1).max(2000),
   important: z.boolean().optional(),
+  imageUrl: z.string().max(500).optional().nullable(),
 });
 
 export async function POST(req: Request) {
@@ -34,7 +35,12 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "Dados inválidos" }, { status: 422 });
 
   const notice = await prisma.chamberNotice.create({
-    data: { title: parsed.data.title, message: parsed.data.message, important: parsed.data.important ?? false },
+    data: {
+      title: parsed.data.title,
+      message: parsed.data.message,
+      important: parsed.data.important ?? false,
+      imageUrl: parsed.data.imageUrl || null,
+    },
   });
   return NextResponse.json({ ok: true, notice });
 }

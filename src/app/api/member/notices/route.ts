@@ -17,7 +17,7 @@ export async function GET() {
   const notices = await prisma.chamberNotice.findMany({
     orderBy: { createdAt: "desc" },
     take: 10,
-    select: { id: true, title: true, message: true, important: true, createdAt: true },
+    select: { id: true, title: true, message: true, important: true, imageUrl: true, createdAt: true },
   });
   return NextResponse.json({ notices });
 }

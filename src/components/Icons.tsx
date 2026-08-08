@@ -153,6 +153,39 @@ export const IconSettings = (p: P) => (
 export const IconClose = (p: P) => (
   <svg {...base} {...p}><path d="M5 5l14 14M19 5L5 19" /></svg>
 );
+export const IconGrid = (p: P) => (
+  <svg {...base} {...p}><rect x="3" y="3" width="8" height="8" rx="1.5" /><rect x="13" y="3" width="8" height="8" rx="1.5" /><rect x="3" y="13" width="8" height="8" rx="1.5" /><rect x="13" y="13" width="8" height="8" rx="1.5" /></svg>
+);
+export const IconStar = (p: P) => (
+  <svg {...base} {...p}><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8L12 3.5z" /></svg>
+);
+export const IconSearch = (p: P) => (
+  <svg {...base} {...p}><circle cx="10.5" cy="10.5" r="6.5" /><path d="M20 20l-5-5" /></svg>
+);
+export const IconDownload = (p: P) => (
+  <svg {...base} {...p}><path d="M12 3v12M7 10l5 5 5-5" /><path d="M4 19h16" /></svg>
+);
+export const IconFilter = (p: P) => (
+  <svg {...base} {...p}><path d="M4 5h16M7 12h10M10 19h4" /></svg>
+);
+export const IconDots = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="5" r="1.4" /><circle cx="12" cy="12" r="1.4" /><circle cx="12" cy="19" r="1.4" /></svg>
+);
+export const IconChevronLeft = (p: P) => (
+  <svg {...base} {...p}><path d="M15 5l-7 7 7 7" /></svg>
+);
+export const IconChevronRight = (p: P) => (
+  <svg {...base} {...p}><path d="M9 5l7 7-7 7" /></svg>
+);
+export const IconPlus = (p: P) => (
+  <svg {...base} {...p}><path d="M12 5v14M5 12h14" /></svg>
+);
+export const IconXCircle = (p: P) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M9 9l6 6M15 9l-6 6" /></svg>
+);
+export const IconMenu = (p: P) => (
+  <svg {...base} {...p}><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+);
 
 const map = {
   handshake: IconHandshake,
@@ -202,6 +235,17 @@ const map = {
   folder: IconFolder,
   settings: IconSettings,
   close: IconClose,
+  grid: IconGrid,
+  star: IconStar,
+  search: IconSearch,
+  download: IconDownload,
+  filter: IconFilter,
+  dots: IconDots,
+  chevronleft: IconChevronLeft,
+  chevronright: IconChevronRight,
+  plus: IconPlus,
+  xcircle: IconXCircle,
+  menu: IconMenu,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

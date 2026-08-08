@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { adminLoginSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
 import { env } from "@/lib/env";
+import { prisma } from "@/lib/prisma";
 import { signAdminSession, ADMIN_COOKIE, adminCookieOptions } from "@/lib/session";
 
 export const runtime = "nodejs";
@@ -24,13 +26,6 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!env.ADMIN_PASSWORD) {
-    return NextResponse.json(
-      { error: "Login de administrador não configurado (ADMIN_PASSWORD ausente)." },
-      { status: 503 }
-    );
-  }
-
   let body: unknown;
   try {
     body = await req.json();
@@ -43,6 +38,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Informe a senha" }, { status: 422 });
   }
 
+  // Login por conta individual (e-mail + senha), cadastrada em Usuários.
+  if (parsed.data.email) {
+    if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
+    const user = await prisma.adminUser.findUnique({ where: { email: parsed.data.email.toLowerCase() } });
+    if (!user || !(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
+      return NextResponse.json({ error: "E-mail ou senha incorretos." }, { status: 401 });
+    }
+    const token = await signAdminSession(user.id);
+    const res = NextResponse.json({ ok: true });
+    res.cookies.set(ADMIN_COOKIE, token, adminCookieOptions);
+    return res;
+  }
+
+  // Login "mestre" — senha única compartilhada (ADMIN_PASSWORD).
+  if (!env.ADMIN_PASSWORD) {
+    return NextResponse.json(
+      { error: "Login de administrador não configurado (ADMIN_PASSWORD ausente)." },
+      { status: 503 }
+    );
+  }
   if (parsed.data.password !== env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: "Senha incorreta." }, { status: 401 });
   }

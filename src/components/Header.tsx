@@ -14,7 +14,7 @@ export default function Header() {
   const pathname = usePathname();
   // O Painel do Associado (associados ativos) tem seu próprio menu/topbar —
   // sem o header institucional do site.
-  if (pathname?.startsWith("/membro/painel/")) return null;
+  if (pathname?.startsWith("/membro/painel/") || pathname?.startsWith("/admin")) return null;
 
   const links = [
     { href: "/a-camara", label: d.nav.about },

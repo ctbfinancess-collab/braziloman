@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { deepMerge } from "@/lib/contentMerge";
+import { AdminLayout } from "./AdminLayout";
 
 type Node = string | number | boolean | null | undefined | Node[] | { [key: string]: Node };
 type PathSeg = string | number;
@@ -465,12 +465,6 @@ export function ContentEditor() {
     }
   }
 
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
-  }
-
   const term = search.trim().toLowerCase();
 
   const sections = useMemo(() => {
@@ -480,41 +474,24 @@ export function ContentEditor() {
 
   if (status === "loading") {
     return (
-      <section className="section">
-        <div className="container reveal">
-          <p className="section-lead">Carregando conteúdo…</p>
-        </div>
-      </section>
+      <AdminLayout active="conteudo" title="Conteúdo do Site">
+        <p className="section-lead">Carregando conteúdo…</p>
+      </AdminLayout>
     );
   }
 
   if (status === "error" && !draftPt) {
     return (
-      <section className="section">
-        <div className="container reveal">
-          <p className="form-note err">{errorMsg}</p>
-        </div>
-      </section>
+      <AdminLayout active="conteudo" title="Conteúdo do Site">
+        <p className="form-note err">{errorMsg}</p>
+      </AdminLayout>
     );
   }
 
   if (!draftPt || !draftEn || !defaults) return null;
 
   return (
-    <section className="section">
-      <div className="container reveal">
-        <div className="ce-toolbar">
-          <div>
-            <p className="section-eyebrow">Administração</p>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Conteúdo do Site</h1>
-          </div>
-          <div className="ce-toolbar-actions">
-            <Link href="/admin/associados" className="btn btn-ghost">Pedidos de associação</Link>
-            <button type="button" className="btn btn-ghost" onClick={logout}>Sair</button>
-          </div>
-        </div>
-        <span className="about-flourish" aria-hidden="true" />
-
+    <AdminLayout active="conteudo" title="Conteúdo do Site" lead="Edite textos e imagens das páginas públicas do site.">
         <div className="ce-controls">
           <input
             type="text"
@@ -559,8 +536,7 @@ export function ContentEditor() {
             />
           ))}
         </div>
-      </div>
-    </section>
+    </AdminLayout>
   );
 }
 

@@ -20,7 +20,7 @@ export default function Footer() {
 
   // O Painel do Associado (associados ativos) tem seu próprio rodapé, sem o
   // rodapé institucional do site.
-  if (pathname?.startsWith("/membro/painel/")) return null;
+  if (pathname?.startsWith("/membro/painel/") || pathname?.startsWith("/admin")) return null;
 
   return (
     <footer className="site-footer">

@@ -8,7 +8,7 @@ import { Icon } from "./Icons";
 import type { LoyaltyTier } from "@/lib/loyalty";
 import { TIER_NAMES } from "@/lib/loyalty";
 
-type Notice = { id: string; title: string; message: string; important: boolean; createdAt: string };
+type Notice = { id: string; title: string; message: string; important: boolean; imageUrl?: string | null; createdAt: string };
 
 type NavKey =
   | "painel"
@@ -134,6 +134,10 @@ export function MemberDashboardShell({
                     <div className="dash-notice-list">
                       {notices.map((n) => (
                         <div className={`dash-notice-item${n.important ? " important" : ""}`} key={n.id}>
+                          {n.imageUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img className="dash-notice-item-photo" src={n.imageUrl} alt="" />
+                          )}
                           <p className="dash-notice-item-title">{n.title}</p>
                           <p className="dash-notice-item-message">{n.message}</p>
                           <p className="dash-notice-item-date">{new Date(n.createdAt).toLocaleDateString(lang === "pt" ? "pt-BR" : "en-US")}</p>

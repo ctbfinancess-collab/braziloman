@@ -143,3 +143,18 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: "Associado não encontrado" }, { status: 404 });
   }
 }
+
+/** Remove permanentemente um pedido de associação (e, em cascata, seus registros
+ *  de fidelidade/inscrições em eventos). Usado no menu "⋮" da lista do admin. */
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
+
+  const { id } = await params;
+  try {
+    await prisma.membershipApplication.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Associado não encontrado" }, { status: 404 });
+  }
+}
