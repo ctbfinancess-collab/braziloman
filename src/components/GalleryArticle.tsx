@@ -17,29 +17,29 @@ export default function GalleryArticle() {
           <p>{a.lead}</p>
         </div>
 
-        <h2 className="mp-subtitle mp-subtitle-tight">{a.videoTitle}</h2>
-        {a.videos.length > 0 ? (
-          <div className="launch-videos">
-            {a.videos.map((v) => (
-              <video key={v.src} className="launch-video" controls preload="none" poster={v.poster}>
-                <source src={v.src} type="video/mp4" />
-              </video>
-            ))}
-          </div>
-        ) : (
-          <p className="launch-gallery-empty">{a.emptyVideos}</p>
+        {a.videos.length > 0 && (
+          <>
+            <h2 className="mp-subtitle mp-subtitle-tight">{a.videoTitle}</h2>
+            <div className="launch-videos">
+              {a.videos.map((v) => (
+                <video key={v.src} className="launch-video" controls preload="none" poster={v.poster}>
+                  <source src={v.src} type="video/mp4" />
+                </video>
+              ))}
+            </div>
+          </>
         )}
 
-        <h2 className="mp-subtitle mp-subtitle-tight">{a.galleryTitle}</h2>
-        {a.gallery.length > 0 ? (
-          <div className="launch-gallery">
-            {a.gallery.map((p) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={p} src={p} alt="" loading="lazy" />
-            ))}
-          </div>
-        ) : (
-          <p className="launch-gallery-empty">{a.emptyGallery}</p>
+        {a.gallery.length > 0 && (
+          <>
+            <h2 className="mp-subtitle mp-subtitle-tight">{a.galleryTitle}</h2>
+            <div className="launch-gallery">
+              {a.gallery.map((p) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={p} src={p} alt="" loading="lazy" />
+              ))}
+            </div>
+          </>
         )}
 
         {a.press.length > 0 && (

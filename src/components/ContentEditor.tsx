@@ -96,8 +96,6 @@ const FIELD_LABEL_OVERRIDES: Record<string, string> = {
   videoTitle: "Título da seção de vídeos",
   pressTitle: "Título da seção de imprensa",
   backLabel: "Texto do link \"Voltar\"",
-  emptyGallery: "Mensagem quando não houver fotos ainda",
-  emptyVideos: "Mensagem quando não houver vídeos ainda",
 };
 
 function humanize(key: string): string {

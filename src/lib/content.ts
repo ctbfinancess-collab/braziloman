@@ -982,10 +982,8 @@ export const content = {
       lead: "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa nacional e internacional.",
       galleryTitle: "Fotos",
       videoTitle: "Vídeos",
-      pressTitle: "Na Imprensa",
+      pressTitle: "Imprensa",
       backLabel: "Voltar para Notícias",
-      emptyGallery: "Novas fotos em breve.",
-      emptyVideos: "Novos vídeos em breve.",
       gallery: [] as string[],
       videos: [] as { src: string; poster: string }[],
       press: [
@@ -2264,10 +2262,8 @@ export const content = {
       lead: "Photos, videos and the Brazil–Oman Chamber of Commerce in the national and international press.",
       galleryTitle: "Photos",
       videoTitle: "Videos",
-      pressTitle: "In the Press",
+      pressTitle: "Press",
       backLabel: "Back to News",
-      emptyGallery: "New photos coming soon.",
-      emptyVideos: "New videos coming soon.",
       gallery: [] as string[],
       videos: [] as { src: string; poster: string }[],
       press: [
