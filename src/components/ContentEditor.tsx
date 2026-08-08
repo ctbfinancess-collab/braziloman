@@ -83,6 +83,14 @@ const FIELD_LABEL_OVERRIDES: Record<string, string> = {
   h: "Título do card",
   p: "Texto do card",
   icon: "Ícone (nome técnico, cuidado ao mudar)",
+  name: "Nome",
+  url: "Link (URL)",
+  logo: "Logo",
+  poster: "Capa do vídeo (aparece antes de dar play)",
+  src: "Arquivo de vídeo",
+  gallery: "Galeria de fotos",
+  videos: "Vídeos",
+  press: "Imprensa (logos e links)",
 };
 
 function humanize(key: string): string {
@@ -98,6 +106,10 @@ function sectionLabel(key: string): string {
 
 function isImagePath(value: unknown): boolean {
   return typeof value === "string" && /\.(jpe?g|png|webp|gif|svg)($|\?)/i.test(value);
+}
+
+function isVideoPath(value: unknown): boolean {
+  return typeof value === "string" && /\.(mp4|mov|webm)($|\?)/i.test(value);
 }
 
 function isDocumentPath(value: unknown): boolean {
@@ -144,8 +156,9 @@ function FieldNode(props: FieldProps) {
     const isOverridden = ptNode !== defaultPtNode;
     const pathKey = path.join(".");
     const isImg = isImagePath(ptNode) || isImagePath(defaultPtNode);
+    const isVideo = isVideoPath(ptNode) || isVideoPath(defaultPtNode);
     const isUrlField = path[path.length - 1] === "url";
-    const isDoc = isDocumentPath(ptNode) || isDocumentPath(defaultPtNode) || (isUrlField && !isImg);
+    const isDoc = isDocumentPath(ptNode) || isDocumentPath(defaultPtNode) || (isUrlField && !isImg && !isVideo);
     const long = ptNode.length > 70 || (typeof enNode === "string" && enNode.length > 70);
 
     return (
@@ -159,20 +172,23 @@ function FieldNode(props: FieldProps) {
             </button>
           )}
         </div>
-        {(isImg || isDoc) && (
+        {(isImg || isVideo || isDoc) && (
           <div className="ce-image-row">
             {isImg && ptNode && (
               // eslint-disable-next-line @next/next/no-img-element
               <img key={ptNode} src={ptNode} alt="" className="ce-image-preview" />
             )}
+            {isVideo && ptNode && (
+              <video key={ptNode} src={ptNode} controls preload="metadata" className="ce-video-preview" />
+            )}
             {isDoc && ptNode && (
               <a href={ptNode} target="_blank" rel="noreferrer" className="ce-mini-btn">Ver arquivo atual</a>
             )}
             <label className="ce-upload-btn">
-              {uploadingKey === pathKey ? "Enviando…" : isImg ? "Trocar imagem" : "Enviar arquivo (PDF ou imagem)"}
+              {uploadingKey === pathKey ? "Enviando…" : isImg ? "Trocar imagem" : isVideo ? "Trocar vídeo" : "Enviar arquivo (PDF ou imagem)"}
               <input
                 type="file"
-                accept={isImg ? "image/*" : "image/*,application/pdf"}
+                accept={isImg ? "image/*" : isVideo ? "video/*" : "image/*,application/pdf"}
                 style={{ display: "none" }}
                 onChange={(e) => {
                   const file = e.target.files?.[0];

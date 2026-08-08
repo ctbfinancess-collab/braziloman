@@ -25,6 +25,13 @@ const ALLOWED_IMAGE_TYPES: Record<string, string> = {
   "application/pdf": "pdf",
 };
 
+// vídeos de notícias/galeria (ex.: fotos e vídeos do evento de lançamento).
+const ALLOWED_VIDEO_TYPES: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/quicktime": "mov",
+  "video/webm": "webm",
+};
+
 const ALLOWED_DOCUMENT_TYPES: Record<string, string> = {
   ...ALLOWED_IMAGE_TYPES,
   "application/pdf": "pdf",
@@ -46,7 +53,7 @@ export function isDocumentStorageEnabled() {
 export async function uploadMedia(file: Buffer, contentType: string): Promise<string> {
   if (!client || !hasMedia) throw new Error("Upload de mídia não configurado (R2)");
 
-  const ext = ALLOWED_IMAGE_TYPES[contentType];
+  const ext = ALLOWED_IMAGE_TYPES[contentType] || ALLOWED_VIDEO_TYPES[contentType];
   if (!ext) throw new Error("Tipo de arquivo não permitido");
 
   const key = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;

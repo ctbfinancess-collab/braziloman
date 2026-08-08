@@ -1174,6 +1174,7 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .ce-empty { font-size: 0.85rem; color: var(--fg-dim); font-style: italic; }
 .ce-image-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
 .ce-image-preview { width: 72px; height: 72px; object-fit: cover; border: 1px solid var(--border-strong); }
+.ce-video-preview { width: 128px; height: 72px; object-fit: cover; border: 1px solid var(--border-strong); background: #000; }
 .ce-upload-btn {
   font-size: 0.78rem; border: 1px solid var(--border-strong); color: var(--gold-light);
   padding: 6px 12px; cursor: pointer; background: transparent;
