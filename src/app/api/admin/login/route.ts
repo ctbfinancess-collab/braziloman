@@ -4,7 +4,7 @@ import { adminLoginSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
 import { env } from "@/lib/env";
 import { prisma } from "@/lib/prisma";
-import { signAdminSession, ADMIN_COOKIE, adminCookieOptions } from "@/lib/session";
+import { signAdminSession, signAdminTwoFaPending, ADMIN_COOKIE, adminCookieOptions } from "@/lib/session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -45,6 +45,14 @@ export async function POST(req: Request) {
     if (!user || !(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
       return NextResponse.json({ error: "E-mail ou senha incorretos." }, { status: 401 });
     }
+
+    // Conta com 2FA ativo: senha confere, mas a sessão só é liberada depois
+    // do código do Authenticator (ver /api/admin/login/verify-totp).
+    if (user.totpEnabled) {
+      const pendingToken = await signAdminTwoFaPending(user.id);
+      return NextResponse.json({ needsTotp: true, pendingToken });
+    }
+
     const token = await signAdminSession(user.id);
     const res = NextResponse.json({ ok: true });
     res.cookies.set(ADMIN_COOKIE, token, adminCookieOptions);

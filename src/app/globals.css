@@ -2140,6 +2140,19 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .admin-empty { text-align: center; padding: 60px 24px; color: var(--fg-muted); }
 .admin-empty svg { width: 34px; height: 34px; color: var(--gold); margin-bottom: 10px; }
 
+/* 2FA (Usuários) */
+.admin-2fa-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 32px; max-width: 520px; }
+.admin-2fa-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.admin-2fa-card-head h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 1.1rem; }
+.admin-2fa-card-head p { margin: 0; color: var(--fg-muted); font-size: 0.88rem; line-height: 1.5; }
+.admin-2fa-setup ol { margin: 0 0 14px; padding-left: 18px; color: var(--fg-muted); font-size: 0.9rem; }
+.admin-2fa-qr { display: block; width: 180px; height: 180px; margin: 0 0 14px; border: 1px solid var(--border); border-radius: 6px; }
+.admin-2fa-secret { font-size: 0.84rem; color: var(--fg-muted); margin: 0 0 18px; word-break: break-all; }
+.admin-2fa-secret code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; }
+.admin-2fa-confirm-form { display: grid; gap: 14px; max-width: 220px; }
+.admin-2fa-confirm-form label { display: grid; gap: 6px; font-size: 0.8rem; color: var(--fg-muted); }
+.admin-2fa-confirm-form input { font-size: 1.1rem; letter-spacing: 0.2em; text-align: center; padding: 10px; border: 1px solid var(--border-strong); border-radius: 6px; }
+
 @media (max-width: 1100px) {
   .admin-stats { grid-template-columns: repeat(3, 1fr); }
 }

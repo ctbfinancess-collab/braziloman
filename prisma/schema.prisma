@@ -225,6 +225,11 @@ model AdminUser {
   passwordHash String
   name         String
   createdAt    DateTime @default(now())
+  /// Segredo TOTP (2FA, tipo Google Authenticator) — só existe depois que o
+  /// próprio usuário confirma o setup escaneando o QR code. totpEnabled só
+  /// vira true nesse momento; até lá o secret é "pendente de confirmação".
+  totpSecret   String?
+  totpEnabled  Boolean  @default(false)
 }
 
 /// Parceiro/associado em destaque na página pública "Parceiros e Associados"

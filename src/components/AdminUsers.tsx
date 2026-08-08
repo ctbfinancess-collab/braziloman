@@ -9,6 +9,178 @@ type AdminUserRow = { id: string; name: string; email: string; createdAt: string
 type FormState = { name: string; email: string; password: string };
 const EMPTY_FORM: FormState = { name: "", email: "", password: "" };
 
+/** Autenticação em duas etapas (2FA) da conta que está logada AGORA — não
+ *  é gerenciável por outra pessoa, cada um ativa a própria (precisa escanear
+ *  o QR code com o próprio celular). Some inteiramente pra quem entrou com
+ *  a senha mestre, já que 2FA só existe pra contas individuais. */
+function MyTwoFactorCard() {
+  const [state, setState] = useState<"loading" | "unavailable" | "disabled" | "enabling" | "enabled">("loading");
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [secret, setSecret] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [disabling, setDisabling] = useState(false);
+
+  const load = useCallback(async () => {
+    const res = await fetch("/api/admin/me/totp");
+    if (!res.ok) {
+      setState("unavailable");
+      return;
+    }
+    const json = await res.json();
+    setState(json.enabled ? "enabled" : "disabled");
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  async function onStartSetup() {
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/me/totp", { method: "POST" });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Não foi possível gerar o QR code.");
+        return;
+      }
+      setQrDataUrl(json.qrDataUrl);
+      setSecret(json.secret);
+      setState("enabling");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onConfirm(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/me/totp", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Código inválido.");
+        return;
+      }
+      setCode("");
+      setState("enabled");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onDisable(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/me/totp", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Código inválido.");
+        return;
+      }
+      setCode("");
+      setDisabling(false);
+      setState("disabled");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (state === "loading" || state === "unavailable") return null;
+
+  return (
+    <div className="admin-2fa-card">
+      <div className="admin-2fa-card-head">
+        <div>
+          <h3>Autenticação em duas etapas (2FA)</h3>
+          <p>Protege a sua conta individual com um código do Google Authenticator, Authy ou similar, além da senha.</p>
+        </div>
+        {state === "enabled" && <span className="admin-badge tone-positive">Ativado</span>}
+        {state === "disabled" && <span className="admin-badge tone-neutral">Desativado</span>}
+      </div>
+
+      {state === "disabled" && (
+        <button type="button" className="btn btn-primary" onClick={onStartSetup} disabled={busy}>
+          {busy ? "Gerando…" : "Ativar 2FA"}
+        </button>
+      )}
+
+      {state === "enabling" && (
+        <div className="admin-2fa-setup">
+          <ol>
+            <li>Abra o Google Authenticator (ou similar) e escaneie o QR code:</li>
+          </ol>
+          {qrDataUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={qrDataUrl} alt="QR code do 2FA" className="admin-2fa-qr" />
+          )}
+          {secret && <p className="admin-2fa-secret">Não consegue escanear? Digite manualmente: <code>{secret}</code></p>}
+          <form onSubmit={onConfirm} className="admin-2fa-confirm-form">
+            <label>
+              Código gerado pelo app
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                required
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                autoFocus
+              />
+            </label>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? "Confirmando…" : "Confirmar e ativar"}</button>
+              <button type="button" className="btn btn-ghost" onClick={() => { setState("disabled"); setCode(""); setError(""); }}>Cancelar</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {state === "enabled" && !disabling && (
+        <button type="button" className="btn btn-ghost" onClick={() => setDisabling(true)}>Desativar 2FA</button>
+      )}
+
+      {state === "enabled" && disabling && (
+        <form onSubmit={onDisable} className="admin-2fa-confirm-form">
+          <label>
+            Confirme com o código atual do app pra desativar
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]{6}"
+              maxLength={6}
+              required
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              autoFocus
+            />
+          </label>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? "Desativando…" : "Confirmar desativação"}</button>
+            <button type="button" className="btn btn-ghost" onClick={() => { setDisabling(false); setCode(""); setError(""); }}>Cancelar</button>
+          </div>
+        </form>
+      )}
+
+      {error && <p className="form-note err">{error}</p>}
+    </div>
+  );
+}
+
 /** Painel admin de Usuários — cria e remove contas individuais de administrador
  *  (login por e-mail + senha). Convive com a senha mestre compartilhada, que
  *  continua funcionando como acesso de reserva. */
@@ -80,6 +252,8 @@ export function AdminUsers() {
       lead="Contas individuais de acesso ao painel admin — além da senha mestre compartilhada, que continua funcionando normalmente."
       actions={<button type="button" className="btn btn-primary" onClick={() => setForm({ ...EMPTY_FORM })}><Icon name="plus" /> Novo usuário</button>}
     >
+        <MyTwoFactorCard />
+
         {error && <p className="form-note err">{error}</p>}
 
         {form && (

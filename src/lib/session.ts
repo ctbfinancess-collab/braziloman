@@ -27,8 +27,14 @@ export type MemberSessionPayload = { type: "member"; sub: string };
  *  compartilhada) — mantido por compatibilidade, nunca removido. */
 export type AdminSessionPayload = { type: "admin"; sub?: string };
 export type PasswordResetPayload = { type: "password-reset"; sub: string };
+/** Token intermediário entre "senha confirmada" e "sessão liberada", só
+ *  quando a conta individual tem 2FA ativo. Nunca autentica sozinho no
+ *  admin — só serve pra provar, no passo 2 (código do Authenticator), que
+ *  o passo 1 (senha) já foi conferido. */
+export type AdminTwoFaPendingPayload = { type: "admin-2fa-pending"; sub: string };
 
 const PASSWORD_RESET_MAX_AGE = 60 * 60; // 1 hora
+const TWO_FA_PENDING_MAX_AGE = 5 * 60; // 5 minutos
 
 export async function signMemberSession(applicationId: string): Promise<string> {
   return new SignJWT({ type: "member" } satisfies Omit<MemberSessionPayload, "sub">)
@@ -46,6 +52,25 @@ export async function signAdminSession(userId?: string): Promise<string> {
     .setExpirationTime(`${ADMIN_MAX_AGE}s`);
   if (userId) jwt = jwt.setSubject(userId);
   return jwt.sign(getSecretKey());
+}
+
+export async function signAdminTwoFaPending(userId: string): Promise<string> {
+  return new SignJWT({ type: "admin-2fa-pending" } satisfies Omit<AdminTwoFaPendingPayload, "sub">)
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(userId)
+    .setIssuedAt()
+    .setExpirationTime(`${TWO_FA_PENDING_MAX_AGE}s`)
+    .sign(getSecretKey());
+}
+
+export async function verifyAdminTwoFaPending(token: string): Promise<AdminTwoFaPendingPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, getSecretKey());
+    if (payload.type !== "admin-2fa-pending" || typeof payload.sub !== "string") return null;
+    return { type: "admin-2fa-pending", sub: payload.sub };
+  } catch {
+    return null;
+  }
 }
 
 export async function signPasswordResetToken(applicationId: string): Promise<string> {

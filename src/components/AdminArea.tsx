@@ -24,6 +24,7 @@ export function AdminLoginForm() {
   const router = useRouter();
   const [status, setStatus] = useState<"idle" | "sending" | "err">("idle");
   const [error, setError] = useState("");
+  const [pendingToken, setPendingToken] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,12 +47,86 @@ export function AdminLoginForm() {
         setStatus("err");
         return;
       }
+      if (json.needsTotp) {
+        setPendingToken(json.pendingToken);
+        setStatus("idle");
+        return;
+      }
       router.push("/admin/associados");
       router.refresh();
     } catch {
       setError("Não foi possível entrar.");
       setStatus("err");
     }
+  }
+
+  async function onSubmitTotp(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const code = String(new FormData(form).get("code") || "");
+    setStatus("sending");
+    setError("");
+    try {
+      const res = await fetch("/api/admin/login/verify-totp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pendingToken, code }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Código inválido.");
+        setStatus("err");
+        return;
+      }
+      router.push("/admin/associados");
+      router.refresh();
+    } catch {
+      setError("Não foi possível confirmar o código.");
+      setStatus("err");
+    }
+  }
+
+  if (pendingToken) {
+    return (
+      <section className="section">
+        <div className="container reveal" style={{ maxWidth: 380 }}>
+          <p className="section-eyebrow center">Administração</p>
+          <h1 className="section-title center">Verificação em duas etapas</h1>
+          <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+          <p className="section-lead center" style={{ marginBottom: 24 }}>
+            Digite o código de 6 dígitos do seu app autenticador (Google Authenticator, Authy, etc.).
+          </p>
+          <form className="contact-form mp-form" onSubmit={onSubmitTotp} noValidate>
+            <label>
+              Código
+              <input
+                type="text"
+                name="code"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                autoComplete="one-time-code"
+                autoFocus
+                required
+              />
+            </label>
+            <button type="submit" className="btn btn-primary" disabled={status === "sending"}>
+              {status === "sending" ? "Verificando…" : "Confirmar"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => { setPendingToken(null); setError(""); setStatus("idle"); }}
+            >
+              Voltar
+            </button>
+            {status === "err" && (
+              <p className="form-note err" role="status" aria-live="polite">{error}</p>
+            )}
+          </form>
+        </div>
+      </section>
+    );
   }
 
   return (
