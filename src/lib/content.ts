@@ -1004,8 +1004,15 @@ export const content = {
       backLabel: "Voltar para Notícias",
       emptyGallery: "Novas fotos em breve.",
       emptyVideos: "Novos vídeos em breve.",
-      gallery: [] as string[],
-      videos: [] as { src: string; poster: string }[],
+      gallery: [
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
+      ],
+      videos: [
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
+      ],
     },
     frenteParlamentarArticle: {
       tag: "Institucional",
@@ -2280,8 +2287,15 @@ export const content = {
       backLabel: "Back to News",
       emptyGallery: "New photos coming soon.",
       emptyVideos: "New videos coming soon.",
-      gallery: [] as string[],
-      videos: [] as { src: string; poster: string }[],
+      gallery: [
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
+      ],
+      videos: [
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
+      ],
     },
     frenteParlamentarArticle: {
       tag: "Institutional",
