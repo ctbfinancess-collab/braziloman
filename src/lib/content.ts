@@ -960,6 +960,9 @@ export const content = {
         "/news/lancamento/ccb-14.jpg",
         "/news/lancamento/ccb-15.jpg",
         "/news/lancamento/ccb-16.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
       ],
       videos: [
         { src: "/news/lancamento/video-3.mp4", poster: "/news/lancamento/video-3-poster.jpg" },
@@ -968,6 +971,8 @@ export const content = {
         { src: "/news/lancamento/video-6.mp4", poster: "/news/lancamento/video-6-poster.jpg" },
         { src: "/news/lancamento/video-4.mp4", poster: "/news/lancamento/video-4-poster.jpg" },
         { src: "/news/lancamento/video-1.mp4", poster: "/news/lancamento/video-1-poster.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
       ],
     },
     galleryArticle: {
@@ -981,15 +986,8 @@ export const content = {
       backLabel: "Voltar para Notícias",
       emptyGallery: "Novas fotos em breve.",
       emptyVideos: "Novos vídeos em breve.",
-      gallery: [
-        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
-      ],
-      videos: [
-        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
-        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
-      ],
+      gallery: [] as string[],
+      videos: [] as { src: string; poster: string }[],
       press: [
         { name: "Gazeta de Brasília", url: "https://gazetadebrasilia.com/2026/05/11/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/gazetadebrasilia.png" },
         { name: "Protagonistas do Brasil", url: "https://protagonistasdobrasil.com/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/protagonistasdobrasil.png" },
@@ -2244,6 +2242,9 @@ export const content = {
         "/news/lancamento/ccb-14.jpg",
         "/news/lancamento/ccb-15.jpg",
         "/news/lancamento/ccb-16.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
       ],
       videos: [
         { src: "/news/lancamento/video-3.mp4", poster: "/news/lancamento/video-3-poster.jpg" },
@@ -2252,6 +2253,8 @@ export const content = {
         { src: "/news/lancamento/video-6.mp4", poster: "/news/lancamento/video-6-poster.jpg" },
         { src: "/news/lancamento/video-4.mp4", poster: "/news/lancamento/video-4-poster.jpg" },
         { src: "/news/lancamento/video-1.mp4", poster: "/news/lancamento/video-1-poster.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
       ],
     },
     galleryArticle: {
@@ -2265,15 +2268,8 @@ export const content = {
       backLabel: "Back to News",
       emptyGallery: "New photos coming soon.",
       emptyVideos: "New videos coming soon.",
-      gallery: [
-        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
-      ],
-      videos: [
-        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
-        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
-      ],
+      gallery: [] as string[],
+      videos: [] as { src: string; poster: string }[],
       press: [
         { name: "Gazeta de Brasília", url: "https://gazetadebrasilia.com/2026/05/11/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/gazetadebrasilia.png" },
         { name: "Protagonistas do Brasil", url: "https://protagonistasdobrasil.com/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/protagonistasdobrasil.png" },
