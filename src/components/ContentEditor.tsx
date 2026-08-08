@@ -50,7 +50,7 @@ const SECTION_LABELS: Record<string, string> = {
   consultingPage: "Associe-se — subpáginas (benefícios, serviços etc.)",
   news: "Notícias — lista",
   launchArticle: "Notícia — Lançamento",
-  galleryArticle: "Notícia — Galeria de Fotos e Vídeos",
+  galleryArticle: "Notícia — Câmara de Comércio na Mídia",
   frenteParlamentarArticle: "Notícia — Frente Parlamentar",
   missaoArticle: "Notícia — Missão Empresarial",
   memberArea: "Área do Membro (login e painel)",

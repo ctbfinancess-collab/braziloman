@@ -926,7 +926,7 @@ export const content = {
       comingSoon: "Em breve",
       items: [
         { icon: "calendar", tag: "Lançamento", date: "2026 · Brasília / Mascate", h: "Lançamento Oficial da Câmara de Comércio Brasil–Omã", p: "“Hoje iniciamos uma nova rota de crescimento global. Junte-se à Câmara de Comércio Brasil–Omã.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
-        { icon: "grid", tag: "Galeria", date: "2026 · Brasília / Mascate", h: "Galeria de Fotos e Vídeos", p: "Mais registros em fotos e vídeos das atividades e eventos da Câmara de Comércio Brasil–Omã.", link: "/noticias/galeria" },
+        { icon: "grid", tag: "Mídia", date: "2026 · Brasília / Mascate", h: "Câmara de Comércio na Mídia", p: "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa.", link: "/noticias/galeria" },
         { icon: "bank", tag: "Institucional", date: "Em tramitação · Brasília", h: "Frente Parlamentar Brasil–Omã", p: "Deputado Federal Bibo Nunes propõe no Congresso Nacional a criação de frente parlamentar para fortalecer as relações entre Brasil e Omã.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
         { icon: "plane", tag: "Missão", date: "Em breve · Brasília e Mascate", h: "Missão Empresarial Brasil–Omã", p: "A Câmara organiza a próxima Missão Empresarial Brasil–Omã, com agendas estratégicas em Brasília e Mascate para empresários, investidores e representantes institucionais.", link: "/noticias/missao-empresarial" },
         { icon: "monitor", tag: "Webinar", date: "Em breve · Online", h: "Como Exportar para o Golfo", p: "Especialistas apresentam oportunidades e caminhos para acessar o mercado do Oriente Médio." },
@@ -942,7 +942,6 @@ export const content = {
       p3: "A Câmara nasce como uma plataforma permanente de integração entre Brasil e Omã, com atuação voltada ao desenvolvimento de iniciativas nos setores de agricultura, logística, energia, tecnologia, indústria, comércio exterior e investimentos, consolidando uma nova rota de crescimento, inovação e cooperação bilateral.",
       galleryTitle: "Galeria do evento",
       videoTitle: "Momentos da cerimônia",
-      pressTitle: "Na Imprensa",
       backLabel: "Voltar para Notícias",
       gallery: [
         "/news/lancamento/ccb-7.jpeg",
@@ -970,6 +969,27 @@ export const content = {
         { src: "/news/lancamento/video-4.mp4", poster: "/news/lancamento/video-4-poster.jpg" },
         { src: "/news/lancamento/video-1.mp4", poster: "/news/lancamento/video-1-poster.jpg" },
       ],
+    },
+    galleryArticle: {
+      tag: "Mídia",
+      date: "2026 · Brasília / Mascate",
+      title: "Câmara de Comércio na Mídia",
+      lead: "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa nacional e internacional.",
+      galleryTitle: "Fotos",
+      videoTitle: "Vídeos",
+      pressTitle: "Na Imprensa",
+      backLabel: "Voltar para Notícias",
+      emptyGallery: "Novas fotos em breve.",
+      emptyVideos: "Novos vídeos em breve.",
+      gallery: [
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
+      ],
+      videos: [
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
+      ],
       press: [
         { name: "Gazeta de Brasília", url: "https://gazetadebrasilia.com/2026/05/11/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/gazetadebrasilia.png" },
         { name: "Protagonistas do Brasil", url: "https://protagonistasdobrasil.com/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/protagonistasdobrasil.png" },
@@ -992,26 +1012,6 @@ export const content = {
         { name: "Valor Econômico", url: "https://valor.globo.com/patrocinado/dino/noticia/2026/05/13/congresso-nacional-recebe-tributo-a-jk-em-cerimonia-1.ghtml", logo: "/news/lancamento/press/valoreconomico.png" },
         { name: "O Globo", url: "https://oglobo.globo.com/google/amp/patrocinado/dino/noticia/2026/05/13/congresso-nacional-recebe-tributo-a-jk-em-cerimonia-1.ghtml", logo: "/news/lancamento/press/oglobo.png" },
         { name: "Terra", url: "https://www.terra.com.br/noticias/congresso-nacional-recebe-tributo-a-jk-em-cerimonia,b6b78aed2abaac2985da5562cc48506codmxfb9w.html", logo: "/news/lancamento/press/terra.png" },
-      ],
-    },
-    galleryArticle: {
-      tag: "Galeria",
-      date: "2026 · Brasília / Mascate",
-      title: "Galeria de Fotos e Vídeos",
-      lead: "Mais registros em fotos e vídeos das atividades, eventos e bastidores da Câmara de Comércio Brasil–Omã.",
-      galleryTitle: "Fotos",
-      videoTitle: "Vídeos",
-      backLabel: "Voltar para Notícias",
-      emptyGallery: "Novas fotos em breve.",
-      emptyVideos: "Novos vídeos em breve.",
-      gallery: [
-        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
-      ],
-      videos: [
-        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
-        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
       ],
     },
     frenteParlamentarArticle: {
@@ -2210,7 +2210,7 @@ export const content = {
       comingSoon: "Coming soon",
       items: [
         { icon: "calendar", tag: "Launch", date: "2026 · Brasília / Muscat", h: "Official Launch of the Brazil–Oman Chamber of Commerce", p: "“Today we begin a new route of global growth. Join the Brazil–Oman Chamber of Commerce.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
-        { icon: "grid", tag: "Gallery", date: "2026 · Brasília / Muscat", h: "Photo & Video Gallery", p: "More photos and videos from the Brazil–Oman Chamber of Commerce's activities and events.", link: "/noticias/galeria" },
+        { icon: "grid", tag: "Media", date: "2026 · Brasília / Muscat", h: "Brazil–Oman Chamber in the Media", p: "Photos, videos and the Brazil–Oman Chamber of Commerce in the press.", link: "/noticias/galeria" },
         { icon: "bank", tag: "Institutional", date: "Under review · Brasília", h: "Brazil–Oman Parliamentary Front", p: "Federal Deputy Bibo Nunes proposes a parliamentary front in Brazil's National Congress to strengthen relations between Brazil and Oman.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
         { icon: "plane", tag: "Mission", date: "Soon · Brasília and Muscat", h: "Brazil–Oman Business Mission", p: "The Chamber is organizing the next Brazil–Oman Business Mission, with strategic agendas in Brasília and Muscat for business leaders, investors and institutional representatives.", link: "/noticias/missao-empresarial" },
         { icon: "monitor", tag: "Webinar", date: "Soon · Online", h: "How to Export to the Gulf", p: "Experts present opportunities and pathways to access the Middle East market." },
@@ -2226,7 +2226,6 @@ export const content = {
       p3: "The Chamber was created as a permanent platform for integration between Brazil and Oman, working to develop initiatives in agriculture, logistics, energy, technology, industry, foreign trade and investment — consolidating a new route of growth, innovation and bilateral cooperation.",
       galleryTitle: "Event gallery",
       videoTitle: "Moments from the ceremony",
-      pressTitle: "In the Press",
       backLabel: "Back to News",
       gallery: [
         "/news/lancamento/ccb-7.jpeg",
@@ -2254,6 +2253,27 @@ export const content = {
         { src: "/news/lancamento/video-4.mp4", poster: "/news/lancamento/video-4-poster.jpg" },
         { src: "/news/lancamento/video-1.mp4", poster: "/news/lancamento/video-1-poster.jpg" },
       ],
+    },
+    galleryArticle: {
+      tag: "Media",
+      date: "2026 · Brasília / Muscat",
+      title: "Brazil–Oman Chamber in the Media",
+      lead: "Photos, videos and the Brazil–Oman Chamber of Commerce in the national and international press.",
+      galleryTitle: "Photos",
+      videoTitle: "Videos",
+      pressTitle: "In the Press",
+      backLabel: "Back to News",
+      emptyGallery: "New photos coming soon.",
+      emptyVideos: "New videos coming soon.",
+      gallery: [
+        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
+        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
+      ],
+      videos: [
+        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
+        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
+      ],
       press: [
         { name: "Gazeta de Brasília", url: "https://gazetadebrasilia.com/2026/05/11/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/gazetadebrasilia.png" },
         { name: "Protagonistas do Brasil", url: "https://protagonistasdobrasil.com/camara-de-comercio-brasil-oma-congresso-nacional/", logo: "/news/lancamento/press/protagonistasdobrasil.png" },
@@ -2276,26 +2296,6 @@ export const content = {
         { name: "Valor Econômico", url: "https://valor.globo.com/patrocinado/dino/noticia/2026/05/13/congresso-nacional-recebe-tributo-a-jk-em-cerimonia-1.ghtml", logo: "/news/lancamento/press/valoreconomico.png" },
         { name: "O Globo", url: "https://oglobo.globo.com/google/amp/patrocinado/dino/noticia/2026/05/13/congresso-nacional-recebe-tributo-a-jk-em-cerimonia-1.ghtml", logo: "/news/lancamento/press/oglobo.png" },
         { name: "Terra", url: "https://www.terra.com.br/noticias/congresso-nacional-recebe-tributo-a-jk-em-cerimonia,b6b78aed2abaac2985da5562cc48506codmxfb9w.html", logo: "/news/lancamento/press/terra.png" },
-      ],
-    },
-    galleryArticle: {
-      tag: "Gallery",
-      date: "2026 · Brasília / Muscat",
-      title: "Photo & Video Gallery",
-      lead: "More photos and videos from the Brazil–Oman Chamber of Commerce's activities, events and behind the scenes.",
-      galleryTitle: "Photos",
-      videoTitle: "Videos",
-      backLabel: "Back to News",
-      emptyGallery: "New photos coming soon.",
-      emptyVideos: "New videos coming soon.",
-      gallery: [
-        "https://media.brasilomanchamber.org/uploads/1786213262153-ao0joz.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213263544-mbv7i1.jpg",
-        "https://media.brasilomanchamber.org/uploads/1786213264788-uevc0h.jpg",
-      ],
-      videos: [
-        { src: "https://media.brasilomanchamber.org/uploads/1786213292000-iqxc3p.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213278215-4iz5t2.jpg" },
-        { src: "https://media.brasilomanchamber.org/uploads/1786213310689-1ugd9q.mp4", poster: "https://media.brasilomanchamber.org/uploads/1786213277513-45ti9l.jpg" },
       ],
     },
     frenteParlamentarArticle: {

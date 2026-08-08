@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import GalleryArticle from "@/components/GalleryArticle";
 
 export const metadata: Metadata = {
-  title: "Galeria de Fotos e Vídeos",
+  title: "Câmara de Comércio na Mídia",
   description:
-    "Fotos e vídeos das atividades, eventos e bastidores da Câmara de Comércio Brasil–Omã.",
+    "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa nacional e internacional.",
 };
 
 export default function GaleriaPage() {

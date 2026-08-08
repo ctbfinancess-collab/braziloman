@@ -44,21 +44,6 @@ export default function LaunchArticle() {
             </div>
           </>
         )}
-
-        {a.press.length > 0 && (
-          <>
-            <h2 className="mp-subtitle mp-subtitle-tight">{a.pressTitle}</h2>
-            <div className="launch-press">
-              {a.press.map((p) => (
-                <a className="launch-press-item" key={p.name} href={p.url} target="_blank" rel="noopener noreferrer">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.logo} alt={p.name} loading="lazy" />
-                  <span className="launch-press-caption">{p.name}</span>
-                </a>
-              ))}
-            </div>
-          </>
-        )}
       </div>
     </section>
   );
