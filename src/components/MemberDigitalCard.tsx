@@ -54,7 +54,7 @@ export function MemberDigitalCard({
     <div>
       <button
         type="button"
-        className="loyalty-card"
+        className={`loyalty-card tier-${tier.toLowerCase()}`}
         onClick={() => setShowBack((v) => !v)}
         aria-label={showBack ? "Ver frente do cartão" : "Ver verso do cartão"}
       >

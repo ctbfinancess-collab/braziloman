@@ -1412,7 +1412,7 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
    imagem de fundo; ano/número (frente) e QR Code (verso) são sobrepostos por
    cima, nas posições exatas onde a arte já reserva esse espaço. */
 .loyalty-card {
-  display: block; width: 100%; max-width: 420px; aspect-ratio: 1140 / 715;
+  display: block; width: 100%; max-width: 420px; aspect-ratio: 1048 / 623;
   border-radius: 14px; position: relative; overflow: hidden; container-type: inline-size;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 0; padding: 0; background: none; cursor: pointer;
 }
@@ -1429,21 +1429,37 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
   background-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 3px, rgba(0, 0, 0, 0.05) 3px, rgba(0, 0, 0, 0.05) 4px, transparent 4px, transparent 6px);
   background-blend-mode: overlay;
 }
-.loyalty-card-patch-year { left: 51%; top: 60.5%; width: 16%; height: 10%; }
-.loyalty-card-patch-number { left: 51%; top: 76%; width: 31%; height: 11.5%; }
-.loyalty-card-value-year { left: 53%; top: 61%; width: 11%; height: 8%; }
-.loyalty-card-value-number { left: 53%; top: 78%; width: 23%; height: 8%; }
+/* Recalibrado com grade de pixel precisa sobre a arte já cortada (sem a borda).
+   "MEMBER SINCE" é texto fixo do design (fica visível sempre) — o patch cobre só
+   a LINHA DE BAIXO (o ano de exemplo), começando depois do espaço entre as duas
+   linhas pra nunca tampar "MEMBER SINCE". As 3 artes usam o mesmo template mas o
+   texto de exemplo NÃO fica no mesmo pixel exato em cada uma (diferença de até
+   ~20px) — por isso cada nível tem sua própria posição abaixo, calibrada
+   individualmente (uma posição única "seguindo pro meio" não sobra margem
+   suficiente pra nunca vazar "MEMBER SINCE" nem deixar de cobrir o "2026"). */
+.tier-gold .loyalty-card-patch-year,
+.tier-gold .loyalty-card-value-year { left: 54.87%; top: 63.4%; width: 10.97%; height: 8.99%; }
+.tier-gold .loyalty-card-patch-number,
+.tier-gold .loyalty-card-value-number { left: 54.87%; top: 82.18%; width: 22.23%; height: 6.74%; }
+.tier-black .loyalty-card-patch-year,
+.tier-black .loyalty-card-value-year { left: 56.77%; top: 65.33%; width: 9.64%; height: 8.35%; }
+.tier-black .loyalty-card-patch-number,
+.tier-black .loyalty-card-value-number { left: 56.77%; top: 82.66%; width: 20.8%; height: 7.06%; }
+.tier-platinum .loyalty-card-patch-year,
+.tier-platinum .loyalty-card-value-year { left: 53.63%; top: 66.29%; width: 10.11%; height: 8.03%; }
+.tier-platinum .loyalty-card-patch-number,
+.tier-platinum .loyalty-card-value-number { left: 53.63%; top: 84.27%; width: 21.09%; height: 7.06%; }
 .loyalty-card-value {
   position: absolute; display: flex; align-items: center; justify-content: flex-start;
   font-family: var(--font-display); font-weight: 700; white-space: nowrap; line-height: 1;
 }
 .loyalty-card-value-year { font-size: 2cqw; font-weight: 600; }
 .loyalty-card-value-number { font-size: 2cqw; font-weight: 600; }
-.loyalty-card-qr-patch { position: absolute; left: 6.3%; top: 42%; width: 19%; height: 31%; border-radius: 4px; background: #fff; }
+.loyalty-card-qr-patch { position: absolute; left: 2.46%; top: 40.82%; width: 20.67%; height: 35.58%; border-radius: 4px; background: #fff; }
 /* Caixa levemente menor que o patch branco, com folga fixa proporcional — não usar
    padding em %, que é sempre relativo à largura do cartão (não da própria caixa,
    pequena) e pode reduzir a área útil da imagem a quase zero. */
-.loyalty-card-qr { position: absolute; left: 7.53%; top: 43.96%; width: 16.54%; height: 27.09%; object-fit: contain; }
+.loyalty-card-qr { position: absolute; left: 3.8%; top: 43.07%; width: 17.99%; height: 31.11%; object-fit: contain; }
 .loyalty-card-flip-hint { font-size: 0.76rem; color: var(--fg-dim); text-align: center; margin: 8px 0 0; max-width: 420px; }
 
 .loyalty-tier-badge {
