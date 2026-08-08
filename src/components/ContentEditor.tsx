@@ -96,6 +96,23 @@ const FIELD_LABEL_OVERRIDES: Record<string, string> = {
   videoTitle: "Título da seção de vídeos",
   pressTitle: "Título da seção de imprensa",
   backLabel: "Texto do link \"Voltar\"",
+  subtitle: "Subtítulo (datas/local, aparece embaixo do título)",
+  agendaTitle: "Título da seção de agenda",
+  agendaIntro: "Parágrafo de introdução da agenda",
+  agendaItems: "Cards da agenda",
+  cultureTitle: "Título da seção cultural",
+  culture1: "Parágrafo cultural 1",
+  culture2: "Parágrafo cultural 2",
+  culture3: "Parágrafo cultural 3",
+  ctaTitle: "Título do quadro final (participação)",
+  ctaText: "Texto do quadro final",
+  ctaDateRange: "Datas (quadro final)",
+  ctaLocation: "Local (quadro final)",
+  ctaAvailability: "Texto de vagas/inscrição",
+  ctaContactLabel: "Texto acima do WhatsApp",
+  ctaWhatsappLabel: "Número exibido no botão",
+  ctaWhatsappLink: "Link do WhatsApp (wa.me/55...)",
+  ctaMotto: "Frase final",
 };
 
 function humanize(key: string): string {

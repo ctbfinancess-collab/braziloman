@@ -687,6 +687,31 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .launch-article .section-title { margin-top: 2px; }
 .launch-quote { font-family: var(--font-display); font-style: italic; color: var(--gold-light); font-size: 1.15rem; margin: 18px 0 28px; }
 .launch-featured-image { display: block; width: 100%; max-width: 420px; height: auto; border-radius: 8px; border: 1px solid var(--border); margin: 18px 0 28px; }
+
+/* Missão Empresarial */
+.missao-agenda-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 24px 0 48px; }
+.missao-agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 22px; }
+.missao-agenda-card h3 { font-family: var(--font-display); font-size: 1rem; margin: 14px 0 8px; }
+.missao-agenda-card p { color: var(--fg-muted); font-size: 0.86rem; line-height: 1.55; margin: 0; }
+
+.missao-cta-box { background: var(--footer-bg); color: var(--footer-fg); border-radius: 12px; padding: 44px; text-align: center; margin: 12px 0 56px; }
+.missao-cta-box h3 { font-family: var(--font-display); color: var(--footer-gold-light); font-size: 1.4rem; margin: 0 0 14px; }
+.missao-cta-box > p { color: var(--footer-muted); font-size: 0.95rem; max-width: 520px; margin: 0 auto 22px; line-height: 1.6; }
+.missao-cta-meta { display: flex; flex-direction: column; gap: 4px; margin: 0 0 10px; }
+.missao-cta-meta strong { font-family: var(--font-display); color: var(--footer-fg); font-size: 1.05rem; }
+.missao-cta-meta span { color: var(--footer-muted); font-size: 0.88rem; }
+.missao-cta-availability { color: var(--footer-gold-light); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 24px; }
+.missao-cta-contact { color: var(--footer-muted); font-size: 0.86rem; margin: 0 0 12px; }
+.missao-cta-btn { display: inline-flex; margin: 0 auto; }
+.missao-cta-motto { color: var(--footer-dim); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 26px 0 0; }
+
+@media (max-width: 900px) {
+  .missao-agenda-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .missao-agenda-grid { grid-template-columns: 1fr; }
+  .missao-cta-box { padding: 32px 22px; }
+}
 .mp-section-photo { display: block; width: 100%; max-width: 760px; max-height: 360px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); margin: 8px auto 36px; }
 .launch-body { display: grid; gap: 16px; max-width: 760px; margin-bottom: 48px; }
 .launch-body p { color: var(--fg-muted); font-size: 1.03rem; line-height: 1.65; margin: 0; }
