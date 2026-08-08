@@ -675,7 +675,11 @@ export function News() {
                   <time>{n.date}</time>
                   <h3>{n.h}</h3>
                   <p>{n.p}</p>
-                  <span className="news-arrow" aria-hidden="true">→</span>
+                  {n.link ? (
+                    <span className="eco-cta news-cta">{d.news.readMore} <Icon name="arrowright" /></span>
+                  ) : (
+                    <span className="eco-cta eco-cta-disabled news-cta">{d.news.comingSoon}</span>
+                  )}
                 </div>
               </>
             );

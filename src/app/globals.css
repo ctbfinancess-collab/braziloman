@@ -675,8 +675,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
   color: var(--fg-muted); font-size: 0.92rem; margin: 0;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
 }
-.news-arrow { display: block; margin-top: 18px; color: var(--gold); font-size: 1.1rem; transition: transform 0.25s ease; }
-.news-card:hover .news-arrow { transform: translateX(6px); }
+.news-cta { margin-top: 18px; }
+.news-cta svg { width: 13px; height: 13px; transition: transform 0.25s ease; }
+.news-card:hover .news-cta:not(.eco-cta-disabled) { background: rgba(201, 164, 90, 0.1); border-color: var(--gold); }
+.news-card:hover .news-cta:not(.eco-cta-disabled) svg { transform: translateX(4px); }
 
 /* artigo — lançamento */
 .launch-back { display: inline-block; color: var(--gold); font-size: 0.86rem; margin-bottom: 18px; }

@@ -922,6 +922,8 @@ export const content = {
       eyebrow: "Fique por dentro",
       title: "Notícias & Eventos",
       lead: "Acompanhe as principais iniciativas, eventos e oportunidades que conectam o Brasil e Omã.",
+      readMore: "Saiba mais",
+      comingSoon: "Em breve",
       items: [
         { icon: "calendar", tag: "Lançamento", date: "2026 · Brasília / Mascate", h: "Lançamento Oficial da Câmara de Comércio Brasil–Omã", p: "“Hoje iniciamos uma nova rota de crescimento global. Junte-se à Câmara de Comércio Brasil–Omã.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
         { icon: "bank", tag: "Institucional", date: "Em tramitação · Brasília", h: "Frente Parlamentar Brasil–Omã", p: "Deputado Federal Bibo Nunes propõe no Congresso Nacional a criação de frente parlamentar para fortalecer as relações entre Brasil e Omã.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
@@ -2133,6 +2135,8 @@ export const content = {
       eyebrow: "Stay informed",
       title: "News & Events",
       lead: "Follow the main initiatives, events and opportunities connecting Brazil and Oman.",
+      readMore: "Learn more",
+      comingSoon: "Coming soon",
       items: [
         { icon: "calendar", tag: "Launch", date: "2026 · Brasília / Muscat", h: "Official Launch of the Brazil–Oman Chamber of Commerce", p: "“Today we begin a new route of global growth. Join the Brazil–Oman Chamber of Commerce.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
         { icon: "bank", tag: "Institutional", date: "Under review · Brasília", h: "Brazil–Oman Parliamentary Front", p: "Federal Deputy Bibo Nunes proposes a parliamentary front in Brazil's National Congress to strengthen relations between Brazil and Oman.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
