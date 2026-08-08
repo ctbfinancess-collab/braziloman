@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { type LoyaltyTier } from "@/lib/loyalty";
 
-// "?v=2" força o navegador a buscar a imagem nova em vez de usar uma cópia antiga
-// já guardada em cache (o verso mudou de arte, mas manteve o mesmo nome de arquivo).
+// "?v=" força o navegador (e o cache de borda da CDN) a buscar a imagem nova em
+// vez de uma cópia antiga guardada em cache — o arquivo muda de conteúdo (ex.:
+// removendo a borda embutida) mas mantém o mesmo nome. Sempre subir esse número
+// quando alguma dessas 6 imagens for substituída.
 const CARD_ASSETS: Record<LoyaltyTier, { front: string; back: string }> = {
-  GOLD: { front: "/loyalty/gold-front.jpg", back: "/loyalty/gold-back.jpg?v=2" },
-  BLACK: { front: "/loyalty/black-front.jpg", back: "/loyalty/black-back.jpg?v=2" },
-  PLATINUM: { front: "/loyalty/platinum-front.jpg", back: "/loyalty/platinum-back.jpg?v=2" },
+  GOLD: { front: "/loyalty/gold-front.jpg?v=3", back: "/loyalty/gold-back.jpg?v=3" },
+  BLACK: { front: "/loyalty/black-front.jpg?v=3", back: "/loyalty/black-back.jpg?v=3" },
+  PLATINUM: { front: "/loyalty/platinum-front.jpg?v=3", back: "/loyalty/platinum-back.jpg?v=3" },
 };
 
 // Cor do texto gravado e da "mancha" que cobre o número/ano de exemplo da arte

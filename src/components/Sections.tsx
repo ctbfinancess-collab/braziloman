@@ -522,9 +522,9 @@ export function MembershipLevels() {
         </span>
         <p className="section-lead mp-lead-center light">{d.membership.levels.lead}</p>
         <div className="membership-levels-grid">
-          <img src="/loyalty/gold-front.jpg" alt="Cartão de associado Gold Member" />
-          <img src="/loyalty/black-front.jpg" alt="Cartão de associado Black Member" />
-          <img src="/loyalty/platinum-front.jpg" alt="Cartão de associado Platinum Member" />
+          <img src="/loyalty/gold-front.jpg?v=3" alt="Cartão de associado Gold Member" />
+          <img src="/loyalty/black-front.jpg?v=3" alt="Cartão de associado Black Member" />
+          <img src="/loyalty/platinum-front.jpg?v=3" alt="Cartão de associado Platinum Member" />
         </div>
       </div>
     </section>
