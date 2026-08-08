@@ -1501,6 +1501,14 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .dash-brand strong { display: block; font-family: var(--font-display); color: var(--footer-gold-light); font-size: 1rem; }
 .dash-brand span { display: block; font-family: var(--font-display); color: var(--footer-gold); font-size: 1rem; letter-spacing: 0.02em; }
 
+.dash-back-to-site {
+  display: flex; align-items: center; gap: 8px; color: var(--footer-muted); font-size: 0.82rem;
+  padding: 8px 10px; margin-bottom: 18px; border: 1px solid var(--footer-border-strong); border-radius: 6px;
+  justify-content: center; transition: all 0.2s;
+}
+.dash-back-to-site svg { width: 15px; height: 15px; }
+.dash-back-to-site:hover { color: var(--footer-gold-light); border-color: var(--gold); background: rgba(201, 162, 90, 0.08); }
+
 .dash-nav { display: flex; flex-direction: column; gap: 4px; }
 .dash-nav-item {
   display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 6px;

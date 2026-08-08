@@ -1141,6 +1141,7 @@ export const content = {
         brand: "Câmara de Comércio",
         brand2: "Brasil–Omã",
         homeTitle: "Painel do Associado",
+        backToSite: "Voltar para o site",
         nav: {
           painel: "Painel",
           perfil: "Meu Perfil",
@@ -2424,6 +2425,7 @@ export const content = {
         brand: "Brazil–Oman Chamber",
         brand2: "of Commerce",
         homeTitle: "Member Dashboard",
+        backToSite: "Back to site",
         nav: {
           painel: "Dashboard",
           perfil: "My Profile",

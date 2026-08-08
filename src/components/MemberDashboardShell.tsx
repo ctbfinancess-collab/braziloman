@@ -88,6 +88,10 @@ export function MemberDashboardShell({
           <span>{t.brand2}</span>
         </div>
 
+        <Link href="/" className="dash-back-to-site">
+          <Icon name="chevronleft" /> {t.backToSite}
+        </Link>
+
         <nav className="dash-nav">
           {NAV_ITEMS.map((item) => (
             <Link
