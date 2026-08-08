@@ -23,9 +23,9 @@ const TEXT_COLOR: Record<LoyaltyTier, string> = {
   PLATINUM: "#1a1a1c",
 };
 const PATCH_COLOR: Record<LoyaltyTier, string> = {
-  GOLD: "#b0914f",
-  BLACK: "#0a0908",
-  PLATINUM: "#5f5f60",
+  GOLD: "#bb9a55",
+  BLACK: "#16130e",
+  PLATINUM: "#6e6e6f",
 };
 
 /**
@@ -71,7 +71,8 @@ export function MemberDigitalCard({
               aria-hidden="true"
             />
             <span className="loyalty-card-value loyalty-card-value-year" style={{ color: textColor }}>
-              {sinceYear ?? "—"}
+              <span className="loyalty-card-since-label">Member Since</span>
+              <span className="loyalty-card-since-value">{sinceYear ?? "—"}</span>
             </span>
             <span
               className="loyalty-card-patch loyalty-card-patch-number"

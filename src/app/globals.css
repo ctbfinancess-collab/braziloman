@@ -1468,35 +1468,38 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 /* Textura sutil (listras finas) por cima da cor sólida — sem ela, a mancha fica
    "chapada" contra o metal escovado fotografado, que tem grão visível. */
 .loyalty-card-patch {
-  position: absolute; border-radius: 3px; box-shadow: 0 0 7px 5px var(--patch-glow);
+  position: absolute; border-radius: 3px; box-shadow: 0 0 22px 16px var(--patch-glow);
   background-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 3px, rgba(0, 0, 0, 0.05) 3px, rgba(0, 0, 0, 0.05) 4px, transparent 4px, transparent 6px);
   background-blend-mode: overlay;
 }
 /* Recalibrado com grade de pixel precisa sobre a arte já cortada (sem a borda).
-   "MEMBER SINCE" é texto fixo do design (fica visível sempre) — o patch cobre só
-   a LINHA DE BAIXO (o ano de exemplo), começando depois do espaço entre as duas
-   linhas pra nunca tampar "MEMBER SINCE". As 3 artes usam o mesmo template mas o
-   texto de exemplo NÃO fica no mesmo pixel exato em cada uma (diferença de até
-   ~20px) — por isso cada nível tem sua própria posição abaixo, calibrada
-   individualmente (uma posição única "seguindo pro meio" não sobra margem
-   suficiente pra nunca vazar "MEMBER SINCE" nem deixar de cobrir o "2026"). */
+   "MEMBER SINCE" também é coberto agora (não só o ano) — nas 3 artes, esse
+   texto gravado saiu com uma leve suavização de compressão/render, visível
+   sobretudo ao lado do ano (que é texto real, nítido). Em vez de conviver com
+   a diferença, cobrimos as DUAS linhas com a mesma mancha e desenhamos as
+   duas de novo, nítidas, por cima — ver .loyalty-card-since-label/-value.
+   As 3 artes usam o mesmo template mas o texto de exemplo não fica no mesmo
+   pixel exato em cada uma (diferença de até ~20px), por isso cada nível tem
+   sua própria posição, calibrada individualmente. */
 .tier-gold .loyalty-card-patch-year,
-.tier-gold .loyalty-card-value-year { left: 54.87%; top: 63.4%; width: 10.97%; height: 8.99%; }
+.tier-gold .loyalty-card-value-year { left: 54.8%; top: 57%; width: 26.5%; height: 17.3%; }
 .tier-gold .loyalty-card-patch-number,
 .tier-gold .loyalty-card-value-number { left: 54.87%; top: 82.18%; width: 22.23%; height: 6.74%; }
 .tier-black .loyalty-card-patch-year,
-.tier-black .loyalty-card-value-year { left: 56.77%; top: 65.33%; width: 9.64%; height: 8.35%; }
+.tier-black .loyalty-card-value-year { left: 56.8%; top: 59.3%; width: 27.2%; height: 16.2%; }
 .tier-black .loyalty-card-patch-number,
 .tier-black .loyalty-card-value-number { left: 56.77%; top: 82.66%; width: 20.8%; height: 7.06%; }
 .tier-platinum .loyalty-card-patch-year,
-.tier-platinum .loyalty-card-value-year { left: 53.63%; top: 66.29%; width: 10.11%; height: 8.03%; }
+.tier-platinum .loyalty-card-value-year { left: 53.9%; top: 59.8%; width: 26.7%; height: 17%; }
 .tier-platinum .loyalty-card-patch-number,
 .tier-platinum .loyalty-card-value-number { left: 53.63%; top: 84.27%; width: 21.09%; height: 7.06%; }
 .loyalty-card-value {
   position: absolute; display: flex; align-items: center; justify-content: flex-start;
   font-family: var(--font-display); font-weight: 700; white-space: nowrap; line-height: 1;
 }
-.loyalty-card-value-year { font-size: 2cqw; font-weight: 600; }
+.loyalty-card-value-year { flex-direction: column; align-items: flex-start; justify-content: center; gap: 6%; }
+.loyalty-card-since-label { font-size: 0.85cqw; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.88; }
+.loyalty-card-since-value { font-size: 2.3cqw; font-weight: 700; }
 .loyalty-card-value-number { font-size: 2cqw; font-weight: 600; }
 .loyalty-card-qr-patch { position: absolute; left: 2.46%; top: 40.82%; width: 20.67%; height: 35.58%; border-radius: 4px; background: #fff; }
 /* Caixa levemente menor que o patch branco, com folga fixa proporcional — não usar
