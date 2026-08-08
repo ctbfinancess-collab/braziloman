@@ -27,6 +27,11 @@ const schema = z.object({
   // Resumo de compliance por IA (Claude). Sem a chave, o botão "Gerar resumo
   // com IA" no admin apenas avisa que não está configurado.
   ANTHROPIC_API_KEY: z.string().optional(),
+  // Login com Google (Área do Membro). Sem essas variáveis, o botão
+  // "Continuar com Google" fica escondido — ver console.cloud.google.com
+  // (APIs & Services > Credentials > OAuth client ID > Web application).
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -46,3 +51,4 @@ export const hasDocumentStorage = Boolean(
   env.R2_ACCOUNT_ID && env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY && env.R2_DOCUMENTS_BUCKET
 );
 export const hasAiSummary = Boolean(env.ANTHROPIC_API_KEY);
+export const hasGoogleLogin = Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET);

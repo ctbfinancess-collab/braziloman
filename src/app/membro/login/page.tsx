@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { MemberLoginForm } from "@/components/MemberArea";
+import { hasGoogleLogin } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Entrar — Área do Membro",
@@ -8,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function MemberLoginPage() {
-  return <MemberLoginForm />;
+  return (
+    <Suspense>
+      <MemberLoginForm googleEnabled={hasGoogleLogin} />
+    </Suspense>
+  );
 }

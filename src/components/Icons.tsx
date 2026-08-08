@@ -195,6 +195,14 @@ export const IconFacebook = (p: P) => (
 export const IconLinkedin = (p: P) => (
   <svg {...base} {...p}><rect x="3" y="3" width="18" height="18" rx="2.5" /><circle cx="7.7" cy="8.2" r="1" fill="currentColor" stroke="none" /><path d="M7.7 11v7" /><path d="M12 18v-4.2c0-1.7 1-2.8 2.5-2.8 1.4 0 2 1 2 2.8V18M12 11v7" /></svg>
 );
+export const IconGoogle = (p: P) => (
+  <svg width={20} height={20} viewBox="0 0 48 48" {...p}>
+    <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.7 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.1 17.7 9.5 24 9.5z" />
+    <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.6c-.5 3-2.2 5.4-4.6 7.1l7.2 5.6c4.2-3.9 6.7-9.6 6.7-17.2z" />
+    <path fill="#FBBC05" d="M10.5 19.3a14.5 14.5 0 0 0 0 9.4l-7.9 6.1a24 24 0 0 1 0-21.6l7.9 6.1z" />
+    <path fill="#34A853" d="M24 48c6.2 0 11.7-2 15.6-5.6l-7.2-5.6c-2 1.3-4.6 2.1-8.4 2.1-6.3 0-11.6-3.6-13.5-9.7l-7.9 6.1C6.5 42.6 14.6 48 24 48z" />
+  </svg>
+);
 export const IconWhatsapp = (p: P) => (
   <svg {...base} {...p}><path d="M6 19l1.2-3.5A7.5 7.5 0 1 1 10 18.3L6 19z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1-.5.8-1l-.4-1a.8.8 0 0 0-1-.5l-.7.3a4.4 4.4 0 0 1-2.5-2.5l.3-.7a.8.8 0 0 0-.5-1l-1-.4c-.5-.2-1 .2-1 .8z" /></svg>
 );
@@ -262,6 +270,7 @@ const map = {
   facebook: IconFacebook,
   linkedin: IconLinkedin,
   whatsapp: IconWhatsapp,
+  google: IconGoogle,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {

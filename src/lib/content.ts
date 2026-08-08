@@ -926,10 +926,10 @@ export const content = {
       comingSoon: "Em breve",
       items: [
         { icon: "calendar", tag: "Lançamento", date: "2026 · Brasília / Mascate", h: "Lançamento Oficial da Câmara de Comércio Brasil–Omã", p: "“Hoje iniciamos uma nova rota de crescimento global. Junte-se à Câmara de Comércio Brasil–Omã.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
-        { icon: "grid", tag: "Mídia", date: "2026 · Brasília / Mascate", h: "Câmara de Comércio na Mídia", p: "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa.", link: "/noticias/galeria" },
+        { icon: "grid", tag: "Mídia", date: "2026 · Brasília / Mascate", h: "Câmara de Comércio na Mídia", p: "Fotos, vídeos e a Câmara de Comércio Brasil–Omã na imprensa.", link: "/noticias/galeria", image: "" },
         { icon: "bank", tag: "Institucional", date: "Em tramitação · Brasília", h: "Frente Parlamentar Brasil–Omã", p: "Deputado Federal Bibo Nunes propõe no Congresso Nacional a criação de frente parlamentar para fortalecer as relações entre Brasil e Omã.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
-        { icon: "plane", tag: "Missão", date: "Em breve · Brasília e Mascate", h: "Missão Empresarial Brasil–Omã", p: "A Câmara organiza a próxima Missão Empresarial Brasil–Omã, com agendas estratégicas em Brasília e Mascate para empresários, investidores e representantes institucionais.", link: "/noticias/missao-empresarial" },
-        { icon: "monitor", tag: "Webinar", date: "Em breve · Online", h: "Como Exportar para o Golfo", p: "Especialistas apresentam oportunidades e caminhos para acessar o mercado do Oriente Médio." },
+        { icon: "plane", tag: "Missão", date: "Em breve · Brasília e Mascate", h: "Missão Empresarial Brasil–Omã", p: "A Câmara organiza a próxima Missão Empresarial Brasil–Omã, com agendas estratégicas em Brasília e Mascate para empresários, investidores e representantes institucionais.", link: "/noticias/missao-empresarial", image: "" },
+        { icon: "monitor", tag: "Webinar", date: "Em breve · Online", h: "Como Exportar para o Golfo", p: "Especialistas apresentam oportunidades e caminhos para acessar o mercado do Oriente Médio.", image: "" },
       ],
     },
     launchArticle: {
@@ -1051,6 +1051,12 @@ export const content = {
         applyLink: "Solicitar associação",
         genericError: "Não foi possível entrar. Tente novamente.",
         forgotLink: "Esqueceu sua senha?",
+        googleCta: "Continuar com Google",
+        googleDivider: "ou",
+        googleErrorNotAMember: "Esse e-mail do Google não está associado à Câmara. Solicite sua associação ou entre com e-mail e senha.",
+        googleErrorPending: "Sua associação ainda está em análise. Avisaremos por e-mail assim que for aprovada.",
+        googleErrorRejected: "Sua solicitação de associação não foi aprovada. Entre em contato para mais informações.",
+        googleErrorGeneric: "Não foi possível entrar com o Google. Tente novamente ou use e-mail e senha.",
       },
       statusScreen: {
         eyebrow: "Área do Membro",
@@ -2206,10 +2212,10 @@ export const content = {
       comingSoon: "Coming soon",
       items: [
         { icon: "calendar", tag: "Launch", date: "2026 · Brasília / Muscat", h: "Official Launch of the Brazil–Oman Chamber of Commerce", p: "“Today we begin a new route of global growth. Join the Brazil–Oman Chamber of Commerce.”", link: "/noticias/lancamento", image: "/news/lancamento/capa.jpg" },
-        { icon: "grid", tag: "Media", date: "2026 · Brasília / Muscat", h: "Brazil–Oman Chamber in the Media", p: "Photos, videos and the Brazil–Oman Chamber of Commerce in the press.", link: "/noticias/galeria" },
+        { icon: "grid", tag: "Media", date: "2026 · Brasília / Muscat", h: "Brazil–Oman Chamber in the Media", p: "Photos, videos and the Brazil–Oman Chamber of Commerce in the press.", link: "/noticias/galeria", image: "" },
         { icon: "bank", tag: "Institutional", date: "Under review · Brasília", h: "Brazil–Oman Parliamentary Front", p: "Federal Deputy Bibo Nunes proposes a parliamentary front in Brazil's National Congress to strengthen relations between Brazil and Oman.", link: "/noticias/frente-parlamentar", image: "/news/frente-parlamentar.jpg" },
-        { icon: "plane", tag: "Mission", date: "Soon · Brasília and Muscat", h: "Brazil–Oman Business Mission", p: "The Chamber is organizing the next Brazil–Oman Business Mission, with strategic agendas in Brasília and Muscat for business leaders, investors and institutional representatives.", link: "/noticias/missao-empresarial" },
-        { icon: "monitor", tag: "Webinar", date: "Soon · Online", h: "How to Export to the Gulf", p: "Experts present opportunities and pathways to access the Middle East market." },
+        { icon: "plane", tag: "Mission", date: "Soon · Brasília and Muscat", h: "Brazil–Oman Business Mission", p: "The Chamber is organizing the next Brazil–Oman Business Mission, with strategic agendas in Brasília and Muscat for business leaders, investors and institutional representatives.", link: "/noticias/missao-empresarial", image: "" },
+        { icon: "monitor", tag: "Webinar", date: "Soon · Online", h: "How to Export to the Gulf", p: "Experts present opportunities and pathways to access the Middle East market.", image: "" },
       ],
     },
     launchArticle: {
@@ -2331,6 +2337,12 @@ export const content = {
         applyLink: "Apply for membership",
         genericError: "Could not sign in. Please try again.",
         forgotLink: "Forgot your password?",
+        googleCta: "Continue with Google",
+        googleDivider: "or",
+        googleErrorNotAMember: "That Google account's email isn't associated with the Chamber. Apply for membership or sign in with email and password.",
+        googleErrorPending: "Your membership is still under review. We'll email you as soon as it's approved.",
+        googleErrorRejected: "Your membership application wasn't approved. Please contact us for more information.",
+        googleErrorGeneric: "Could not sign in with Google. Please try again or use email and password.",
       },
       statusScreen: {
         eyebrow: "Member Area",

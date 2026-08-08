@@ -956,6 +956,10 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .member-login-card-title { font-family: var(--font-display); font-size: 1.7rem; color: var(--fg); margin: 0; }
 .member-login-card-lead { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.6; max-width: 360px; margin: 14px auto 0; }
 
+.member-login-google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 24px; }
+.member-login-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--fg-dim); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.member-login-divider::before, .member-login-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
 .member-login-form { text-align: left; margin-top: 28px; display: grid; gap: 18px; }
 .member-login-label { display: grid; gap: 8px; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-light); }
 .member-login-input-wrap {

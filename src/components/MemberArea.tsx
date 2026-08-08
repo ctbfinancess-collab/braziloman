@@ -1,18 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 
-export function MemberLoginForm() {
+export function MemberLoginForm({ googleEnabled = false }: { googleEnabled?: boolean }) {
   const { d } = useI18n();
   const t = d.memberArea.login;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<"idle" | "sending" | "err">("idle");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const googleErrorParam = searchParams.get("googleError");
+  const googleErrorMessage = googleErrorParam
+    ? ({ not_a_member: t.googleErrorNotAMember, pending: t.googleErrorPending, rejected: t.googleErrorRejected }[
+        googleErrorParam
+      ] ?? t.googleErrorGeneric)
+    : null;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -74,6 +82,19 @@ export function MemberLoginForm() {
             <h2 className="member-login-card-title">{t.title}</h2>
             <span className="about-flourish mp-flourish-center" aria-hidden="true" />
             <p className="member-login-card-lead">{t.lead}</p>
+
+            {googleErrorMessage && status !== "err" && (
+              <p className="form-note err" role="status" aria-live="polite">{googleErrorMessage}</p>
+            )}
+
+            {googleEnabled && (
+              <>
+                <a href="/api/member/google/start" className="btn btn-ghost member-login-google-btn">
+                  <Icon name="google" /> {t.googleCta}
+                </a>
+                <div className="member-login-divider"><span>{t.googleDivider}</span></div>
+              </>
+            )}
 
             <form className="member-login-form" onSubmit={onSubmit} noValidate>
               <label className="member-login-label">
