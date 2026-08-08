@@ -50,6 +50,7 @@ const SECTION_LABELS: Record<string, string> = {
   consultingPage: "Associe-se — subpáginas (benefícios, serviços etc.)",
   news: "Notícias — lista",
   launchArticle: "Notícia — Lançamento",
+  galleryArticle: "Notícia — Galeria de Fotos e Vídeos",
   frenteParlamentarArticle: "Notícia — Frente Parlamentar",
   missaoArticle: "Notícia — Missão Empresarial",
   memberArea: "Área do Membro (login e painel)",
@@ -91,6 +92,12 @@ const FIELD_LABEL_OVERRIDES: Record<string, string> = {
   gallery: "Galeria de fotos",
   videos: "Vídeos",
   press: "Imprensa (logos e links)",
+  galleryTitle: "Título da seção de fotos",
+  videoTitle: "Título da seção de vídeos",
+  pressTitle: "Título da seção de imprensa",
+  backLabel: "Texto do link \"Voltar\"",
+  emptyGallery: "Mensagem quando não houver fotos ainda",
+  emptyVideos: "Mensagem quando não houver vídeos ainda",
 };
 
 function humanize(key: string): string {
@@ -114,6 +121,27 @@ function isVideoPath(value: unknown): boolean {
 
 function isDocumentPath(value: unknown): boolean {
   return typeof value === "string" && /\.pdf($|\?)/i.test(value);
+}
+
+// Um campo vazio (item novo, ainda sem valor) não bate com nenhum regex de
+// extensão de arquivo — sem isso, "+ Adicionar item" numa lista de fotos/
+// vídeos criaria um campo sem botão de upload nenhum, obrigando a colar a
+// URL manualmente. Detecta pelo NOME do campo (convenção já usada em todo
+// o content.ts), então funciona mesmo com o valor ainda em branco.
+const IMAGE_FIELD_NAMES = new Set(["image", "photo", "logo", "poster"]);
+const IMAGE_ARRAY_KEYS = new Set(["gallery"]);
+const VIDEO_FIELD_NAMES = new Set(["src"]);
+
+function isKnownImageField(path: PathSeg[]): boolean {
+  const last = path[path.length - 1];
+  if (typeof last === "string" && IMAGE_FIELD_NAMES.has(last)) return true;
+  const parentKey = path[path.length - 2];
+  return typeof last === "number" && typeof parentKey === "string" && IMAGE_ARRAY_KEYS.has(parentKey);
+}
+
+function isKnownVideoField(path: PathSeg[]): boolean {
+  const last = path[path.length - 1];
+  return typeof last === "string" && VIDEO_FIELD_NAMES.has(last);
 }
 
 function matchesSearch(node: Node, term: string): boolean {
@@ -155,8 +183,8 @@ function FieldNode(props: FieldProps) {
   if (typeof ptNode === "string") {
     const isOverridden = ptNode !== defaultPtNode;
     const pathKey = path.join(".");
-    const isImg = isImagePath(ptNode) || isImagePath(defaultPtNode);
-    const isVideo = isVideoPath(ptNode) || isVideoPath(defaultPtNode);
+    const isImg = isImagePath(ptNode) || isImagePath(defaultPtNode) || isKnownImageField(path);
+    const isVideo = isVideoPath(ptNode) || isVideoPath(defaultPtNode) || isKnownVideoField(path);
     const isUrlField = path[path.length - 1] === "url";
     const isDoc = isDocumentPath(ptNode) || isDocumentPath(defaultPtNode) || (isUrlField && !isImg && !isVideo);
     const long = ptNode.length > 70 || (typeof enNode === "string" && enNode.length > 70);
@@ -383,7 +411,7 @@ export function ContentEditor() {
       if (prev === null) return prev;
       const arr = getAt(prev, path);
       if (!Array.isArray(arr)) return prev;
-      const template = arr.length > 0 ? JSON.parse(JSON.stringify(arr[arr.length - 1])) : {};
+      const template = arr.length > 0 ? JSON.parse(JSON.stringify(arr[arr.length - 1])) : emptyArrayTemplate(path);
       const blanked = blankLeaves(template);
       return setAt(prev, path, [...arr, blanked]);
     });
@@ -391,7 +419,7 @@ export function ContentEditor() {
       if (prev === null) return prev;
       const arr = getAt(prev, path);
       if (!Array.isArray(arr)) return prev;
-      const template = arr.length > 0 ? JSON.parse(JSON.stringify(arr[arr.length - 1])) : {};
+      const template = arr.length > 0 ? JSON.parse(JSON.stringify(arr[arr.length - 1])) : emptyArrayTemplate(path);
       const blanked = blankLeaves(template);
       return setAt(prev, path, [...arr, blanked]);
     });
@@ -554,6 +582,22 @@ export function ContentEditor() {
         </div>
     </AdminLayout>
   );
+}
+
+// Quando um array de conteúdo começa vazio (ex.: galeria nova sem fotos ainda),
+// não há nenhum item existente pra copiar o formato — sem isso, "+ Adicionar
+// item" criaria um objeto vazio sem nenhum campo pra digitar. Os formatos
+// abaixo cobrem os arrays que hoje começam vazios no content.ts.
+const EMPTY_ARRAY_TEMPLATES: Record<string, Node> = {
+  gallery: "",
+  videos: { src: "", poster: "" },
+  press: { name: "", url: "", logo: "" },
+};
+
+function emptyArrayTemplate(path: PathSeg[]): Node {
+  const key = path[path.length - 1];
+  if (typeof key === "string" && key in EMPTY_ARRAY_TEMPLATES) return EMPTY_ARRAY_TEMPLATES[key];
+  return "";
 }
 
 function blankLeaves(node: Node): Node {
