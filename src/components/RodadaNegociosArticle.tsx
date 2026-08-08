@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 
-export default function MissaoArticle() {
+export default function RodadaNegociosArticle() {
   const { d } = useI18n();
-  const a = d.missaoArticle;
+  const a = d.rodadaNegociosArticle;
   return (
     <section className="section launch-article">
       <div className="container reveal">
@@ -24,25 +24,15 @@ export default function MissaoArticle() {
           <p>{a.intro}</p>
         </div>
 
-        <h2 className="mp-subtitle mp-subtitle-tight">{a.agendaTitle}</h2>
-        <div className="launch-body">
-          <p>{a.agendaIntro}</p>
-        </div>
-        <div className="article-highlight-grid">
-          {a.agendaItems.map((item) => (
+        <h2 className="mp-subtitle mp-subtitle-tight">{a.highlightsTitle}</h2>
+        <div className="article-highlight-grid cols-3">
+          {a.highlights.map((item) => (
             <div className="article-highlight-card" key={item.h}>
               <span className="benefit-icon"><Icon name={item.icon} /></span>
               <h3>{item.h}</h3>
               <p>{item.p}</p>
             </div>
           ))}
-        </div>
-
-        <h2 className="mp-subtitle mp-subtitle-tight">{a.cultureTitle}</h2>
-        <div className="launch-body">
-          <p>{a.culture1}</p>
-          <p>{a.culture2}</p>
-          <p>{a.culture3}</p>
         </div>
 
         <div className="article-cta-box">

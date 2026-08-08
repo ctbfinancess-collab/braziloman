@@ -51,6 +51,7 @@ const SECTION_LABELS: Record<string, string> = {
   news: "Notícias — lista",
   launchArticle: "Notícia — Lançamento",
   galleryArticle: "Notícia — Câmara de Comércio na Mídia",
+  rodadaNegociosArticle: "Notícia — Rodada de Negócios",
   frenteParlamentarArticle: "Notícia — Frente Parlamentar",
   missaoArticle: "Notícia — Missão Empresarial",
   memberArea: "Área do Membro (login e painel)",
@@ -113,6 +114,8 @@ const FIELD_LABEL_OVERRIDES: Record<string, string> = {
   ctaWhatsappLabel: "Número exibido no botão",
   ctaWhatsappLink: "Link do WhatsApp (wa.me/55...)",
   ctaMotto: "Frase final",
+  highlightsTitle: "Título da seção de destaques",
+  highlights: "Cards de destaque",
 };
 
 function humanize(key: string): string {

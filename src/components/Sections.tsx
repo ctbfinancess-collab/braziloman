@@ -666,7 +666,13 @@ export function News() {
           {d.news.items.map((n) => {
             const body = (
               <>
-                {n.image && <img className="news-card-photo" src={n.image} alt="" />}
+                {n.image ? (
+                  <img className="news-card-photo" src={n.image} alt="" />
+                ) : (
+                  <span className="news-card-photo news-card-photo-placeholder" aria-hidden="true">
+                    <Icon name={n.icon} />
+                  </span>
+                )}
                 <div className="news-card-body">
                   <div className="news-card-top">
                     <span className="news-icon"><Icon name={n.icon} /></span>
