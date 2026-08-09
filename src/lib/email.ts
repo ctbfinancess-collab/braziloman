@@ -351,9 +351,74 @@ export async function sendWelcomeEmail(to: string, name: string) {
  *  chamada — encadeado em blocos aqui se passar disso). Nunca lança: se o
  *  Resend não estiver configurado, retorna como se ninguém tivesse recebido
  *  (quem chama decide o que fazer). */
+/** Assunto padrão do modelo oficial — mostrado como sugestão no admin, mas
+ *  sempre editável antes de enviar. */
+export const PARTNER_PROPOSAL_OFFICIAL_SUBJECT =
+  "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã";
+
+/** Corpo oficial do convite de parceria — mesmo texto do documento
+ *  institucional ("Convite para Parceria Institucional"), com o nome da
+ *  empresa já personalizado nos dois lugares em que aparecia como
+ *  [NOME DA EMPRESA]. `extraNote`, se houver, entra como um parágrafo extra
+ *  antes do fechamento (ex.: um contexto específico daquele contato). */
+function partnerProposalOfficialBodyHtml(companyName: string, extraNote?: string | null): string {
+  const company = escapeHtml(companyName);
+  const sectionLabel = (text: string) =>
+    `<p style="font-family: Georgia, serif; color:#96712c; font-weight:bold; font-size:14px; letter-spacing:0.02em; margin: 24px 0 10px;">${text}</p>`;
+  const bullets = (items: string[]) =>
+    `<ul style="font-family: Arial, sans-serif; color:#201b13; font-size:15px; line-height:1.8; margin:0 0 16px; padding-left:20px;">${items
+      .map((i) => `<li>${i}</li>`)
+      .join("")}</ul>`;
+
+  return `
+    <p style="font-family: Arial, sans-serif; color:#96712c; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 8px;">Member Privileges</p>
+    ${heading("Convite para Parceria Institucional")}
+    ${paragraph(`À <strong>${company}</strong>,`)}
+    ${paragraph("Prezados(as),")}
+    ${paragraph(`A Câmara de Comércio Brasil-Omã tem a satisfação de convidar a <strong>${company}</strong> a integrar o <strong>Member Privileges</strong>, programa de benefícios exclusivos destinado aos associados da Câmara.`)}
+    ${paragraph("O programa reúne empresas selecionadas de diferentes segmentos, no Brasil, em Omã e internacionalmente, oferecendo aos membros condições diferenciadas, experiências, serviços e benefícios exclusivos.")}
+    ${paragraph("Nossa proposta é estabelecer uma parceria <strong>sem custo de adesão</strong> para a empresa parceira, por meio da concessão de uma condição especial aos associados da Câmara.")}
+    ${paragraph("Ao integrar o programa, a empresa passa a fazer parte do ecossistema de benefícios da instituição, ampliando sua visibilidade e suas oportunidades de relacionamento com empresários, executivos, investidores e demais integrantes de nossa comunidade.")}
+    ${sectionLabel("UMA PARCERIA SIMPLES, EXCLUSIVA E DE VALOR")}
+    ${paragraph("A empresa parceira define livremente o benefício que deseja oferecer. Ele pode assumir a forma de desconto, upgrade, cortesia, experiência VIP, condição comercial diferenciada, benefício corporativo ou outra vantagem exclusiva para os membros.")}
+    ${sectionLabel("A EMPRESA PARCEIRA OFERECE")}
+    ${bullets([
+      "Desconto percentual ou valor especial;",
+      "Upgrade, cortesia ou serviço adicional;",
+      "Condição comercial diferenciada;",
+      "Experiência VIP ou benefício corporativo;",
+      "Oferta exclusiva definida pela própria empresa.",
+    ])}
+    ${sectionLabel("A CÂMARA OFERECE")}
+    ${paragraph("A empresa e seu benefício poderão ser apresentados no Member Privileges da Câmara de Comércio Brasil-Omã, com logo, descrição institucional, benefício, localização e condições de utilização. As condições de resgate são reservadas aos associados ativos, preservando o caráter exclusivo da parceria.")}
+    ${paragraph("A parceria não exige pagamento de comissão ou taxa de participação, salvo eventual projeto específico formalmente acordado entre as partes.")}
+    ${extraNote ? paragraph(freeTextToHtml(extraNote)) : ""}
+    <div style="background:#efece3; border-left:3px solid #96712c; padding:16px 20px; margin:22px 0 6px;">
+      <p style="font-family: Georgia, serif; color:#201b13; font-weight:bold; font-size:15px; margin:0 0 10px;">Gostaríamos de ter a ${company} entre nossos parceiros.</p>
+      <p style="font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.7; margin:0;">Pra seguir, é só responder este e-mail com: benefício oferecido, condições/restrições, validade e o contato responsável pela parceria.</p>
+    </div>
+    ${paragraph('<em>Conectando empresas, oportunidades e relações entre Brasil e Omã.</em>')}
+  `;
+}
+
+/** Envio em massa de propostas de parceria pro funil de Captação — a
+ *  secretária escolhe o modelo oficial (texto institucional fixo,
+ *  personalizado com o nome de cada empresa) ou escreve uma mensagem própria,
+ *  com banner e/ou anexo em PDF opcionais. Sem anexo, usa /emails/batch do
+ *  Resend (até 100 por chamada, mais rápido); com anexo, manda um por um —
+ *  a API de batch do Resend não aceita anexos. Nunca lança: se o Resend não
+ *  estiver configurado, retorna como se ninguém tivesse recebido (quem chama
+ *  decide o que fazer). */
 export async function sendPartnerProposalBatch(
   recipients: { prospectId: string; to: string; companyName: string }[],
-  data: { subject: string; message: string; imageUrl?: string | null }
+  data: {
+    subject: string;
+    message: string;
+    imageUrl?: string | null;
+    template?: "custom" | "official";
+    attachmentUrl?: string | null;
+    attachmentFilename?: string | null;
+  }
 ): Promise<{ sentProspectIds: string[]; failed: { prospectId: string; message: string }[] }> {
   if (!resend || recipients.length === 0) {
     return { sentProspectIds: [], failed: recipients.map((r) => ({ prospectId: r.prospectId, message: "Resend não configurado." })) };
@@ -362,23 +427,51 @@ export async function sendPartnerProposalBatch(
   const bannerBlock = data.imageUrl
     ? `<img src="${data.imageUrl}" alt="" style="display:block; width:100%; max-width:488px; height:auto; margin:0 0 20px; border:0; border-radius:4px;" />`
     : "";
+  const closing = paragraph(
+    "Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>."
+  );
 
-  const CHUNK = 100;
+  function buildHtml(companyName: string): string {
+    const body =
+      data.template === "official"
+        ? partnerProposalOfficialBodyHtml(companyName, data.message || null)
+        : `${heading(`Olá, ${companyName}!`)}
+           <div style="font-family: Arial, sans-serif; color:#201b13; font-size: 15px; line-height:1.7; margin: 0 0 16px;">${freeTextToHtml(data.message)}</div>`;
+    return layout(data.subject, `${bannerBlock}${body}${closing}`);
+  }
+
   const sentProspectIds: string[] = [];
   const failed: { prospectId: string; message: string }[] = [];
 
+  // Com anexo: a API de batch não aceita `attachments`, então manda um por
+  // um (path = URL pública já hospedada no R2 — o próprio Resend busca o
+  // arquivo, sem precisar baixar/re-enviar os bytes aqui).
+  if (data.attachmentUrl) {
+    for (const r of recipients) {
+      try {
+        await resend.emails.send({
+          from: FROM,
+          to: r.to,
+          subject: data.subject,
+          html: buildHtml(r.companyName),
+          attachments: [{ filename: data.attachmentFilename || "Proposta-de-Parceria.pdf", path: data.attachmentUrl }],
+        });
+        sentProspectIds.push(r.prospectId);
+      } catch (err) {
+        failed.push({ prospectId: r.prospectId, message: err instanceof Error ? err.message : "Falha no envio." });
+      }
+    }
+    return { sentProspectIds, failed };
+  }
+
+  const CHUNK = 100;
   for (let start = 0; start < recipients.length; start += CHUNK) {
     const chunk = recipients.slice(start, start + CHUNK);
     const emails = chunk.map((r) => ({
       from: FROM,
       to: r.to,
       subject: data.subject,
-      html: layout(
-        data.subject,
-        `${bannerBlock}${heading(`Olá, ${r.companyName}!`)}
-         <div style="font-family: Arial, sans-serif; color:#201b13; font-size: 15px; line-height:1.7; margin: 0 0 16px;">${freeTextToHtml(data.message)}</div>
-         ${paragraph(`Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>.`)}`
-      ),
+      html: buildHtml(r.companyName),
     }));
 
     try {

@@ -7,12 +7,22 @@ import { sendPartnerProposalBatch } from "@/lib/email";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const schema = z.object({
-  prospectIds: z.array(z.string().min(1)).min(1).max(500),
-  subject: z.string().min(1).max(200),
-  message: z.string().min(1).max(8000),
-  imageUrl: z.string().max(500).optional().nullable(),
-});
+const schema = z
+  .object({
+    prospectIds: z.array(z.string().min(1)).min(1).max(500),
+    subject: z.string().min(1).max(200),
+    // No modelo oficial isso é só uma observação extra opcional; na mensagem
+    // personalizada é o corpo inteiro do e-mail (aí sim, obrigatório).
+    message: z.string().max(8000).optional().default(""),
+    imageUrl: z.string().max(500).optional().nullable(),
+    template: z.enum(["custom", "official"]).optional().default("custom"),
+    attachmentUrl: z.string().max(500).optional().nullable(),
+    attachmentFilename: z.string().max(200).optional().nullable(),
+  })
+  .refine((data) => data.template === "official" || data.message.trim().length > 0, {
+    message: "Escreva a mensagem ou use o modelo oficial.",
+    path: ["message"],
+  });
 
 /** Disparo em massa de e-mail de proposta ("tipo e-mail marketing") pro
  *  funil de Captação — usado pela secretária pra abordar várias empresas de
@@ -45,6 +55,9 @@ export async function POST(req: Request) {
     subject: parsed.data.subject,
     message: parsed.data.message,
     imageUrl: parsed.data.imageUrl || null,
+    template: parsed.data.template,
+    attachmentUrl: parsed.data.attachmentUrl || null,
+    attachmentFilename: parsed.data.attachmentFilename || null,
   });
 
   if (sentProspectIds.length > 0) {

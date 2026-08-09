@@ -141,6 +141,25 @@ const EMPTY_PROSPECT_FORM: ProspectForm = {
   contactEmail: "", contactPhone: "", website: "", notes: "", status: "PROSPECTED",
 };
 
+// Mesmo assunto/texto do modelo oficial de e-mail em src/lib/email.ts — só
+// pra mostrar aqui no admin (nunca importar lib/email.ts num componente
+// client, ela usa a chave do Resend). Se o texto do e-mail mudar lá, atualizar
+// aqui também.
+const OFFICIAL_PROPOSAL_SUBJECT = "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã";
+const OFFICIAL_PROPOSAL_PREVIEW = `À [Nome da empresa],
+
+A Câmara de Comércio Brasil-Omã tem a satisfação de convidar [Nome da empresa] a integrar o Member Privileges, programa de benefícios exclusivos destinado aos associados da Câmara.
+
+O programa reúne empresas selecionadas de diferentes segmentos, no Brasil, em Omã e internacionalmente. A parceria não tem custo de adesão — a empresa só concede uma condição especial aos associados.
+
+UMA PARCERIA SIMPLES, EXCLUSIVA E DE VALOR
+A empresa parceira define livremente o benefício: desconto, upgrade, cortesia, experiência VIP, condição comercial diferenciada ou outra vantagem exclusiva.
+
+A CÂMARA OFERECE
+A empresa e seu benefício são apresentados no Member Privileges, com logo, descrição, benefício, localização e condições — reservado aos associados ativos.
+
+Gostaríamos de ter [Nome da empresa] entre nossos parceiros. Pra seguir, é só responder com: benefício oferecido, condições/restrições, validade e contato responsável.`;
+
 type Tab = "partners" | "benefits" | "categories" | "prospects";
 
 /** Painel admin do módulo "Parceiros & Benefícios" — marketplace exclusivo
@@ -167,8 +186,16 @@ export function AdminBenefits() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingProspectLogo, setUploadingProspectLogo] = useState(false);
   const [selectedProspectIds, setSelectedProspectIds] = useState<Set<string>>(new Set());
-  const [proposalForm, setProposalForm] = useState<{ subject: string; message: string; imageUrl: string } | null>(null);
+  const [proposalForm, setProposalForm] = useState<{
+    template: "official" | "custom";
+    subject: string;
+    message: string;
+    imageUrl: string;
+    attachmentUrl: string;
+    attachmentFilename: string;
+  } | null>(null);
   const [uploadingProposalImage, setUploadingProposalImage] = useState(false);
+  const [uploadingProposalAttachment, setUploadingProposalAttachment] = useState(false);
   const [sendingProposal, setSendingProposal] = useState(false);
   const [proposalResult, setProposalResult] = useState<{ sentCount: number; skippedNoEmail: string[]; failedNames: string[] } | null>(null);
 
@@ -477,7 +504,7 @@ export function AdminBenefits() {
   }
   function openProposalForm() {
     setProposalResult(null);
-    setProposalForm({ subject: "", message: "", imageUrl: "" });
+    setProposalForm({ template: "official", subject: OFFICIAL_PROPOSAL_SUBJECT, message: "", imageUrl: "", attachmentUrl: "", attachmentFilename: "" });
   }
   async function onUploadProposalImage(file: File) {
     setUploadingProposalImage(true);
@@ -495,6 +522,22 @@ export function AdminBenefits() {
       setUploadingProposalImage(false);
     }
   }
+  async function onUploadProposalAttachment(file: File) {
+    setUploadingProposalAttachment(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Falha no upload");
+      setProposalForm((f) => (f ? { ...f, attachmentUrl: json.url, attachmentFilename: file.name } : f));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha no upload do PDF.");
+    } finally {
+      setUploadingProposalAttachment(false);
+    }
+  }
   async function onSendProposal(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!proposalForm || selectedProspectIds.size === 0) return;
@@ -506,9 +549,12 @@ export function AdminBenefits() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prospectIds: Array.from(selectedProspectIds),
+          template: proposalForm.template,
           subject: proposalForm.subject,
           message: proposalForm.message,
           imageUrl: proposalForm.imageUrl || null,
+          attachmentUrl: proposalForm.attachmentUrl || null,
+          attachmentFilename: proposalForm.attachmentFilename || null,
         }),
       });
       const json = await res.json();
@@ -888,11 +934,50 @@ export function AdminBenefits() {
           )}
 
           {proposalForm && (
-            <form className="contact-form mp-form" onSubmit={onSendProposal} style={{ marginBottom: 32, maxWidth: 560 }}>
+            <form className="contact-form mp-form" onSubmit={onSendProposal} style={{ marginBottom: 32, maxWidth: 620 }}>
               <h3 className="mp-form-title">Enviar proposta por e-mail ({selectedProspectIds.size} empresa{selectedProspectIds.size > 1 ? "s" : ""})</h3>
+
+              <div className="prospect-template-toggle">
+                <label className={proposalForm.template === "official" ? "active" : ""}>
+                  <input
+                    type="radio"
+                    name="proposal-template"
+                    checked={proposalForm.template === "official"}
+                    onChange={() => setProposalForm({ ...proposalForm, template: "official", subject: OFFICIAL_PROPOSAL_SUBJECT })}
+                  />
+                  Modelo oficial (Convite Member Privileges)
+                </label>
+                <label className={proposalForm.template === "custom" ? "active" : ""}>
+                  <input
+                    type="radio"
+                    name="proposal-template"
+                    checked={proposalForm.template === "custom"}
+                    onChange={() => setProposalForm({ ...proposalForm, template: "custom", subject: proposalForm.subject === OFFICIAL_PROPOSAL_SUBJECT ? "" : proposalForm.subject })}
+                  />
+                  Mensagem personalizada
+                </label>
+              </div>
+
               <label>Assunto
                 <input type="text" required maxLength={200} placeholder="Ex.: Proposta de parceria — Câmara Brasil–Omã" value={proposalForm.subject} onChange={(e) => setProposalForm({ ...proposalForm, subject: e.target.value })} />
               </label>
+
+              {proposalForm.template === "official" ? (
+                <>
+                  <div className="prospect-template-preview">
+                    <p className="cp-chips-label" style={{ marginTop: 0 }}>Pré-visualização do texto fixo (enviado com o nome de cada empresa no lugar de &ldquo;[Nome da empresa]&rdquo;):</p>
+                    <pre>{OFFICIAL_PROPOSAL_PREVIEW}</pre>
+                  </div>
+                  <label>Observação adicional (opcional)
+                    <textarea rows={3} maxLength={2000} placeholder="Um parágrafo extra, só se quiser acrescentar algo específico daquele contato." value={proposalForm.message} onChange={(e) => setProposalForm({ ...proposalForm, message: e.target.value })} />
+                  </label>
+                </>
+              ) : (
+                <label>Mensagem
+                  <textarea rows={8} required maxLength={8000} placeholder="Escreva a proposta — cada empresa recebe com uma saudação personalizada com o próprio nome." value={proposalForm.message} onChange={(e) => setProposalForm({ ...proposalForm, message: e.target.value })} />
+                </label>
+              )}
+
               <label>Imagem/banner (opcional)
                 <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => { const f = e.target.files?.[0]; if (f) onUploadProposalImage(f); }} />
               </label>
@@ -903,10 +988,16 @@ export function AdminBenefits() {
                   <img src={proposalForm.imageUrl} alt="" style={{ width: "100%", maxWidth: 320, borderRadius: 6, border: "1px solid var(--border)" }} />
                 </div>
               )}
-              <label>Mensagem
-                <textarea rows={8} required maxLength={8000} placeholder="Escreva a proposta — cada empresa recebe com uma saudação personalizada com o próprio nome." value={proposalForm.message} onChange={(e) => setProposalForm({ ...proposalForm, message: e.target.value })} />
+
+              <label>Anexar PDF (opcional)
+                <input type="file" accept="application/pdf" onChange={(e) => { const f = e.target.files?.[0]; if (f) onUploadProposalAttachment(f); }} />
               </label>
-              <p className="cp-chips-label" style={{ marginTop: -10 }}>Cada empresa selecionada recebe o mesmo assunto/imagem/mensagem, com &ldquo;Olá, [nome da empresa]!&rdquo; no topo. Só quem tem e-mail de contato cadastrado recebe.</p>
+              {uploadingProposalAttachment && <p className="cp-chips-label">Enviando PDF…</p>}
+              {proposalForm.attachmentUrl && <p className="cp-chips-label">Anexado: {proposalForm.attachmentFilename}</p>}
+              <p className="cp-chips-label" style={{ marginTop: -10 }}>
+                Só quem tem e-mail de contato cadastrado recebe.
+                {proposalForm.attachmentUrl && " Com anexo, o envio é um por um (mais lento que sem anexo, mas cada empresa continua com o texto personalizado)."}
+              </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <button type="submit" className="btn btn-primary" disabled={sendingProposal}>{sendingProposal ? "Enviando…" : `Enviar para ${selectedProspectIds.size}`}</button>
                 <button type="button" className="btn btn-ghost" onClick={() => setProposalForm(null)}>Cancelar</button>

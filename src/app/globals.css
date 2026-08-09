@@ -2349,6 +2349,13 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 
 .prospect-bulk-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 0.84rem; color: var(--fg-muted); }
 
+.prospect-template-toggle { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+.prospect-template-toggle label { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 500; color: var(--fg-muted); border: 1px solid var(--border-strong); border-radius: 20px; padding: 6px 14px; cursor: pointer; }
+.prospect-template-toggle label.active { color: var(--gold-deep); border-color: var(--gold); background: rgba(150, 116, 52, 0.1); }
+.prospect-template-toggle input { width: auto; margin: 0; }
+.prospect-template-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+.prospect-template-preview pre { white-space: pre-wrap; font-family: Georgia, serif; font-size: 0.8rem; line-height: 1.6; color: var(--fg-muted); margin: 0; max-height: 260px; overflow-y: auto; }
+
 @media (max-width: 1400px) {
   .prospect-board { grid-template-columns: repeat(3, minmax(200px, 1fr)); }
 }
