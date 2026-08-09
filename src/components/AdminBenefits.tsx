@@ -145,8 +145,12 @@ const EMPTY_PROSPECT_FORM: ProspectForm = {
 // pra mostrar aqui no admin (nunca importar lib/email.ts num componente
 // client, ela usa a chave do Resend). Se o texto do e-mail mudar lá, atualizar
 // aqui também.
-const OFFICIAL_PROPOSAL_SUBJECT = "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã";
-const OFFICIAL_PROPOSAL_PREVIEW = `À [Nome da empresa],
+const OFFICIAL_PROPOSAL_SUBJECT: Record<"pt" | "en", string> = {
+  pt: "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã",
+  en: "Institutional Partnership Invitation — Member Privileges | Brazil–Oman Chamber of Commerce",
+};
+const OFFICIAL_PROPOSAL_PREVIEW: Record<"pt" | "en", string> = {
+  pt: `À [Nome da empresa],
 
 A Câmara de Comércio Brasil-Omã tem a satisfação de convidar [Nome da empresa] a integrar o Member Privileges, programa de benefícios exclusivos destinado aos associados da Câmara.
 
@@ -158,7 +162,21 @@ A empresa parceira define livremente o benefício: desconto, upgrade, cortesia, 
 A CÂMARA OFERECE
 A empresa e seu benefício são apresentados no Member Privileges, com logo, descrição, benefício, localização e condições — reservado aos associados ativos.
 
-Gostaríamos de ter [Nome da empresa] entre nossos parceiros. Pra seguir, é só responder com: benefício oferecido, condições/restrições, validade e contato responsável.`;
+Gostaríamos de ter [Nome da empresa] entre nossos parceiros. Pra seguir, é só responder com: benefício oferecido, condições/restrições, validade e contato responsável.`,
+  en: `To [Company Name],
+
+The Brazil–Oman Chamber of Commerce is pleased to invite [Company Name] to join Member Privileges, an exclusive benefits program for the Chamber's members.
+
+The program brings together selected companies from different sectors, in Brazil, Oman and internationally. The partnership has no membership cost — the company just grants a special condition to members.
+
+A SIMPLE, EXCLUSIVE AND VALUABLE PARTNERSHIP
+The partner company freely defines the benefit: discount, upgrade, courtesy, VIP experience, special commercial condition or another exclusive advantage.
+
+THE CHAMBER OFFERS
+The company and its benefit are featured in Member Privileges, with logo, description, benefit, location and terms — reserved for active members.
+
+We would love to have [Company Name] among our partners. To move forward, simply reply with: benefit offered, conditions/restrictions, validity, and the responsible contact.`,
+};
 
 type Tab = "partners" | "benefits" | "categories" | "prospects";
 
@@ -188,6 +206,7 @@ export function AdminBenefits() {
   const [selectedProspectIds, setSelectedProspectIds] = useState<Set<string>>(new Set());
   const [proposalForm, setProposalForm] = useState<{
     template: "official" | "custom";
+    language: "pt" | "en";
     subject: string;
     message: string;
     imageUrl: string;
@@ -504,7 +523,7 @@ export function AdminBenefits() {
   }
   function openProposalForm() {
     setProposalResult(null);
-    setProposalForm({ template: "official", subject: OFFICIAL_PROPOSAL_SUBJECT, message: "", imageUrl: "", attachmentUrl: "", attachmentFilename: "" });
+    setProposalForm({ template: "official", language: "pt", subject: OFFICIAL_PROPOSAL_SUBJECT.pt, message: "", imageUrl: "", attachmentUrl: "", attachmentFilename: "" });
   }
   async function onUploadProposalImage(file: File) {
     setUploadingProposalImage(true);
@@ -550,6 +569,7 @@ export function AdminBenefits() {
         body: JSON.stringify({
           prospectIds: Array.from(selectedProspectIds),
           template: proposalForm.template,
+          language: proposalForm.language,
           subject: proposalForm.subject,
           message: proposalForm.message,
           imageUrl: proposalForm.imageUrl || null,
@@ -943,7 +963,7 @@ export function AdminBenefits() {
                     type="radio"
                     name="proposal-template"
                     checked={proposalForm.template === "official"}
-                    onChange={() => setProposalForm({ ...proposalForm, template: "official", subject: OFFICIAL_PROPOSAL_SUBJECT })}
+                    onChange={() => setProposalForm({ ...proposalForm, template: "official", subject: OFFICIAL_PROPOSAL_SUBJECT[proposalForm.language] })}
                   />
                   Modelo oficial (Convite Member Privileges)
                 </label>
@@ -952,9 +972,48 @@ export function AdminBenefits() {
                     type="radio"
                     name="proposal-template"
                     checked={proposalForm.template === "custom"}
-                    onChange={() => setProposalForm({ ...proposalForm, template: "custom", subject: proposalForm.subject === OFFICIAL_PROPOSAL_SUBJECT ? "" : proposalForm.subject })}
+                    onChange={() =>
+                      setProposalForm({
+                        ...proposalForm,
+                        template: "custom",
+                        subject: Object.values(OFFICIAL_PROPOSAL_SUBJECT).includes(proposalForm.subject) ? "" : proposalForm.subject,
+                      })
+                    }
                   />
                   Mensagem personalizada
+                </label>
+              </div>
+
+              <div className="prospect-template-toggle">
+                <label className={proposalForm.language === "pt" ? "active" : ""}>
+                  <input
+                    type="radio"
+                    name="proposal-language"
+                    checked={proposalForm.language === "pt"}
+                    onChange={() =>
+                      setProposalForm({
+                        ...proposalForm,
+                        language: "pt",
+                        subject: proposalForm.template === "official" ? OFFICIAL_PROPOSAL_SUBJECT.pt : proposalForm.subject,
+                      })
+                    }
+                  />
+                  Português
+                </label>
+                <label className={proposalForm.language === "en" ? "active" : ""}>
+                  <input
+                    type="radio"
+                    name="proposal-language"
+                    checked={proposalForm.language === "en"}
+                    onChange={() =>
+                      setProposalForm({
+                        ...proposalForm,
+                        language: "en",
+                        subject: proposalForm.template === "official" ? OFFICIAL_PROPOSAL_SUBJECT.en : proposalForm.subject,
+                      })
+                    }
+                  />
+                  English (captação no exterior)
                 </label>
               </div>
 
@@ -966,7 +1025,7 @@ export function AdminBenefits() {
                 <>
                   <div className="prospect-template-preview">
                     <p className="cp-chips-label" style={{ marginTop: 0 }}>Pré-visualização do texto fixo (enviado com o nome de cada empresa no lugar de &ldquo;[Nome da empresa]&rdquo;):</p>
-                    <pre>{OFFICIAL_PROPOSAL_PREVIEW}</pre>
+                    <pre>{OFFICIAL_PROPOSAL_PREVIEW[proposalForm.language]}</pre>
                   </div>
                   <label>Observação adicional (opcional)
                     <textarea rows={3} maxLength={2000} placeholder="Um parágrafo extra, só se quiser acrescentar algo específico daquele contato." value={proposalForm.message} onChange={(e) => setProposalForm({ ...proposalForm, message: e.target.value })} />

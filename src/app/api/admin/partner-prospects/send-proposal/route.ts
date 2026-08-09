@@ -16,6 +16,7 @@ const schema = z
     message: z.string().max(8000).optional().default(""),
     imageUrl: z.string().max(500).optional().nullable(),
     template: z.enum(["custom", "official"]).optional().default("custom"),
+    language: z.enum(["pt", "en"]).optional().default("pt"),
     attachmentUrl: z.string().max(500).optional().nullable(),
     attachmentFilename: z.string().max(200).optional().nullable(),
   })
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
     message: parsed.data.message,
     imageUrl: parsed.data.imageUrl || null,
     template: parsed.data.template,
+    language: parsed.data.language,
     attachmentUrl: parsed.data.attachmentUrl || null,
     attachmentFilename: parsed.data.attachmentFilename || null,
   });

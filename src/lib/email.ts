@@ -351,17 +351,20 @@ export async function sendWelcomeEmail(to: string, name: string) {
  *  chamada — encadeado em blocos aqui se passar disso). Nunca lança: se o
  *  Resend não estiver configurado, retorna como se ninguém tivesse recebido
  *  (quem chama decide o que fazer). */
-/** Assunto padrão do modelo oficial — mostrado como sugestão no admin, mas
- *  sempre editável antes de enviar. */
-export const PARTNER_PROPOSAL_OFFICIAL_SUBJECT =
-  "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã";
+/** Assunto padrão do modelo oficial em cada idioma — mostrado como sugestão
+ *  no admin, mas sempre editável antes de enviar. */
+export const PARTNER_PROPOSAL_OFFICIAL_SUBJECT = {
+  pt: "Convite para Parceria Institucional — Member Privileges | Câmara de Comércio Brasil-Omã",
+  en: "Institutional Partnership Invitation — Member Privileges | Brazil–Oman Chamber of Commerce",
+} as const;
 
 /** Corpo oficial do convite de parceria — mesmo texto do documento
- *  institucional ("Convite para Parceria Institucional"), com o nome da
- *  empresa já personalizado nos dois lugares em que aparecia como
- *  [NOME DA EMPRESA]. `extraNote`, se houver, entra como um parágrafo extra
- *  antes do fechamento (ex.: um contexto específico daquele contato). */
-function partnerProposalOfficialBodyHtml(companyName: string, extraNote?: string | null): string {
+ *  institucional ("Convite para Parceria Institucional"), em PT ou EN (pra
+ *  captação de parceiros no exterior), com o nome da empresa já personalizado
+ *  nos dois lugares em que aparecia como [NOME DA EMPRESA]/[Company Name].
+ *  `extraNote`, se houver, entra como um parágrafo extra antes do fechamento
+ *  (ex.: um contexto específico daquele contato). */
+function partnerProposalOfficialBodyHtml(companyName: string, extraNote: string | null, lang: "pt" | "en"): string {
   const company = escapeHtml(companyName);
   const sectionLabel = (text: string) =>
     `<p style="font-family: Georgia, serif; color:#96712c; font-weight:bold; font-size:14px; letter-spacing:0.02em; margin: 24px 0 10px;">${text}</p>`;
@@ -369,6 +372,38 @@ function partnerProposalOfficialBodyHtml(companyName: string, extraNote?: string
     `<ul style="font-family: Arial, sans-serif; color:#201b13; font-size:15px; line-height:1.8; margin:0 0 16px; padding-left:20px;">${items
       .map((i) => `<li>${i}</li>`)
       .join("")}</ul>`;
+
+  if (lang === "en") {
+    return `
+      <p style="font-family: Arial, sans-serif; color:#96712c; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 8px;">Member Privileges</p>
+      ${heading("Institutional Partnership Invitation")}
+      ${paragraph(`To <strong>${company}</strong>,`)}
+      ${paragraph("Dear Sir/Madam,")}
+      ${paragraph(`The Brazil–Oman Chamber of Commerce is pleased to invite <strong>${company}</strong> to join <strong>Member Privileges</strong>, an exclusive benefits program for the Chamber's members.`)}
+      ${paragraph("The program brings together selected companies from different sectors, in Brazil, Oman and internationally, offering members special conditions, experiences, services and exclusive benefits.")}
+      ${paragraph("Our proposal is to establish a partnership at <strong>no membership cost</strong> to the partner company, through granting a special condition to the Chamber's members.")}
+      ${paragraph("By joining the program, the company becomes part of the institution's benefits ecosystem, expanding its visibility and networking opportunities with entrepreneurs, executives, investors and other members of our community.")}
+      ${sectionLabel("A SIMPLE, EXCLUSIVE AND VALUABLE PARTNERSHIP")}
+      ${paragraph("The partner company freely defines the benefit it wishes to offer. It can take the form of a discount, upgrade, courtesy, VIP experience, special commercial condition, corporate benefit or any other exclusive advantage for members.")}
+      ${sectionLabel("THE PARTNER COMPANY OFFERS")}
+      ${bullets([
+        "Percentage discount or special rate;",
+        "Upgrade, courtesy or additional service;",
+        "Special commercial terms;",
+        "VIP experience or corporate benefit;",
+        "An exclusive offer defined by the company itself.",
+      ])}
+      ${sectionLabel("THE CHAMBER OFFERS")}
+      ${paragraph("The company and its benefit may be featured in the Brazil–Oman Chamber of Commerce's Member Privileges, with logo, institutional description, benefit, location and terms of use. Redemption is reserved for active members, preserving the exclusive nature of the partnership.")}
+      ${paragraph("The partnership does not require any commission or participation fee, except for a specific project formally agreed upon between the parties.")}
+      ${extraNote ? paragraph(freeTextToHtml(extraNote)) : ""}
+      <div style="background:#efece3; border-left:3px solid #96712c; padding:16px 20px; margin:22px 0 6px;">
+        <p style="font-family: Georgia, serif; color:#201b13; font-weight:bold; font-size:15px; margin:0 0 10px;">We would love to have ${company} among our partners.</p>
+        <p style="font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.7; margin:0;">To move forward, simply reply to this email with: the benefit offered, conditions/restrictions, validity period, and the contact responsible for the partnership.</p>
+      </div>
+      ${paragraph('<em>Connecting companies, opportunities and relationships between Brazil and Oman.</em>')}
+    `;
+  }
 
   return `
     <p style="font-family: Arial, sans-serif; color:#96712c; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 8px;">Member Privileges</p>
@@ -416,6 +451,7 @@ export async function sendPartnerProposalBatch(
     message: string;
     imageUrl?: string | null;
     template?: "custom" | "official";
+    language?: "pt" | "en";
     attachmentUrl?: string | null;
     attachmentFilename?: string | null;
   }
@@ -424,18 +460,21 @@ export async function sendPartnerProposalBatch(
     return { sentProspectIds: [], failed: recipients.map((r) => ({ prospectId: r.prospectId, message: "Resend não configurado." })) };
   }
 
+  const lang = data.language ?? "pt";
   const bannerBlock = data.imageUrl
     ? `<img src="${data.imageUrl}" alt="" style="display:block; width:100%; max-width:488px; height:auto; margin:0 0 20px; border:0; border-radius:4px;" />`
     : "";
   const closing = paragraph(
-    "Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>."
+    lang === "en"
+      ? "If you'd prefer not to receive further outreach like this, just reply to let us know. Best regards, the <strong>Brazil–Oman Chamber of Commerce</strong> team."
+      : "Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>."
   );
 
   function buildHtml(companyName: string): string {
     const body =
       data.template === "official"
-        ? partnerProposalOfficialBodyHtml(companyName, data.message || null)
-        : `${heading(`Olá, ${companyName}!`)}
+        ? partnerProposalOfficialBodyHtml(companyName, data.message || null, lang)
+        : `${heading(`${lang === "en" ? "Hello" : "Olá"}, ${companyName}!`)}
            <div style="font-family: Arial, sans-serif; color:#201b13; font-size: 15px; line-height:1.7; margin: 0 0 16px;">${freeTextToHtml(data.message)}</div>`;
     return layout(data.subject, `${bannerBlock}${body}${closing}`);
   }
