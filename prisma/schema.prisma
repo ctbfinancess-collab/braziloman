@@ -306,6 +306,19 @@ enum BenefitType {
   OTHER
 }
 
+/// Controla quantas vezes o MESMO associado pode clicar em "Usar benefício"
+/// (a ação que dispara e-mail com o cupom). SINGLE_USE é o padrão pra
+/// benefícios novos — a maioria dos cupons (ex.: CAMARA20) é de uso único por
+/// associado; DAILY/WEEKLY/MONTHLY/UNLIMITED existem pra parceiros com
+/// benefício recorrente (ex.: "10% de desconto toda vez que for ao restaurante").
+enum BenefitFrequency {
+  SINGLE_USE
+  DAILY
+  WEEKLY
+  MONTHLY
+  UNLIMITED
+}
+
 /// Categorias do marketplace "Parceiros & Benefícios" (Hotéis & Resorts,
 /// Gastronomia, etc.) — tabela própria (não enum) pra o admin poder criar
 /// novas categorias sem precisar de deploy.
@@ -363,6 +376,8 @@ model Benefit {
   couponCode  String?
   redeemUrl   String?
   eligibility BenefitEligibility @default(ALL)
+  /// Frequência de uso permitida por associado — ver comentário do enum.
+  frequency   BenefitFrequency   @default(SINGLE_USE)
   /// Aparece na seção "Destaques" no topo da página do associado.
   featured    Boolean            @default(false)
   status      String             @default("active")

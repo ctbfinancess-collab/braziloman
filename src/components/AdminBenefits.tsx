@@ -6,8 +6,9 @@ import { AdminLayout } from "./AdminLayout";
 import { Icon } from "./Icons";
 import {
   BENEFIT_TYPES, BENEFIT_TYPE_LABELS, ELIGIBILITY_OPTIONS, ELIGIBILITY_LABELS,
+  BENEFIT_FREQUENCIES, BENEFIT_FREQUENCY_LABELS,
   PROSPECT_STATUSES, PROSPECT_STATUS_LABELS,
-  type BenefitType, type BenefitEligibility, type ProspectStatus,
+  type BenefitType, type BenefitEligibility, type BenefitFrequency, type ProspectStatus,
 } from "@/lib/benefits";
 
 type Category = { id: string; name: string; order: number; _count: { partners: number } };
@@ -44,10 +45,15 @@ type BenefitRow = {
   couponCode: string | null;
   redeemUrl: string | null;
   eligibility: BenefitEligibility;
+  frequency: BenefitFrequency;
   featured: boolean;
   status: string;
   order: number;
   _count: { redemptions: number };
+  /// Resgates de verdade ("Usar benefício") e quantos associados distintos —
+  /// calculados no servidor, ver GET /api/admin/benefits.
+  usesCount: number;
+  uniqueUsersCount: number;
 };
 
 type PartnerForm = {
@@ -85,6 +91,7 @@ type BenefitForm = {
   couponCode: string;
   redeemUrl: string;
   eligibility: BenefitEligibility;
+  frequency: BenefitFrequency;
   featured: boolean;
   status: "active" | "inactive";
   order: string;
@@ -93,7 +100,7 @@ type BenefitForm = {
 const EMPTY_BENEFIT_FORM: BenefitForm = {
   id: null, partnerId: "", title: "", type: "PERCENT_DISCOUNT", description: "", rules: "",
   validFrom: "", validUntil: "", couponCode: "", redeemUrl: "", eligibility: "ALL",
-  featured: false, status: "active", order: "0",
+  frequency: "SINGLE_USE", featured: false, status: "active", order: "0",
 };
 
 type Prospect = {
@@ -148,6 +155,10 @@ export function AdminBenefits() {
   const [benefitForm, setBenefitForm] = useState<BenefitForm | null>(null);
   const [prospectForm, setProspectForm] = useState<ProspectForm | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [historyBenefit, setHistoryBenefit] = useState<BenefitRow | null>(null);
+  const [historyRows, setHistoryRows] = useState<
+    { id: string; createdAt: string; memberName: string; memberCompany: string }[] | null
+  >(null);
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
 
@@ -278,7 +289,7 @@ export function AdminBenefits() {
       description: b.description || "", rules: b.rules || "",
       validFrom: b.validFrom ? b.validFrom.slice(0, 10) : "", validUntil: b.validUntil ? b.validUntil.slice(0, 10) : "",
       couponCode: b.couponCode || "", redeemUrl: b.redeemUrl || "", eligibility: b.eligibility,
-      featured: b.featured, status: b.status as "active" | "inactive", order: String(b.order),
+      frequency: b.frequency, featured: b.featured, status: b.status as "active" | "inactive", order: String(b.order),
     });
   }
   async function onSaveBenefit(e: React.FormEvent<HTMLFormElement>) {
@@ -299,6 +310,7 @@ export function AdminBenefits() {
         couponCode: benefitForm.couponCode || null,
         redeemUrl: benefitForm.redeemUrl || null,
         eligibility: benefitForm.eligibility,
+        frequency: benefitForm.frequency,
         featured: benefitForm.featured,
         status: benefitForm.status,
         order: Number.isFinite(order) ? order : 0,
@@ -323,6 +335,17 @@ export function AdminBenefits() {
     if (!confirm("Remover este benefício?")) return;
     const res = await fetch(`/api/admin/benefits/${id}`, { method: "DELETE" });
     if (res.ok) await loadAll();
+  }
+  async function openHistory(b: BenefitRow) {
+    setHistoryBenefit(b);
+    setHistoryRows(null);
+    try {
+      const res = await fetch(`/api/admin/benefits/${b.id}/redemptions`);
+      const json = await res.json();
+      setHistoryRows(res.ok ? json.redemptions : []);
+    } catch {
+      setHistoryRows([]);
+    }
   }
 
   // ---------- Categorias ----------
@@ -654,6 +677,12 @@ export function AdminBenefits() {
                   <input type="url" maxLength={500} placeholder="https://…" value={benefitForm.redeemUrl} onChange={(e) => setBenefitForm({ ...benefitForm, redeemUrl: e.target.value })} />
                 </label>
               </div>
+              <label>Frequência de uso
+                <select value={benefitForm.frequency} onChange={(e) => setBenefitForm({ ...benefitForm, frequency: e.target.value as BenefitFrequency })}>
+                  {BENEFIT_FREQUENCIES.map((f) => <option key={f} value={f}>{BENEFIT_FREQUENCY_LABELS[f]}</option>)}
+                </select>
+              </label>
+              <p className="cp-chips-label" style={{ marginTop: -10 }}>Controla quantas vezes o mesmo associado pode clicar em &quot;Usar benefício&quot; (o que dispara o e-mail com o cupom). &quot;Uso único&quot; é o padrão — use as outras opções só pra benefícios recorrentes (ex.: desconto toda vez que for ao parceiro).</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
                 <label>Status
                   <select value={benefitForm.status} onChange={(e) => setBenefitForm({ ...benefitForm, status: e.target.value as "active" | "inactive" })}>
@@ -683,7 +712,7 @@ export function AdminBenefits() {
           ) : (
             <div className="admin-table-wrap">
               <table className="admin-table">
-                <thead><tr><th>Benefício</th><th>Parceiro</th><th>Tipo</th><th>Nível</th><th>Resgates</th><th>Status</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Benefício</th><th>Parceiro</th><th>Tipo</th><th>Nível</th><th>Frequência</th><th>Resgates</th><th>Associados únicos</th><th>Status</th><th>Ações</th></tr></thead>
                 <tbody>
                   {benefits.map((b) => (
                     <tr key={b.id}>
@@ -691,10 +720,13 @@ export function AdminBenefits() {
                       <td>{b.partner.name}</td>
                       <td>{BENEFIT_TYPE_LABELS[b.type]}</td>
                       <td>{ELIGIBILITY_LABELS[b.eligibility]}</td>
-                      <td>{b._count.redemptions}</td>
+                      <td>{BENEFIT_FREQUENCY_LABELS[b.frequency]}</td>
+                      <td>{b.usesCount}</td>
+                      <td>{b.uniqueUsersCount}</td>
                       <td><span className={`admin-badge tone-${b.status === "active" ? "positive" : "neutral"}`}>{b.status === "active" ? "Ativo" : "Inativo"}</span></td>
                       <td>
                         <button type="button" className="btn btn-ghost" onClick={() => openEditBenefit(b)}>Editar</button>{" "}
+                        <button type="button" className="btn btn-ghost" onClick={() => openHistory(b)}>Histórico</button>{" "}
                         <button type="button" className="btn btn-ghost" onClick={() => onDeleteBenefit(b.id)}>Remover</button>
                       </td>
                     </tr>
@@ -832,6 +864,40 @@ export function AdminBenefits() {
             </div>
           )}
         </>
+      )}
+
+      {historyBenefit && (
+        <div className="benefit-modal-overlay" onClick={() => setHistoryBenefit(null)}>
+          <div className="benefit-modal" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="benefit-modal-close" onClick={() => setHistoryBenefit(null)} aria-label="Fechar">
+              <Icon name="close" />
+            </button>
+            <h2 className="benefit-modal-title" style={{ marginTop: 0 }}>Histórico de resgates</h2>
+            <p className="benefit-modal-text">
+              {historyBenefit.title} · {historyBenefit.partner.name} — {BENEFIT_FREQUENCY_LABELS[historyBenefit.frequency]}
+            </p>
+            {historyRows === null ? (
+              <p className="section-lead">Carregando…</p>
+            ) : historyRows.length === 0 ? (
+              <p className="section-lead">Nenhum resgate registrado ainda.</p>
+            ) : (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead><tr><th>Associado</th><th>Empresa</th><th>Data e hora</th></tr></thead>
+                  <tbody>
+                    {historyRows.map((r) => (
+                      <tr key={r.id}>
+                        <td>{r.memberName}</td>
+                        <td>{r.memberCompany}</td>
+                        <td>{new Date(r.createdAt).toLocaleString("pt-BR")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </AdminLayout>
   );

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/adminAuth";
-import { BENEFIT_TYPES, ELIGIBILITY_OPTIONS } from "@/lib/benefits";
+import { BENEFIT_TYPES, ELIGIBILITY_OPTIONS, BENEFIT_FREQUENCIES } from "@/lib/benefits";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +18,7 @@ const updateSchema = z.object({
   couponCode: z.string().max(120).optional().nullable(),
   redeemUrl: z.string().max(500).optional().nullable(),
   eligibility: z.enum(ELIGIBILITY_OPTIONS).optional(),
+  frequency: z.enum(BENEFIT_FREQUENCIES).optional(),
   featured: z.boolean().optional(),
   status: z.enum(["active", "inactive"]).optional(),
   order: z.number().int().optional(),

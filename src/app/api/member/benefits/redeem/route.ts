@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import { verifyMemberSession, MEMBER_COOKIE } from "@/lib/session";
 import { getTier } from "@/lib/loyalty";
-import { memberCanAccessBenefit, type BenefitEligibility } from "@/lib/benefits";
+import { memberCanAccessBenefit, isBenefitRedemptionBlocked, type BenefitEligibility, type BenefitFrequency } from "@/lib/benefits";
 import { sendBenefitCouponEmail, sendBenefitRedeemedAdminEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
     select: {
       status: true,
       eligibility: true,
+      frequency: true,
       title: true,
       description: true,
       rules: true,
@@ -64,13 +66,53 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Esse benefício não está disponível pro seu nível." }, { status: 403 });
   }
 
-  await prisma.benefitRedemption.create({
-    data: { benefitId: parsed.data.benefitId, applicationId: session.sub, action: parsed.data.action },
-  });
+  // "Usar benefício" (a ação que dispara e-mail com o cupom) respeita a
+  // frequência configurada no benefício — nunca só no botão do front-end. A
+  // checagem + criação roda dentro de UMA transação serializable: se dois
+  // cliques (ou duas chamadas diretas na API) chegarem ao mesmo tempo, o
+  // Postgres derruba um dos dois com erro de serialização — tratado abaixo
+  // como "bloqueado", nunca como duplicidade. "view"/"coupon" continuam sem
+  // limite, só alimentam estatística de acesso.
+  if (parsed.data.action === "use") {
+    let blockedAt: Date | null = null;
+    try {
+      await prisma.$transaction(
+        async (tx) => {
+          const lastUse = await tx.benefitRedemption.findFirst({
+            where: { benefitId: parsed.data.benefitId, applicationId: session.sub, action: "use" },
+            orderBy: { createdAt: "desc" },
+            select: { createdAt: true },
+          });
+          if (isBenefitRedemptionBlocked(benefit.frequency as BenefitFrequency, lastUse?.createdAt ?? null)) {
+            blockedAt = lastUse!.createdAt;
+            return;
+          }
+          await tx.benefitRedemption.create({
+            data: { benefitId: parsed.data.benefitId, applicationId: session.sub, action: "use" },
+          });
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+      );
+    } catch {
+      // Conflito de serialização (perdeu a corrida pro outro clique/chamada
+      // simultânea) — trata como "já utilizado agora mesmo", sem 2º e-mail.
+      blockedAt = new Date();
+    }
+    if (blockedAt) {
+      // Benefício já utilizado (dentro da janela permitida) — não reenvia
+      // e-mail, só informa quando foi o último resgate.
+      return NextResponse.json({ ok: true, blocked: true, lastUsedAt: (blockedAt as Date).toISOString() });
+    }
+  } else {
+    await prisma.benefitRedemption.create({
+      data: { benefitId: parsed.data.benefitId, applicationId: session.sub, action: parsed.data.action },
+    });
+  }
 
   // "Usar benefício" é o momento em que o associado realmente se compromete a
   // aproveitar a oferta — manda o cupom/link por e-mail (comprovante) e avisa
-  // a Câmara internamente. "view"/"coupon" não disparam e-mail, só "use".
+  // a Câmara internamente. "view"/"coupon" não disparam e-mail, só "use". E só
+  // dispara aqui, DEPOIS da checagem de frequência acima — nunca num resgate repetido.
   if (parsed.data.action === "use") {
     try {
       await Promise.all([
@@ -93,6 +135,7 @@ export async function POST(req: Request) {
     } catch {
       // e-mail é um "extra" aqui — nunca derruba a confirmação do resgate.
     }
+    return NextResponse.json({ ok: true, blocked: false });
   }
 
   return NextResponse.json({ ok: true });

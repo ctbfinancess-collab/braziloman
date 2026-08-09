@@ -33,6 +33,10 @@ export type BenefitItem = {
   featured: boolean;
   createdAt: string;
   eligible: boolean;
+  /// Data do resgate mais recente que ainda está dentro da janela de
+  /// frequência do benefício (uso único já consumido, ou ainda dentro do
+  /// dia/semana/mês configurado) — null quando o associado pode resgatar agora.
+  alreadyUsedAt: string | null;
   partner: {
     id: string;
     name: string;
@@ -65,6 +69,23 @@ async function logRedemption(benefitId: string, action: "view" | "use" | "coupon
   }
 }
 
+/// "Usar benefício" precisa da resposta (ao contrário de view/coupon, que só
+/// registram estatística): o servidor pode responder "blocked" quando a
+/// frequência de uso do benefício (uso único, 1x/dia etc.) já foi consumida.
+async function redeemUse(benefitId: string): Promise<{ blocked: boolean; lastUsedAt?: string } | null> {
+  try {
+    const res = await fetch("/api/member/benefits/redeem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ benefitId, action: "use" }),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 function BenefitCard({ b, t, onOpen }: { b: BenefitItem; t: ReturnType<typeof useDashboardText>["t"]; onOpen: (b: BenefitItem) => void }) {
   return (
     <div className={`benefit-card${b.eligible ? "" : " locked"}`}>
@@ -94,6 +115,29 @@ function BenefitCard({ b, t, onOpen }: { b: BenefitItem; t: ReturnType<typeof us
   );
 }
 
+/// Estado visual do botão de resgate depois de uma tentativa de "Usar
+/// benefício" — "new" (resgate novo, e-mail enviado agora) ou "already"
+/// (já estava/ficou fora da janela de uso, com a data do último resgate).
+function UseResultNote({
+  result,
+  t,
+  lang,
+}: {
+  result: { status: "new" } | { status: "already"; usedAt: string | null };
+  t: ReturnType<typeof useDashboardText>["t"];
+  lang: "pt" | "en";
+}) {
+  if (result.status === "new") {
+    return <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsUseConfirmed}</p>;
+  }
+  return (
+    <div className="benefit-modal-confirmed-box">
+      <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsAlreadyUsedText}</p>
+      {result.usedAt && <p className="benefit-modal-used-date">{t.benefitsUsedOnLabel} {fmtDate(result.usedAt, lang)}</p>}
+    </div>
+  );
+}
+
 export function MemberBenefits({ member, tier, benefits }: { member: ProfileFields; tier: LoyaltyTier; benefits: BenefitItem[] }) {
   const { t, lang } = useDashboardText();
   const searchParams = useSearchParams();
@@ -109,7 +153,16 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
     return openId ? (benefits.find((b) => b.id === openId) ?? null) : null;
   });
   const [copied, setCopied] = useState(false);
-  const [usedConfirmed, setUsedConfirmed] = useState(false);
+  // "new": acabou de resgatar agora (mostra o aviso de e-mail enviado).
+  // "already": já estava (ou ficou, na tentativa) fora da janela de uso —
+  // mostra "✓ Benefício utilizado" + a data, sem reenviar e-mail. Nasce
+  // preenchido quando o deep link (?open=) aponta pra um benefício que esse
+  // associado já usou — nunca deixa o botão nascer clicável nesse caso.
+  const [useResult, setUseResult] = useState<{ status: "new" } | { status: "already"; usedAt: string | null } | null>(() => {
+    const openId = searchParams.get("open");
+    const b = openId ? benefits.find((x) => x.id === openId) : null;
+    return b?.alreadyUsedAt ? { status: "already", usedAt: b.alreadyUsedAt } : null;
+  });
 
   const categories = useMemo(() => Array.from(new Set(benefits.map((b) => b.partner.category))).sort(), [benefits]);
   const countries = useMemo(() => Array.from(new Set(benefits.map((b) => b.partner.country))).sort(), [benefits]);
@@ -145,7 +198,7 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
   function openBenefit(b: BenefitItem) {
     setActive(b);
     setCopied(false);
-    setUsedConfirmed(false);
+    setUseResult(b.alreadyUsedAt ? { status: "already", usedAt: b.alreadyUsedAt } : null);
     logRedemption(b.id, "view");
   }
 
@@ -159,9 +212,15 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
     }
   }
 
-  function onUseBenefit(benefitId: string) {
-    setUsedConfirmed(true);
-    logRedemption(benefitId, "use");
+  async function onUseBenefit(benefitId: string) {
+    const result = await redeemUse(benefitId);
+    if (result?.blocked) {
+      setUseResult({ status: "already", usedAt: result.lastUsedAt ?? null });
+    } else {
+      // Sucesso (ou falha de rede) — sempre dá uma resposta visual: nunca
+      // deixa o clique sem reação (era exatamente o bug reportado antes).
+      setUseResult({ status: "new" });
+    }
   }
 
   return (
@@ -287,14 +346,12 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
                 >
                   {t.benefitsRedeemButton} <Icon name="arrowright" />
                 </a>
-                {usedConfirmed && (
-                  <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsUseConfirmed}</p>
-                )}
+                {useResult && <UseResultNote result={useResult} t={t} lang={lang} />}
               </>
             )}
             {active.eligible && !active.redeemUrl && (
-              usedConfirmed ? (
-                <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsUseConfirmed}</p>
+              useResult ? (
+                <UseResultNote result={useResult} t={t} lang={lang} />
               ) : (
                 <button type="button" className="btn btn-primary benefit-modal-redeem" onClick={() => onUseBenefit(active.id)}>
                   {t.benefitsUseButton}

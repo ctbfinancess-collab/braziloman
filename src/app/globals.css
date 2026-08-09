@@ -2003,6 +2003,8 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .benefit-modal-redeem svg { width: 15px; height: 15px; }
 .benefit-modal-confirmed { display: flex; align-items: center; gap: 8px; color: #2f6e46; background: rgba(63, 143, 92, 0.1); border: 1px solid rgba(63, 143, 92, 0.3); border-radius: 8px; padding: 12px 14px; font-size: 0.86rem; margin: 6px 0 0; }
 .benefit-modal-confirmed svg { width: 16px; height: 16px; flex-shrink: 0; }
+.benefit-modal-confirmed-box { margin: 6px 0 0; }
+.benefit-modal-used-date { font-size: 0.78rem; color: var(--muted); margin: 6px 2px 0; }
 
 .dash-event-date-inline { font-size: 0.7rem; letter-spacing: 0.06em; color: var(--gold); font-weight: 600; margin: 0 0 3px; }
 .dash-event-body { flex: 1; min-width: 0; }
