@@ -213,7 +213,8 @@ function ActivityList({ activity }: { activity: ActivityItem[] }) {
   );
 }
 
-const QUICK_ACCESS: { href: string; icon: string; key: "eventos" | "missoes" | "documentos" | "certificado" }[] = [
+const QUICK_ACCESS: { href: string; icon: string; key: "eventos" | "missoes" | "documentos" | "certificado" | "beneficios" }[] = [
+  { href: "/membro/painel/beneficios", icon: "briefcase", key: "beneficios" },
   { href: "/membro/painel/eventos", icon: "calendar", key: "eventos" },
   { href: "/membro/painel/missoes", icon: "plane", key: "missoes" },
   { href: "/membro/painel/documentos", icon: "folder", key: "documentos" },
@@ -298,6 +299,23 @@ function UpcomingCommitmentsWidget({ upcoming }: { upcoming: UpcomingCommitment[
   );
 }
 
+/** Banner de anúncio do módulo "Parceiros & Benefícios" — bem no topo do
+ *  painel, pra quem ainda não viu a novidade não passar direto sem notar. */
+function BenefitsPromoBanner() {
+  const { t } = useDashboardText();
+  return (
+    <Link href="/membro/painel/beneficios" className="dash-promo-banner">
+      <span className="dash-promo-tag">{t.benefitsPromoTag}</span>
+      <span className="dash-promo-icon"><Icon name="briefcase" /></span>
+      <span className="dash-promo-body">
+        <strong>{t.benefitsPromoTitle}</strong>
+        <span>{t.benefitsPromoText}</span>
+      </span>
+      <span className="btn btn-primary dash-promo-btn">{t.benefitsPromoCta} <Icon name="arrowright" /></span>
+    </Link>
+  );
+}
+
 /** Widget de destaque da Rede de Associados. */
 function NetworkHighlightWidget({ networkCount }: { networkCount: number }) {
   const { t } = useDashboardText();
@@ -325,6 +343,8 @@ export function DashboardHome(props: DashboardMemberInfo) {
       title={t.homeTitle}
       subtitle={t.welcome.replace("{name}", props.member.name)}
     >
+      <BenefitsPromoBanner />
+
       <div className="dash-grid dash-grid-status">
         <StatusCard member={props.member} />
         <CardWidget
