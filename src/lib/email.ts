@@ -397,10 +397,7 @@ function partnerProposalOfficialBodyHtml(companyName: string, extraNote: string 
       ${paragraph("The company and its benefit may be featured in the Brazil–Oman Chamber of Commerce's Member Privileges, with logo, institutional description, benefit, location and terms of use. Redemption is reserved for active members, preserving the exclusive nature of the partnership.")}
       ${paragraph("The partnership does not require any commission or participation fee, except for a specific project formally agreed upon between the parties.")}
       ${extraNote ? paragraph(freeTextToHtml(extraNote)) : ""}
-      <div style="background:#efece3; border-left:3px solid #96712c; padding:16px 20px; margin:22px 0 6px;">
-        <p style="font-family: Georgia, serif; color:#201b13; font-weight:bold; font-size:15px; margin:0 0 10px;">We would love to have ${company} among our partners.</p>
-        <p style="font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.7; margin:0;">To move forward, simply reply to this email with: the benefit offered, conditions/restrictions, validity period, and the contact responsible for the partnership.</p>
-      </div>
+      ${paragraph(`We would love to have <strong>${company}</strong> among our partners. To move forward, simply reply to this email with: the benefit offered, conditions/restrictions, validity period, and the contact responsible for the partnership.`)}
       ${paragraph('<em>Connecting companies, opportunities and relationships between Brazil and Oman.</em>')}
     `;
   }
@@ -428,10 +425,7 @@ function partnerProposalOfficialBodyHtml(companyName: string, extraNote: string 
     ${paragraph("A empresa e seu benefício poderão ser apresentados no Member Privileges da Câmara de Comércio Brasil-Omã, com logo, descrição institucional, benefício, localização e condições de utilização. As condições de resgate são reservadas aos associados ativos, preservando o caráter exclusivo da parceria.")}
     ${paragraph("A parceria não exige pagamento de comissão ou taxa de participação, salvo eventual projeto específico formalmente acordado entre as partes.")}
     ${extraNote ? paragraph(freeTextToHtml(extraNote)) : ""}
-    <div style="background:#efece3; border-left:3px solid #96712c; padding:16px 20px; margin:22px 0 6px;">
-      <p style="font-family: Georgia, serif; color:#201b13; font-weight:bold; font-size:15px; margin:0 0 10px;">Gostaríamos de ter a ${company} entre nossos parceiros.</p>
-      <p style="font-family: Arial, sans-serif; color:#201b13; font-size:14px; line-height:1.7; margin:0;">Pra seguir, é só responder este e-mail com: benefício oferecido, condições/restrições, validade e o contato responsável pela parceria.</p>
-    </div>
+    ${paragraph(`Gostaríamos de ter a <strong>${company}</strong> entre nossos parceiros. Pra seguir, é só responder este e-mail com: benefício oferecido, condições/restrições, validade e o contato responsável pela parceria.`)}
     ${paragraph('<em>Conectando empresas, oportunidades e relações entre Brasil e Omã.</em>')}
   `;
 }
@@ -464,10 +458,14 @@ export async function sendPartnerProposalBatch(
   const bannerBlock = data.imageUrl
     ? `<img src="${data.imageUrl}" alt="" style="display:block; width:100%; max-width:488px; height:auto; margin:0 0 20px; border:0; border-radius:4px;" />`
     : "";
+  // Propositalmente sem tom de "e-mail marketing" (nada de "cancele
+  // inscrição"/"pare de receber") — frase assim é um dos sinais mais fortes
+  // que faz o Gmail jogar pra aba Promoções em vez da Principal. Fecha como
+  // uma correspondência comercial de verdade, uma pessoa pra outra.
   const closing = paragraph(
     lang === "en"
-      ? "If you'd prefer not to receive further outreach like this, just reply to let us know. Best regards, the <strong>Brazil–Oman Chamber of Commerce</strong> team."
-      : "Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>."
+      ? "We're happy to answer any questions — just reply to this email. Best regards, <strong>Brazil–Oman Chamber of Commerce</strong>."
+      : "Ficamos à disposição para qualquer dúvida — é só responder este e-mail. Atenciosamente, <strong>Câmara de Comércio Brasil–Omã</strong>."
   );
 
   function buildHtml(companyName: string): string {

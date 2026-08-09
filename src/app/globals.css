@@ -2330,7 +2330,8 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .prospect-column-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-deep); font-weight: 600; margin: 0 0 12px; padding: 0 2px; }
 .prospect-column-head span { background: rgba(150, 116, 52, 0.14); color: var(--gold-deep); border-radius: 20px; padding: 1px 8px; font-size: 0.7rem; }
 .prospect-column-empty { color: var(--fg-dim); font-size: 0.78rem; text-align: center; padding: 12px 0; }
-.prospect-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.prospect-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s; }
+.prospect-card:hover { border-color: var(--gold); }
 .prospect-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
 .prospect-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .prospect-card-check { display: flex; flex-shrink: 0; }

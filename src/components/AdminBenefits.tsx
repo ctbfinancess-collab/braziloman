@@ -1134,9 +1134,16 @@ export function AdminBenefits() {
                   <div className="prospect-column" key={status}>
                     <p className="prospect-column-head">{PROSPECT_STATUS_LABELS[status]} <span>{items.length}</span></p>
                     {items.map((p) => (
-                      <div className={`prospect-card${selectedProspectIds.has(p.id) ? " selected" : ""}`} key={p.id}>
+                      <div
+                        className={`prospect-card${selectedProspectIds.has(p.id) ? " selected" : ""}`}
+                        key={p.id}
+                        onClick={() => openEditProspect(p)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === "Enter") openEditProspect(p); }}
+                      >
                         <div className="prospect-card-head">
-                          <label className="prospect-card-check">
+                          <label className="prospect-card-check" onClick={(e) => e.stopPropagation()}>
                             <input type="checkbox" checked={selectedProspectIds.has(p.id)} onChange={() => toggleProspectSelected(p.id)} />
                           </label>
                           {p.logoUrl ? (
@@ -1163,11 +1170,12 @@ export function AdminBenefits() {
                         <select
                           className="prospect-card-status"
                           value={p.status}
+                          onClick={(e) => e.stopPropagation()}
                           onChange={(e) => onChangeProspectStatus(p.id, e.target.value as ProspectStatus)}
                         >
                           {PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{PROSPECT_STATUS_LABELS[s]}</option>)}
                         </select>
-                        <div className="prospect-card-actions">
+                        <div className="prospect-card-actions" onClick={(e) => e.stopPropagation()}>
                           <button type="button" className="btn btn-ghost" onClick={() => openEditProspect(p)}>Editar</button>
                           <button type="button" className="btn btn-ghost" onClick={() => onDeleteProspect(p.id)}>Remover</button>
                         </div>
