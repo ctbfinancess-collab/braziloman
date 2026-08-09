@@ -109,6 +109,7 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
     return openId ? (benefits.find((b) => b.id === openId) ?? null) : null;
   });
   const [copied, setCopied] = useState(false);
+  const [usedConfirmed, setUsedConfirmed] = useState(false);
 
   const categories = useMemo(() => Array.from(new Set(benefits.map((b) => b.partner.category))).sort(), [benefits]);
   const countries = useMemo(() => Array.from(new Set(benefits.map((b) => b.partner.country))).sort(), [benefits]);
@@ -144,6 +145,7 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
   function openBenefit(b: BenefitItem) {
     setActive(b);
     setCopied(false);
+    setUsedConfirmed(false);
     logRedemption(b.id, "view");
   }
 
@@ -155,6 +157,11 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
     } catch {
       // clipboard indisponível — ignora
     }
+  }
+
+  function onUseBenefit(benefitId: string) {
+    setUsedConfirmed(true);
+    logRedemption(benefitId, "use");
   }
 
   return (
@@ -281,9 +288,13 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
               </a>
             )}
             {active.eligible && !active.redeemUrl && (
-              <button type="button" className="btn btn-primary benefit-modal-redeem" onClick={() => logRedemption(active.id, "use")}>
-                {t.benefitsUseButton}
-              </button>
+              usedConfirmed ? (
+                <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsUseConfirmed}</p>
+              ) : (
+                <button type="button" className="btn btn-primary benefit-modal-redeem" onClick={() => onUseBenefit(active.id)}>
+                  {t.benefitsUseButton}
+                </button>
+              )
             )}
           </div>
         </div>
