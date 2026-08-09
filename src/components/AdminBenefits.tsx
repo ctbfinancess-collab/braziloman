@@ -645,6 +645,7 @@ export function AdminBenefits() {
                   <input type="date" value={benefitForm.validUntil} onChange={(e) => setBenefitForm({ ...benefitForm, validUntil: e.target.value })} />
                 </label>
               </div>
+              <p className="cp-chips-label" style={{ marginTop: -10 }}>Depois da validade final, o benefício some sozinho pro associado e da vitrine pública — mesmo com status Ativo. Não precisa desativar na mão.</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <label>Cupom/código (se houver)
                   <input type="text" maxLength={120} value={benefitForm.couponCode} onChange={(e) => setBenefitForm({ ...benefitForm, couponCode: e.target.value })} />

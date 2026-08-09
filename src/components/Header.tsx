@@ -22,6 +22,7 @@ export default function Header() {
     { href: "/atuacao", label: d.nav.services },
     { href: "/ecossistema", label: d.nav.ecosystem },
     { href: "/parceiros", label: d.nav.partners },
+    { href: "/member-privileges", label: d.nav.memberPrivileges },
     { href: "/noticias", label: d.nav.news },
     { href: "/contato", label: d.nav.contact },
   ];

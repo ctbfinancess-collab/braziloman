@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { requireActiveMember } from "@/lib/memberDashboard";
 import { getTier } from "@/lib/loyalty";
@@ -16,7 +17,11 @@ export default async function DashboardBenefitsPage() {
 
   const rows = prisma
     ? await prisma.benefit.findMany({
-        where: { status: "active", partner: { status: "active" } },
+        where: {
+          status: "active",
+          partner: { status: "active" },
+          OR: [{ validUntil: null }, { validUntil: { gte: new Date() } }],
+        },
         orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
         include: { partner: { include: { category: true } } },
       })
@@ -47,19 +52,21 @@ export default async function DashboardBenefitsPage() {
   }));
 
   return (
-    <MemberBenefits
-      member={{
-        name: member.name,
-        email: member.email,
-        company: member.company,
-        role: member.role,
-        sector: member.sector,
-        country: member.country,
-        phone: member.phone,
-        createdAt: member.createdAt,
-      }}
-      tier={tier}
-      benefits={benefits}
-    />
+    <Suspense>
+      <MemberBenefits
+        member={{
+          name: member.name,
+          email: member.email,
+          company: member.company,
+          role: member.role,
+          sector: member.sector,
+          country: member.country,
+          phone: member.phone,
+          createdAt: member.createdAt,
+        }}
+        tier={tier}
+        benefits={benefits}
+      />
+    </Suspense>
   );
 }

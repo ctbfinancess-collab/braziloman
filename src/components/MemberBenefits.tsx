@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 import { MemberDashboardShell } from "./MemberDashboardShell";
@@ -95,12 +96,18 @@ function BenefitCard({ b, t, onOpen }: { b: BenefitItem; t: ReturnType<typeof us
 
 export function MemberBenefits({ member, tier, benefits }: { member: ProfileFields; tier: LoyaltyTier; benefits: BenefitItem[] }) {
   const { t, lang } = useDashboardText();
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
-  const [active, setActive] = useState<BenefitItem | null>(null);
+  // Deep link vindo da vitrine pública (/member-privileges) — associado ativo
+  // clica em "Ver benefício" lá e cai aqui já com o benefício aberto.
+  const [active, setActive] = useState<BenefitItem | null>(() => {
+    const openId = searchParams.get("open");
+    return openId ? (benefits.find((b) => b.id === openId) ?? null) : null;
+  });
   const [copied, setCopied] = useState(false);
 
   const categories = useMemo(() => Array.from(new Set(benefits.map((b) => b.partner.category))).sort(), [benefits]);
