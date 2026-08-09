@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: "eventos", label: "Eventos e Missões", href: "/admin/eventos", icon: "calendar" },
   { key: "avisos", label: "Comunicados", href: "/admin/avisos", icon: "megaphone" },
   { key: "parceiros", label: "Parceiros", href: "/admin/parceiros", icon: "briefcase" },
+  { key: "beneficios", label: "Parceiros & Benefícios", href: "/admin/beneficios", icon: "ticket" },
   { key: "mensagens", label: "Mensagens", href: "/admin/mensagens", icon: "mail" },
   { key: "conteudo", label: "Conteúdo do site", href: "/admin/conteudo", icon: "folder" },
   { key: "relatorios", label: "Relatórios", href: "/admin/relatorios", icon: "chart" },

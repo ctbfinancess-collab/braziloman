@@ -88,6 +88,7 @@ model MembershipApplication {
 
   loyaltyTransactions LoyaltyTransaction[]
   eventRegistrations  EventRegistration[]
+  benefitRedemptions  BenefitRedemption[]
 
   @@index([status])
 }
@@ -247,6 +248,116 @@ model Partner {
   updatedAt DateTime @updatedAt
 
   @@index([order])
+}
+
+/// Nível mínimo de associado exigido pra acessar um benefício. ALL = qualquer
+/// associado ativo, independente do nível no Programa de Fidelidade.
+enum BenefitEligibility {
+  GOLD
+  BLACK
+  PLATINUM
+  ALL
+}
+
+enum BenefitType {
+  PERCENT_DISCOUNT
+  FIXED_DISCOUNT
+  SPECIAL_RATE
+  UPGRADE
+  VIP_PERK
+  COURTESY
+  CASHBACK
+  VOUCHER
+  EXCLUSIVE_EXPERIENCE
+  PRIORITY_SUPPORT
+  OTHER
+}
+
+/// Categorias do marketplace "Parceiros & Benefícios" (Hotéis & Resorts,
+/// Gastronomia, etc.) — tabela própria (não enum) pra o admin poder criar
+/// novas categorias sem precisar de deploy.
+model BenefitCategory {
+  id       String           @id @default(cuid())
+  name     String           @unique
+  order    Int              @default(0)
+  partners BenefitPartner[]
+
+  @@index([order])
+}
+
+/// Empresa parceira do módulo "Parceiros & Benefícios" — marketplace exclusivo
+/// pra associados, dentro da própria Área do Associado (não é a mesma coisa
+/// que o model Partner, que é a vitrine pública em /parceiros).
+model BenefitPartner {
+  id               String   @id @default(cuid())
+  name             String
+  logoUrl          String?
+  categoryId       String
+  category         BenefitCategory @relation(fields: [categoryId], references: [id])
+  country          String
+  city             String?
+  website          String?
+  instagram        String?
+  whatsapp         String?
+  contactEmail     String?
+  shortDescription String?
+  fullDescription  String?
+  /// ativo/inativo — parceiro inativo não aparece nem conta nos indicadores.
+  status           String   @default("active")
+  /// Ordem de exibição no grid (menor primeiro).
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  benefits Benefit[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([order])
+}
+
+/// Um parceiro pode ter mais de um benefício (ex.: desconto + tarifa especial).
+model Benefit {
+  id          String             @id @default(cuid())
+  partnerId   String
+  partner     BenefitPartner     @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  title       String
+  type        BenefitType
+  description String?
+  rules       String?
+  validFrom   DateTime?
+  validUntil  DateTime?
+  couponCode  String?
+  redeemUrl   String?
+  eligibility BenefitEligibility @default(ALL)
+  /// Aparece na seção "Destaques" no topo da página do associado.
+  featured    Boolean            @default(false)
+  status      String             @default("active")
+  order       Int                @default(0)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  redemptions BenefitRedemption[]
+
+  @@index([partnerId])
+  @@index([status])
+  @@index([eligibility])
+}
+
+/// Registro de cliques em "Ver benefício" / "Usar benefício" / "Gerar cupom" —
+/// alimenta os indicadores do admin (benefícios mais acessados, resgates/mês).
+model BenefitRedemption {
+  id            String                @id @default(cuid())
+  benefitId     String
+  benefit       Benefit               @relation(fields: [benefitId], references: [id], onDelete: Cascade)
+  applicationId String
+  application   MembershipApplication @relation(fields: [applicationId], references: [id])
+  action        String
+  createdAt     DateTime              @default(now())
+
+  @@index([benefitId])
+  @@index([applicationId])
+  @@index([createdAt])
 }
 
 /// Substituições de conteúdo do site (textos/imagens editados pelo admin).

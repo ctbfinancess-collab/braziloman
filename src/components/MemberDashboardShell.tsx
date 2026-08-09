@@ -16,6 +16,7 @@ type NavKey =
   | "certificado"
   | "carteirinha"
   | "rewards"
+  | "beneficios"
   | "eventos"
   | "missoes"
   | "rede"
@@ -28,6 +29,7 @@ const NAV_ITEMS: { key: NavKey; href: string; icon: string }[] = [
   { key: "certificado", href: "/membro/painel/certificado", icon: "certificate" },
   { key: "carteirinha", href: "/membro/painel/carteirinha", icon: "idcard" },
   { key: "rewards", href: "/membro/painel/rewards", icon: "ticket" },
+  { key: "beneficios", href: "/membro/painel/beneficios", icon: "briefcase" },
   { key: "eventos", href: "/membro/painel/eventos", icon: "calendar" },
   { key: "missoes", href: "/membro/painel/missoes", icon: "plane" },
   { key: "rede", href: "/membro/painel/rede", icon: "people" },
