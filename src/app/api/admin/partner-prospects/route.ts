@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 const createSchema = z.object({
   companyName: z.string().min(1).max(200),
+  logoUrl: z.string().max(500).optional().nullable(),
   category: z.string().max(120).optional().nullable(),
   country: z.string().max(120).optional().nullable(),
   city: z.string().max(120).optional().nullable(),
@@ -49,6 +50,7 @@ export async function POST(req: Request) {
   const prospect = await prisma.partnerProspect.create({
     data: {
       companyName: parsed.data.companyName,
+      logoUrl: parsed.data.logoUrl || null,
       category: parsed.data.category || null,
       country: parsed.data.country || null,
       city: parsed.data.city || null,

@@ -72,6 +72,16 @@ function button(label: string, href: string): string {
   </table>`;
 }
 
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/** Converte o texto livre digitado pela secretária (com quebras de linha) em
+ *  HTML seguro — escapa antes de trocar \n por <br>, nunca o contrário. */
+function freeTextToHtml(text: string): string {
+  return escapeHtml(text).replace(/\n/g, "<br>");
+}
+
 /** E-mail 1: confirmação de recebimento, enviado logo após o pré-cadastro em /associe-se. */
 export async function sendApplicationReceivedEmail(to: string, name: string) {
   if (!resend) return;
@@ -332,4 +342,58 @@ export async function sendWelcomeEmail(to: string, name: string) {
     subject: "Bem-vindo(a) à Câmara de Comércio Brasil–Omã",
     html,
   });
+}
+
+/** Envio em massa de propostas de parceria pro funil de Captação — a
+ *  secretária escreve uma mensagem só (com banner opcional) e ela vai,
+ *  personalizada com o nome de cada empresa, pra todos os prospects
+ *  selecionados de uma vez, via /emails/batch do Resend (até 100 por
+ *  chamada — encadeado em blocos aqui se passar disso). Nunca lança: se o
+ *  Resend não estiver configurado, retorna como se ninguém tivesse recebido
+ *  (quem chama decide o que fazer). */
+export async function sendPartnerProposalBatch(
+  recipients: { prospectId: string; to: string; companyName: string }[],
+  data: { subject: string; message: string; imageUrl?: string | null }
+): Promise<{ sentProspectIds: string[]; failed: { prospectId: string; message: string }[] }> {
+  if (!resend || recipients.length === 0) {
+    return { sentProspectIds: [], failed: recipients.map((r) => ({ prospectId: r.prospectId, message: "Resend não configurado." })) };
+  }
+
+  const bannerBlock = data.imageUrl
+    ? `<img src="${data.imageUrl}" alt="" style="display:block; width:100%; max-width:488px; height:auto; margin:0 0 20px; border:0; border-radius:4px;" />`
+    : "";
+
+  const CHUNK = 100;
+  const sentProspectIds: string[] = [];
+  const failed: { prospectId: string; message: string }[] = [];
+
+  for (let start = 0; start < recipients.length; start += CHUNK) {
+    const chunk = recipients.slice(start, start + CHUNK);
+    const emails = chunk.map((r) => ({
+      from: FROM,
+      to: r.to,
+      subject: data.subject,
+      html: layout(
+        data.subject,
+        `${bannerBlock}${heading(`Olá, ${r.companyName}!`)}
+         <div style="font-family: Arial, sans-serif; color:#201b13; font-size: 15px; line-height:1.7; margin: 0 0 16px;">${freeTextToHtml(data.message)}</div>
+         ${paragraph(`Se não deseja mais receber contatos como este, é só responder este e-mail avisando. Um abraço, equipe da <strong>Câmara de Comércio Brasil–Omã</strong>.`)}`
+      ),
+    }));
+
+    try {
+      const res = await resend.batch.send(emails, { batchValidation: "permissive" });
+      const errorByIndex = new Map((res.data?.errors ?? []).map((e) => [e.index, e.message]));
+      chunk.forEach((r, i) => {
+        const err = errorByIndex.get(i);
+        if (err) failed.push({ prospectId: r.prospectId, message: err });
+        else sentProspectIds.push(r.prospectId);
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Falha no envio em lote.";
+      chunk.forEach((r) => failed.push({ prospectId: r.prospectId, message }));
+    }
+  }
+
+  return { sentProspectIds, failed };
 }

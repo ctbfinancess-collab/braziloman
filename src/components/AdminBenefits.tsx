@@ -106,6 +106,7 @@ const EMPTY_BENEFIT_FORM: BenefitForm = {
 type Prospect = {
   id: string;
   companyName: string;
+  logoUrl: string | null;
   category: string | null;
   country: string | null;
   city: string | null;
@@ -116,11 +117,14 @@ type Prospect = {
   notes: string | null;
   status: ProspectStatus;
   order: number;
+  lastProposalSentAt: string | null;
+  proposalsSentCount: number;
 };
 
 type ProspectForm = {
   id: string | null;
   companyName: string;
+  logoUrl: string;
   category: string;
   country: string;
   city: string;
@@ -133,7 +137,7 @@ type ProspectForm = {
 };
 
 const EMPTY_PROSPECT_FORM: ProspectForm = {
-  id: null, companyName: "", category: "", country: "", city: "", contactName: "",
+  id: null, companyName: "", logoUrl: "", category: "", country: "", city: "", contactName: "",
   contactEmail: "", contactPhone: "", website: "", notes: "", status: "PROSPECTED",
 };
 
@@ -161,6 +165,12 @@ export function AdminBenefits() {
   >(null);
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingProspectLogo, setUploadingProspectLogo] = useState(false);
+  const [selectedProspectIds, setSelectedProspectIds] = useState<Set<string>>(new Set());
+  const [proposalForm, setProposalForm] = useState<{ subject: string; message: string; imageUrl: string } | null>(null);
+  const [uploadingProposalImage, setUploadingProposalImage] = useState(false);
+  const [sendingProposal, setSendingProposal] = useState(false);
+  const [proposalResult, setProposalResult] = useState<{ sentCount: number; skippedNoEmail: string[]; failedNames: string[] } | null>(null);
 
   const loadAll = useCallback(async () => {
     const [catsRes, partnersRes, benefitsRes, prospectsRes] = await Promise.all([
@@ -388,10 +398,26 @@ export function AdminBenefits() {
   }
   function openEditProspect(p: Prospect) {
     setProspectForm({
-      id: p.id, companyName: p.companyName, category: p.category || "", country: p.country || "",
+      id: p.id, companyName: p.companyName, logoUrl: p.logoUrl || "", category: p.category || "", country: p.country || "",
       city: p.city || "", contactName: p.contactName || "", contactEmail: p.contactEmail || "",
       contactPhone: p.contactPhone || "", website: p.website || "", notes: p.notes || "", status: p.status,
     });
+  }
+  async function onUploadProspectLogo(file: File) {
+    setUploadingProspectLogo(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Falha no upload");
+      setProspectForm((f) => (f ? { ...f, logoUrl: json.url } : f));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha no upload da imagem.");
+    } finally {
+      setUploadingProspectLogo(false);
+    }
   }
   async function onSaveProspect(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -401,6 +427,7 @@ export function AdminBenefits() {
     try {
       const payload = {
         companyName: prospectForm.companyName,
+        logoUrl: prospectForm.logoUrl || null,
         category: prospectForm.category || null,
         country: prospectForm.country || null,
         city: prospectForm.city || null,
@@ -439,6 +466,63 @@ export function AdminBenefits() {
     if (!confirm("Remover esse prospect do funil?")) return;
     const res = await fetch(`/api/admin/partner-prospects/${id}`, { method: "DELETE" });
     if (res.ok) await loadAll();
+  }
+  function toggleProspectSelected(id: string) {
+    setSelectedProspectIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  function openProposalForm() {
+    setProposalResult(null);
+    setProposalForm({ subject: "", message: "", imageUrl: "" });
+  }
+  async function onUploadProposalImage(file: File) {
+    setUploadingProposalImage(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Falha no upload");
+      setProposalForm((f) => (f ? { ...f, imageUrl: json.url } : f));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha no upload da imagem.");
+    } finally {
+      setUploadingProposalImage(false);
+    }
+  }
+  async function onSendProposal(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!proposalForm || selectedProspectIds.size === 0) return;
+    setSendingProposal(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/partner-prospects/send-proposal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prospectIds: Array.from(selectedProspectIds),
+          subject: proposalForm.subject,
+          message: proposalForm.message,
+          imageUrl: proposalForm.imageUrl || null,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Não foi possível enviar.");
+        return;
+      }
+      setProposalResult({ sentCount: json.sentCount, skippedNoEmail: json.skippedNoEmail, failedNames: json.failedNames });
+      setProposalForm(null);
+      setSelectedProspectIds(new Set());
+      await loadAll();
+    } finally {
+      setSendingProposal(false);
+    }
   }
 
   return (
@@ -775,12 +859,77 @@ export function AdminBenefits() {
             Quando a parceria virar realidade, cadastre normalmente em <strong>Parceiros</strong>.
           </p>
 
+          <div className="prospect-bulk-bar">
+            <span>
+              {selectedProspectIds.size === 0
+                ? "Marque as empresas na lista abaixo pra enviar uma proposta em massa."
+                : `${selectedProspectIds.size} empresa${selectedProspectIds.size > 1 ? "s" : ""} selecionada${selectedProspectIds.size > 1 ? "s" : ""}.`}
+            </span>
+            <div style={{ display: "flex", gap: 8 }}>
+              {selectedProspectIds.size > 0 && (
+                <button type="button" className="btn btn-ghost" onClick={() => setSelectedProspectIds(new Set())}>Limpar seleção</button>
+              )}
+              <button type="button" className="btn btn-primary" disabled={selectedProspectIds.size === 0} onClick={openProposalForm}>
+                <Icon name="mail" /> Enviar proposta por e-mail
+              </button>
+            </div>
+          </div>
+
+          {proposalResult && (
+            <div className="admin-empty" style={{ marginBottom: 24, textAlign: "left" }}>
+              <p><strong>{proposalResult.sentCount}</strong> proposta{proposalResult.sentCount !== 1 ? "s" : ""} enviada{proposalResult.sentCount !== 1 ? "s" : ""} com sucesso.</p>
+              {proposalResult.skippedNoEmail.length > 0 && (
+                <p>Sem e-mail cadastrado (não recebeu): {proposalResult.skippedNoEmail.join(", ")}.</p>
+              )}
+              {proposalResult.failedNames.length > 0 && (
+                <p>Falha no envio: {proposalResult.failedNames.join(", ")}.</p>
+              )}
+            </div>
+          )}
+
+          {proposalForm && (
+            <form className="contact-form mp-form" onSubmit={onSendProposal} style={{ marginBottom: 32, maxWidth: 560 }}>
+              <h3 className="mp-form-title">Enviar proposta por e-mail ({selectedProspectIds.size} empresa{selectedProspectIds.size > 1 ? "s" : ""})</h3>
+              <label>Assunto
+                <input type="text" required maxLength={200} placeholder="Ex.: Proposta de parceria — Câmara Brasil–Omã" value={proposalForm.subject} onChange={(e) => setProposalForm({ ...proposalForm, subject: e.target.value })} />
+              </label>
+              <label>Imagem/banner (opcional)
+                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => { const f = e.target.files?.[0]; if (f) onUploadProposalImage(f); }} />
+              </label>
+              {uploadingProposalImage && <p className="cp-chips-label">Enviando imagem…</p>}
+              {proposalForm.imageUrl && (
+                <div style={{ marginTop: -8 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={proposalForm.imageUrl} alt="" style={{ width: "100%", maxWidth: 320, borderRadius: 6, border: "1px solid var(--border)" }} />
+                </div>
+              )}
+              <label>Mensagem
+                <textarea rows={8} required maxLength={8000} placeholder="Escreva a proposta — cada empresa recebe com uma saudação personalizada com o próprio nome." value={proposalForm.message} onChange={(e) => setProposalForm({ ...proposalForm, message: e.target.value })} />
+              </label>
+              <p className="cp-chips-label" style={{ marginTop: -10 }}>Cada empresa selecionada recebe o mesmo assunto/imagem/mensagem, com &ldquo;Olá, [nome da empresa]!&rdquo; no topo. Só quem tem e-mail de contato cadastrado recebe.</p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button type="submit" className="btn btn-primary" disabled={sendingProposal}>{sendingProposal ? "Enviando…" : `Enviar para ${selectedProspectIds.size}`}</button>
+                <button type="button" className="btn btn-ghost" onClick={() => setProposalForm(null)}>Cancelar</button>
+              </div>
+            </form>
+          )}
+
           {prospectForm && (
             <form className="contact-form mp-form" onSubmit={onSaveProspect} style={{ marginBottom: 32, maxWidth: 560 }}>
               <h3 className="mp-form-title">{prospectForm.id ? "Editar prospect" : "Novo prospect"}</h3>
               <label>Nome da empresa
                 <input type="text" required maxLength={200} value={prospectForm.companyName} onChange={(e) => setProspectForm({ ...prospectForm, companyName: e.target.value })} />
               </label>
+              <label>Logo/imagem da empresa (opcional)
+                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => { const f = e.target.files?.[0]; if (f) onUploadProspectLogo(f); }} />
+              </label>
+              {uploadingProspectLogo && <p className="cp-chips-label">Enviando imagem…</p>}
+              {prospectForm.logoUrl && (
+                <div style={{ marginTop: -8 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={prospectForm.logoUrl} alt="" style={{ width: 88, height: 88, objectFit: "contain", borderRadius: 6, border: "1px solid var(--border)", background: "#fff" }} />
+                </div>
+              )}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <label>Categoria (opcional)
                   <input type="text" maxLength={120} placeholder="Ex.: Hotéis & Resorts" value={prospectForm.category} onChange={(e) => setProspectForm({ ...prospectForm, category: e.target.value })} />
@@ -835,8 +984,19 @@ export function AdminBenefits() {
                   <div className="prospect-column" key={status}>
                     <p className="prospect-column-head">{PROSPECT_STATUS_LABELS[status]} <span>{items.length}</span></p>
                     {items.map((p) => (
-                      <div className="prospect-card" key={p.id}>
-                        <p className="prospect-card-name">{p.companyName}</p>
+                      <div className={`prospect-card${selectedProspectIds.has(p.id) ? " selected" : ""}`} key={p.id}>
+                        <div className="prospect-card-head">
+                          <label className="prospect-card-check">
+                            <input type="checkbox" checked={selectedProspectIds.has(p.id)} onChange={() => toggleProspectSelected(p.id)} />
+                          </label>
+                          {p.logoUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={p.logoUrl} alt="" className="prospect-card-logo" />
+                          ) : (
+                            <span className="prospect-card-logo prospect-card-logo-placeholder">{p.companyName.slice(0, 2).toUpperCase()}</span>
+                          )}
+                          <p className="prospect-card-name">{p.companyName}</p>
+                        </div>
                         {(p.category || p.country) && (
                           <p className="prospect-card-meta">{[p.category, p.city, p.country].filter(Boolean).join(" · ")}</p>
                         )}
@@ -844,6 +1004,12 @@ export function AdminBenefits() {
                         {p.contactEmail && <p className="prospect-card-contact">{p.contactEmail}</p>}
                         {p.contactPhone && <p className="prospect-card-contact">{p.contactPhone}</p>}
                         {p.notes && <p className="prospect-card-notes">{p.notes}</p>}
+                        {p.lastProposalSentAt && (
+                          <p className="prospect-card-proposal">
+                            <Icon name="mail" /> Proposta enviada em {new Date(p.lastProposalSentAt).toLocaleDateString("pt-BR")}
+                            {p.proposalsSentCount > 1 ? ` (${p.proposalsSentCount}x)` : ""}
+                          </p>
+                        )}
                         <select
                           className="prospect-card-status"
                           value={p.status}

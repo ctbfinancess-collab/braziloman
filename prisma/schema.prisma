@@ -250,6 +250,9 @@ enum ProspectStatus {
 model PartnerProspect {
   id           String         @id @default(cuid())
   companyName  String
+  /// Logo/imagem da empresa prospectada — mostrada no card do funil e
+  /// reaproveitada como banner no topo do e-mail de proposta (opcional).
+  logoUrl      String?
   category     String?
   country      String?
   city         String?
@@ -260,6 +263,10 @@ model PartnerProspect {
   notes        String?
   status       ProspectStatus @default(PROSPECTED)
   order        Int            @default(0)
+  /// Controle do disparo de e-mail em massa (proposta/apresentação) — ver
+  /// POST /api/admin/partner-prospects/send-proposal.
+  lastProposalSentAt DateTime?
+  proposalsSentCount Int       @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 

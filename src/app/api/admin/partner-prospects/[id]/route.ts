@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 const updateSchema = z.object({
   companyName: z.string().min(1).max(200).optional(),
+  logoUrl: z.string().max(500).optional().nullable(),
   category: z.string().max(120).optional().nullable(),
   country: z.string().max(120).optional().nullable(),
   city: z.string().max(120).optional().nullable(),
