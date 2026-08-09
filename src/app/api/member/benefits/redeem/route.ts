@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyMemberSession, MEMBER_COOKIE } from "@/lib/session";
 import { getTier } from "@/lib/loyalty";
 import { memberCanAccessBenefit, type BenefitEligibility } from "@/lib/benefits";
+import { sendBenefitCouponEmail, sendBenefitRedeemedAdminEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
 
   const application = await prisma.membershipApplication.findUnique({
     where: { id: session.sub },
-    select: { status: true, pointsTotal: true },
+    select: { status: true, pointsTotal: true, name: true, email: true, company: true },
   });
   if (!application || !["ACTIVE", "APPROVED"].includes(application.status)) {
     return NextResponse.json({ error: "Associação inativa." }, { status: 403 });
@@ -43,7 +44,17 @@ export async function POST(req: Request) {
 
   const benefit = await prisma.benefit.findUnique({
     where: { id: parsed.data.benefitId },
-    select: { status: true, eligibility: true },
+    select: {
+      status: true,
+      eligibility: true,
+      title: true,
+      description: true,
+      rules: true,
+      couponCode: true,
+      redeemUrl: true,
+      validUntil: true,
+      partner: { select: { name: true } },
+    },
   });
   if (!benefit || benefit.status !== "active") {
     return NextResponse.json({ error: "Benefício não encontrado." }, { status: 404 });
@@ -56,6 +67,33 @@ export async function POST(req: Request) {
   await prisma.benefitRedemption.create({
     data: { benefitId: parsed.data.benefitId, applicationId: session.sub, action: parsed.data.action },
   });
+
+  // "Usar benefício" é o momento em que o associado realmente se compromete a
+  // aproveitar a oferta — manda o cupom/link por e-mail (comprovante) e avisa
+  // a Câmara internamente. "view"/"coupon" não disparam e-mail, só "use".
+  if (parsed.data.action === "use") {
+    try {
+      await Promise.all([
+        sendBenefitCouponEmail(application.email, application.name, {
+          partnerName: benefit.partner.name,
+          benefitTitle: benefit.title,
+          description: benefit.description,
+          couponCode: benefit.couponCode,
+          redeemUrl: benefit.redeemUrl,
+          rules: benefit.rules,
+          validUntil: benefit.validUntil,
+        }),
+        sendBenefitRedeemedAdminEmail({
+          memberName: application.name,
+          memberCompany: application.company,
+          partnerName: benefit.partner.name,
+          benefitTitle: benefit.title,
+        }),
+      ]);
+    } catch {
+      // e-mail é um "extra" aqui — nunca derruba a confirmação do resgate.
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

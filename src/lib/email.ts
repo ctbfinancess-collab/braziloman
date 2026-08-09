@@ -242,6 +242,78 @@ export async function sendApprovedPendingPaymentEmail(to: string, name: string, 
   });
 }
 
+/** E-mail: enviado ao associado quando ele clica em "Usar benefício" no
+ *  módulo Parceiros & Benefícios — leva o cupom (se houver) e o link de
+ *  resgate (se houver) direto pro e-mail, como comprovante/lembrete. */
+export async function sendBenefitCouponEmail(
+  to: string,
+  name: string,
+  data: {
+    partnerName: string;
+    benefitTitle: string;
+    description?: string | null;
+    couponCode?: string | null;
+    redeemUrl?: string | null;
+    rules?: string | null;
+    validUntil?: Date | null;
+  }
+) {
+  if (!resend) return;
+  const couponBlock = data.couponCode
+    ? `<div style="background:#efece3; border:1px dashed #96712c; padding:14px 18px; margin:0 0 20px; text-align:center;">
+         <div style="font-family: Arial, sans-serif; color:#857c6b; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">Cupom</div>
+         <div style="font-family: 'Courier New', monospace; color:#201b13; font-size:20px; font-weight:bold; letter-spacing:0.06em;">${data.couponCode}</div>
+       </div>`
+    : "";
+  const rulesBlock = data.rules
+    ? paragraph(`<strong>Regras:</strong> ${data.rules}`)
+    : "";
+  const validityBlock = data.validUntil
+    ? paragraph(`<strong>Válido até:</strong> ${data.validUntil.toLocaleDateString("pt-BR")}`)
+    : "";
+  const html = layout(
+    `Seu cupom — ${data.benefitTitle}, ${data.partnerName}.`,
+    `${heading(`Olá, ${name}!`)}
+     ${paragraph(`Aqui estão os detalhes do benefício <strong>${data.benefitTitle}</strong>, do parceiro <strong>${data.partnerName}</strong>, que você acabou de usar na Área do Associado.`)}
+     ${data.description ? paragraph(data.description) : ""}
+     ${couponBlock}
+     ${rulesBlock}
+     ${validityBlock}
+     ${data.redeemUrl ? button("Acessar benefício", data.redeemUrl) : ""}
+     ${paragraph("Guarde este e-mail — ele serve como comprovante do resgate. Qualquer dúvida, fale com o parceiro diretamente ou entre em contato com a Câmara.")}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Seu cupom: ${data.benefitTitle} — ${data.partnerName}`,
+    html,
+  });
+}
+
+/** E-mail: aviso interno pra Câmara sempre que um associado usa um benefício
+ *  do módulo Parceiros & Benefícios — visibilidade de quais parceiros/ofertas
+ *  estão realmente sendo aproveitados. */
+export async function sendBenefitRedeemedAdminEmail(data: {
+  memberName: string;
+  memberCompany: string;
+  partnerName: string;
+  benefitTitle: string;
+}) {
+  if (!resend) return;
+  const html = layout(
+    "Um associado usou um benefício.",
+    `${heading("Benefício resgatado")}
+     ${paragraph(`<strong>${data.memberName}</strong> (${data.memberCompany}) usou o benefício <strong>${data.benefitTitle}</strong>, do parceiro <strong>${data.partnerName}</strong>.`)}
+     ${button("Ver em Parceiros & Benefícios", `${SITE_URL}/admin/beneficios`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    subject: `Benefício usado: ${data.benefitTitle} (${data.memberCompany})`,
+    html,
+  });
+}
+
 /** E-mail 3: boas-vindas, enviado quando o admin aprova o pedido. */
 export async function sendWelcomeEmail(to: string, name: string) {
   if (!resend) return;

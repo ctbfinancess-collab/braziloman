@@ -277,15 +277,20 @@ export function MemberBenefits({ member, tier, benefits }: { member: ProfileFiel
             )}
 
             {active.eligible && active.redeemUrl && (
-              <a
-                href={active.redeemUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary benefit-modal-redeem"
-                onClick={() => logRedemption(active.id, "use")}
-              >
-                {t.benefitsRedeemButton} <Icon name="arrowright" />
-              </a>
+              <>
+                <a
+                  href={active.redeemUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary benefit-modal-redeem"
+                  onClick={() => onUseBenefit(active.id)}
+                >
+                  {t.benefitsRedeemButton} <Icon name="arrowright" />
+                </a>
+                {usedConfirmed && (
+                  <p className="benefit-modal-confirmed"><Icon name="check" /> {t.benefitsUseConfirmed}</p>
+                )}
+              </>
             )}
             {active.eligible && !active.redeemUrl && (
               usedConfirmed ? (
