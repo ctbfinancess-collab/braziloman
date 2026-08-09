@@ -280,7 +280,8 @@ export async function sendBenefitCouponEmail(
      ${rulesBlock}
      ${validityBlock}
      ${data.redeemUrl ? button("Acessar benefício", data.redeemUrl) : ""}
-     ${paragraph("Guarde este e-mail — ele serve como comprovante do resgate. Qualquer dúvida, fale com o parceiro diretamente ou entre em contato com a Câmara.")}`
+     ${paragraph("Guarde este e-mail — ele serve como comprovante do resgate. Qualquer dúvida, fale com o parceiro diretamente ou entre em contato com a Câmara.")}
+     ${paragraph('<span style="color:#857c6b; font-size:13px;">Dica: se você usa Gmail, esse e-mail pode cair na aba "Promoções" em vez da principal. Vale arrastar pra "Principal" pra não perder os próximos.</span>')}`
   );
   await resend.emails.send({
     from: FROM,
