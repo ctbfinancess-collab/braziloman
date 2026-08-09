@@ -66,7 +66,12 @@ export function MemberPrivilegesPublic({ benefits }: { benefits: PublicBenefit[]
   const [city, setCity] = useState("");
   const [type, setType] = useState("");
   const [gateOpen, setGateOpen] = useState(false);
-  const [isActiveMember, setIsActiveMember] = useState<boolean | null>(null);
+  const [inactiveOpen, setInactiveOpen] = useState(false);
+  // "active": associado logado com status ACTIVE/APPROVED — vai direto pro
+  // benefício. "inactive": logado, mas associação pendente/inadimplente —
+  // aviso específico (nunca o convite de login, ele já está logado). "none":
+  // visitante sem sessão — convite genérico de login/associação.
+  const [memberState, setMemberState] = useState<"loading" | "active" | "inactive" | "none">("loading");
 
   useEffect(() => {
     let cancelled = false;
@@ -74,10 +79,14 @@ export function MemberPrivilegesPublic({ benefits }: { benefits: PublicBenefit[]
       .then((r) => (r.ok ? r.json() : null))
       .then((json) => {
         if (cancelled) return;
-        setIsActiveMember(Boolean(json?.member && ACTIVE_STATUSES.includes(json.member.status)));
+        if (!json?.member) {
+          setMemberState("none");
+        } else {
+          setMemberState(ACTIVE_STATUSES.includes(json.member.status) ? "active" : "inactive");
+        }
       })
       .catch(() => {
-        if (!cancelled) setIsActiveMember(false);
+        if (!cancelled) setMemberState("none");
       });
     return () => {
       cancelled = true;
@@ -125,8 +134,12 @@ export function MemberPrivilegesPublic({ benefits }: { benefits: PublicBenefit[]
   }, [filtered]);
 
   function onView(b: PublicBenefit) {
-    if (isActiveMember) {
+    if (memberState === "active") {
       router.push(`/membro/painel/beneficios?open=${b.id}`);
+      return;
+    }
+    if (memberState === "inactive") {
+      setInactiveOpen(true);
       return;
     }
     setGateOpen(true);
@@ -214,6 +227,20 @@ export function MemberPrivilegesPublic({ benefits }: { benefits: PublicBenefit[]
             <p className="benefit-modal-text">{t.gateText}</p>
             <Link href="/membro/login" className="btn btn-primary benefit-modal-redeem">{t.gateLoginButton}</Link>
             <Link href="/associe-se" className="btn btn-ghost benefit-modal-redeem" style={{ marginTop: 10 }}>{t.gateJoinButton}</Link>
+          </div>
+        </div>
+      )}
+
+      {inactiveOpen && (
+        <div className="benefit-modal-overlay" onClick={() => setInactiveOpen(false)}>
+          <div className="benefit-modal" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="benefit-modal-close" onClick={() => setInactiveOpen(false)} aria-label={t.gateClose}>
+              <Icon name="close" />
+            </button>
+            <span className="benefit-card-seal" style={{ marginBottom: 14 }}>{t.seal}</span>
+            <h2 className="benefit-modal-title" style={{ marginTop: 0 }}>{t.inactiveTitle}</h2>
+            <p className="benefit-modal-text">{t.inactiveText}</p>
+            <Link href="/membro/painel" className="btn btn-primary benefit-modal-redeem">{t.inactiveButton}</Link>
           </div>
         </div>
       )}

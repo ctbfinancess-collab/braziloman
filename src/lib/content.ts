@@ -1097,6 +1097,9 @@ export const content = {
       gateLoginButton: "Entrar como membro",
       gateJoinButton: "Associe-se",
       gateClose: "Fechar",
+      inactiveTitle: "Seu acesso aos Member Privileges está indisponível no momento.",
+      inactiveText: "Os benefícios exclusivos estão disponíveis para associados ativos da Câmara.",
+      inactiveButton: "Regularizar minha associação",
     },
     memberArea: {
       login: {
@@ -2484,6 +2487,9 @@ export const content = {
       gateLoginButton: "Sign in as a member",
       gateJoinButton: "Become a member",
       gateClose: "Close",
+      inactiveTitle: "Your access to Member Privileges is currently unavailable.",
+      inactiveText: "Exclusive benefits are available to active Chamber members.",
+      inactiveButton: "Regularize my membership",
     },
     memberArea: {
       login: {
