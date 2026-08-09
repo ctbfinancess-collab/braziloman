@@ -2289,3 +2289,28 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 }
 .admin-tabs button:hover { color: var(--fg); }
 .admin-tabs button.active { color: var(--gold-deep); border-bottom-color: var(--gold); font-weight: 600; }
+
+/* Captação de Parceiros — quadro estilo Kanban */
+.prospect-board { display: grid; grid-template-columns: repeat(6, minmax(200px, 1fr)); gap: 14px; overflow-x: auto; padding-bottom: 8px; }
+.prospect-column { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; min-width: 200px; }
+.prospect-column-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-deep); font-weight: 600; margin: 0 0 12px; padding: 0 2px; }
+.prospect-column-head span { background: rgba(150, 116, 52, 0.14); color: var(--gold-deep); border-radius: 20px; padding: 1px 8px; font-size: 0.7rem; }
+.prospect-column-empty { color: var(--fg-dim); font-size: 0.78rem; text-align: center; padding: 12px 0; }
+.prospect-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.prospect-card-name { font-weight: 600; color: var(--fg); margin: 0 0 4px; font-size: 0.86rem; }
+.prospect-card-meta { color: var(--gold); font-size: 0.72rem; margin: 0 0 6px; }
+.prospect-card-contact { color: var(--fg-muted); font-size: 0.76rem; margin: 0 0 2px; word-break: break-word; }
+.prospect-card-notes { color: var(--fg-dim); font-size: 0.74rem; margin: 8px 0 0; line-height: 1.4; white-space: pre-wrap; }
+.prospect-card-status { width: 100%; margin-top: 10px; font-size: 0.76rem; padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--bg); color: var(--fg-muted); }
+.prospect-card-actions { display: flex; gap: 6px; margin-top: 8px; }
+.prospect-card-actions .btn { padding: 5px 10px; font-size: 0.72rem; }
+
+@media (max-width: 1400px) {
+  .prospect-board { grid-template-columns: repeat(3, minmax(200px, 1fr)); }
+}
+@media (max-width: 900px) {
+  .prospect-board { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
+@media (max-width: 560px) {
+  .prospect-board { grid-template-columns: 1fr; }
+}

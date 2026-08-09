@@ -233,6 +233,39 @@ model AdminUser {
   totpEnabled  Boolean  @default(false)
 }
 
+enum ProspectStatus {
+  PROSPECTED
+  CONTACTED
+  NEGOTIATING
+  APPROVED
+  ACTIVE
+  REJECTED
+}
+
+/// Funil de captação de parceiros pro módulo "Parceiros & Benefícios" — quadro
+/// de trabalho da equipe (ex.: secretária) enquanto negocia com empresas que
+/// ainda não são parceiras de verdade. Quando a parceria vira realidade, o
+/// cadastro definitivo é feito manualmente em BenefitPartner (sem conversão
+/// automática — cada etapa é uma decisão humana).
+model PartnerProspect {
+  id           String         @id @default(cuid())
+  companyName  String
+  category     String?
+  country      String?
+  city         String?
+  contactName  String?
+  contactEmail String?
+  contactPhone String?
+  website      String?
+  notes        String?
+  status       ProspectStatus @default(PROSPECTED)
+  order        Int            @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([status])
+}
+
 /// Parceiro/associado em destaque na página pública "Parceiros e Associados"
 /// (/parceiros). Curada manualmente pelo admin — nunca preenchida automaticamente
 /// com base nos associados pagantes, pra nunca sugerir uma parceria que não existe.

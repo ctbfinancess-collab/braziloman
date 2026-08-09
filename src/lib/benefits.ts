@@ -48,6 +48,20 @@ export const ELIGIBILITY_LABELS: Record<BenefitEligibility, string> = {
  *  também pode acessar benefícios exigindo um nível abaixo do dele. */
 const TIER_RANK: Record<"GOLD" | "BLACK" | "PLATINUM", number> = { GOLD: 1, BLACK: 2, PLATINUM: 3 };
 
+// ---------- Captação de Parceiros (funil de prospecção) ----------
+
+export const PROSPECT_STATUSES = ["PROSPECTED", "CONTACTED", "NEGOTIATING", "APPROVED", "ACTIVE", "REJECTED"] as const;
+export type ProspectStatus = (typeof PROSPECT_STATUSES)[number];
+
+export const PROSPECT_STATUS_LABELS: Record<ProspectStatus, string> = {
+  PROSPECTED: "Prospectado",
+  CONTACTED: "Contatado",
+  NEGOTIATING: "Em negociação",
+  APPROVED: "Aprovado",
+  ACTIVE: "Ativo",
+  REJECTED: "Recusado",
+};
+
 /** Um associado Black também acessa benefícios marcados como "Gold" (o nível
  *  superior sempre inclui os benefícios dos níveis abaixo), além de "Todos". */
 export function memberCanAccessBenefit(

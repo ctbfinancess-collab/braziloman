@@ -4,7 +4,11 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { AdminLayout } from "./AdminLayout";
 import { Icon } from "./Icons";
-import { BENEFIT_TYPES, BENEFIT_TYPE_LABELS, ELIGIBILITY_OPTIONS, ELIGIBILITY_LABELS, type BenefitType, type BenefitEligibility } from "@/lib/benefits";
+import {
+  BENEFIT_TYPES, BENEFIT_TYPE_LABELS, ELIGIBILITY_OPTIONS, ELIGIBILITY_LABELS,
+  PROSPECT_STATUSES, PROSPECT_STATUS_LABELS,
+  type BenefitType, type BenefitEligibility, type ProspectStatus,
+} from "@/lib/benefits";
 
 type Category = { id: string; name: string; order: number; _count: { partners: number } };
 
@@ -92,7 +96,41 @@ const EMPTY_BENEFIT_FORM: BenefitForm = {
   featured: false, status: "active", order: "0",
 };
 
-type Tab = "partners" | "benefits" | "categories";
+type Prospect = {
+  id: string;
+  companyName: string;
+  category: string | null;
+  country: string | null;
+  city: string | null;
+  contactName: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  website: string | null;
+  notes: string | null;
+  status: ProspectStatus;
+  order: number;
+};
+
+type ProspectForm = {
+  id: string | null;
+  companyName: string;
+  category: string;
+  country: string;
+  city: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  website: string;
+  notes: string;
+  status: ProspectStatus;
+};
+
+const EMPTY_PROSPECT_FORM: ProspectForm = {
+  id: null, companyName: "", category: "", country: "", city: "", contactName: "",
+  contactEmail: "", contactPhone: "", website: "", notes: "", status: "PROSPECTED",
+};
+
+type Tab = "partners" | "benefits" | "categories" | "prospects";
 
 /** Painel admin do módulo "Parceiros & Benefícios" — marketplace exclusivo
  *  dentro da Área do Associado. Curadoria manual, sem integração externa. */
@@ -102,20 +140,23 @@ export function AdminBenefits() {
   const [categories, setCategories] = useState<Category[] | null>(null);
   const [partners, setPartners] = useState<Partner[] | null>(null);
   const [benefits, setBenefits] = useState<BenefitRow[] | null>(null);
+  const [prospects, setProspects] = useState<Prospect[] | null>(null);
   const [redemptionsThisMonth, setRedemptionsThisMonth] = useState(0);
   const [error, setError] = useState("");
 
   const [partnerForm, setPartnerForm] = useState<PartnerForm | null>(null);
   const [benefitForm, setBenefitForm] = useState<BenefitForm | null>(null);
+  const [prospectForm, setProspectForm] = useState<ProspectForm | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
 
   const loadAll = useCallback(async () => {
-    const [catsRes, partnersRes, benefitsRes] = await Promise.all([
+    const [catsRes, partnersRes, benefitsRes, prospectsRes] = await Promise.all([
       fetch("/api/admin/benefit-categories"),
       fetch("/api/admin/benefit-partners"),
       fetch("/api/admin/benefits"),
+      fetch("/api/admin/partner-prospects"),
     ]);
     if (catsRes.status === 401) {
       router.push("/admin/login");
@@ -124,7 +165,8 @@ export function AdminBenefits() {
     const catsJson = await catsRes.json();
     const partnersJson = await partnersRes.json();
     const benefitsJson = await benefitsRes.json();
-    if (!catsRes.ok || !partnersRes.ok || !benefitsRes.ok) {
+    const prospectsJson = await prospectsRes.json();
+    if (!catsRes.ok || !partnersRes.ok || !benefitsRes.ok || !prospectsRes.ok) {
       setError("Erro ao carregar.");
       return;
     }
@@ -132,6 +174,7 @@ export function AdminBenefits() {
     setPartners(partnersJson.partners);
     setBenefits(benefitsJson.benefits);
     setRedemptionsThisMonth(benefitsJson.redemptionsThisMonth ?? 0);
+    setProspects(prospectsJson.prospects);
   }, [router]);
 
   useEffect(() => {
@@ -316,6 +359,65 @@ export function AdminBenefits() {
     await loadAll();
   }
 
+  // ---------- Captação de Parceiros ----------
+  function openNewProspect() {
+    setProspectForm({ ...EMPTY_PROSPECT_FORM });
+  }
+  function openEditProspect(p: Prospect) {
+    setProspectForm({
+      id: p.id, companyName: p.companyName, category: p.category || "", country: p.country || "",
+      city: p.city || "", contactName: p.contactName || "", contactEmail: p.contactEmail || "",
+      contactPhone: p.contactPhone || "", website: p.website || "", notes: p.notes || "", status: p.status,
+    });
+  }
+  async function onSaveProspect(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!prospectForm) return;
+    setSaving(true);
+    setError("");
+    try {
+      const payload = {
+        companyName: prospectForm.companyName,
+        category: prospectForm.category || null,
+        country: prospectForm.country || null,
+        city: prospectForm.city || null,
+        contactName: prospectForm.contactName || null,
+        contactEmail: prospectForm.contactEmail || null,
+        contactPhone: prospectForm.contactPhone || null,
+        website: prospectForm.website || null,
+        notes: prospectForm.notes || null,
+        status: prospectForm.status,
+      };
+      const res = await fetch(prospectForm.id ? `/api/admin/partner-prospects/${prospectForm.id}` : "/api/admin/partner-prospects", {
+        method: prospectForm.id ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error || "Não foi possível salvar.");
+        return;
+      }
+      setProspectForm(null);
+      await loadAll();
+    } finally {
+      setSaving(false);
+    }
+  }
+  async function onChangeProspectStatus(id: string, status: ProspectStatus) {
+    setProspects((prev) => prev?.map((p) => (p.id === id ? { ...p, status } : p)) ?? prev);
+    await fetch(`/api/admin/partner-prospects/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+  }
+  async function onDeleteProspect(id: string) {
+    if (!confirm("Remover esse prospect do funil?")) return;
+    const res = await fetch(`/api/admin/partner-prospects/${id}`, { method: "DELETE" });
+    if (res.ok) await loadAll();
+  }
+
   return (
     <AdminLayout
       active="beneficios"
@@ -326,6 +428,8 @@ export function AdminBenefits() {
           <button type="button" className="btn btn-primary" onClick={openNewPartner}><Icon name="plus" /> Novo Parceiro</button>
         ) : tab === "benefits" ? (
           <button type="button" className="btn btn-primary" onClick={openNewBenefit} disabled={!partners?.length}><Icon name="plus" /> Novo Benefício</button>
+        ) : tab === "prospects" ? (
+          <button type="button" className="btn btn-primary" onClick={openNewProspect}><Icon name="plus" /> Novo Prospect</button>
         ) : null
       }
     >
@@ -388,6 +492,7 @@ export function AdminBenefits() {
         <button type="button" className={tab === "partners" ? "active" : ""} onClick={() => setTab("partners")}>Parceiros ({partners?.length ?? 0})</button>
         <button type="button" className={tab === "benefits" ? "active" : ""} onClick={() => setTab("benefits")}>Benefícios ({benefits?.length ?? 0})</button>
         <button type="button" className={tab === "categories" ? "active" : ""} onClick={() => setTab("categories")}>Categorias ({categories?.length ?? 0})</button>
+        <button type="button" className={tab === "prospects" ? "active" : ""} onClick={() => setTab("prospects")}>Captação ({prospects?.length ?? 0})</button>
       </div>
 
       {tab === "partners" && (
@@ -625,6 +730,104 @@ export function AdminBenefits() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === "prospects" && (
+        <>
+          <p className="section-lead" style={{ marginTop: 0, marginBottom: 24 }}>
+            Funil de negociação com empresas que ainda não são parceiras — mude o status direto no card conforme a conversa avança.
+            Quando a parceria virar realidade, cadastre normalmente em <strong>Parceiros</strong>.
+          </p>
+
+          {prospectForm && (
+            <form className="contact-form mp-form" onSubmit={onSaveProspect} style={{ marginBottom: 32, maxWidth: 560 }}>
+              <h3 className="mp-form-title">{prospectForm.id ? "Editar prospect" : "Novo prospect"}</h3>
+              <label>Nome da empresa
+                <input type="text" required maxLength={200} value={prospectForm.companyName} onChange={(e) => setProspectForm({ ...prospectForm, companyName: e.target.value })} />
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <label>Categoria (opcional)
+                  <input type="text" maxLength={120} placeholder="Ex.: Hotéis & Resorts" value={prospectForm.category} onChange={(e) => setProspectForm({ ...prospectForm, category: e.target.value })} />
+                </label>
+                <label>Status
+                  <select value={prospectForm.status} onChange={(e) => setProspectForm({ ...prospectForm, status: e.target.value as ProspectStatus })}>
+                    {PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{PROSPECT_STATUS_LABELS[s]}</option>)}
+                  </select>
+                </label>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <label>País
+                  <input type="text" maxLength={120} value={prospectForm.country} onChange={(e) => setProspectForm({ ...prospectForm, country: e.target.value })} />
+                </label>
+                <label>Cidade
+                  <input type="text" maxLength={120} value={prospectForm.city} onChange={(e) => setProspectForm({ ...prospectForm, city: e.target.value })} />
+                </label>
+              </div>
+              <label>Site
+                <input type="url" maxLength={300} placeholder="https://…" value={prospectForm.website} onChange={(e) => setProspectForm({ ...prospectForm, website: e.target.value })} />
+              </label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <label>Pessoa de contato
+                  <input type="text" maxLength={160} value={prospectForm.contactName} onChange={(e) => setProspectForm({ ...prospectForm, contactName: e.target.value })} />
+                </label>
+                <label>Telefone/WhatsApp
+                  <input type="text" maxLength={60} value={prospectForm.contactPhone} onChange={(e) => setProspectForm({ ...prospectForm, contactPhone: e.target.value })} />
+                </label>
+              </div>
+              <label>E-mail de contato
+                <input type="email" maxLength={200} value={prospectForm.contactEmail} onChange={(e) => setProspectForm({ ...prospectForm, contactEmail: e.target.value })} />
+              </label>
+              <label>Anotações
+                <textarea rows={3} maxLength={4000} placeholder="Histórico da negociação, próximos passos…" value={prospectForm.notes} onChange={(e) => setProspectForm({ ...prospectForm, notes: e.target.value })} />
+              </label>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</button>
+                <button type="button" className="btn btn-ghost" onClick={() => setProspectForm(null)}>Cancelar</button>
+              </div>
+            </form>
+          )}
+
+          {prospects === null ? (
+            <p className="section-lead">Carregando…</p>
+          ) : prospects.length === 0 ? (
+            <div className="admin-empty"><Icon name="userplus" /><p>Nenhum prospect cadastrado ainda.</p></div>
+          ) : (
+            <div className="prospect-board">
+              {PROSPECT_STATUSES.map((status) => {
+                const items = prospects.filter((p) => p.status === status);
+                return (
+                  <div className="prospect-column" key={status}>
+                    <p className="prospect-column-head">{PROSPECT_STATUS_LABELS[status]} <span>{items.length}</span></p>
+                    {items.map((p) => (
+                      <div className="prospect-card" key={p.id}>
+                        <p className="prospect-card-name">{p.companyName}</p>
+                        {(p.category || p.country) && (
+                          <p className="prospect-card-meta">{[p.category, p.city, p.country].filter(Boolean).join(" · ")}</p>
+                        )}
+                        {p.contactName && <p className="prospect-card-contact">{p.contactName}</p>}
+                        {p.contactEmail && <p className="prospect-card-contact">{p.contactEmail}</p>}
+                        {p.contactPhone && <p className="prospect-card-contact">{p.contactPhone}</p>}
+                        {p.notes && <p className="prospect-card-notes">{p.notes}</p>}
+                        <select
+                          className="prospect-card-status"
+                          value={p.status}
+                          onChange={(e) => onChangeProspectStatus(p.id, e.target.value as ProspectStatus)}
+                        >
+                          {PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{PROSPECT_STATUS_LABELS[s]}</option>)}
+                        </select>
+                        <div className="prospect-card-actions">
+                          <button type="button" className="btn btn-ghost" onClick={() => openEditProspect(p)}>Editar</button>
+                          <button type="button" className="btn btn-ghost" onClick={() => onDeleteProspect(p.id)}>Remover</button>
+                        </div>
+                      </div>
+                    ))}
+                    {items.length === 0 && <p className="prospect-column-empty">—</p>}
+                  </div>
+                );
+              })}
             </div>
           )}
         </>
