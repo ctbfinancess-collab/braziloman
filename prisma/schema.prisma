@@ -220,17 +220,28 @@ model ChamberNotice {
 /// Conta individual de administrador (aba "Usuários" do painel admin). Convive
 /// com o login por senha única (ADMIN_PASSWORD, ver /api/admin/login) — esse
 /// segue funcionando como acesso "mestre", pra nunca travar o acesso ao admin.
+/// FULL = acesso completo ao painel admin (igual à senha mestra).
+/// PARTNERS_BENEFITS = só enxerga /admin/beneficios (Parceiros & Benefícios:
+/// parceiros, benefícios, categorias, captação) — pra alguém como a
+/// secretária trabalhar nisso sem ver pedidos de associação, usuários,
+/// conteúdo do site etc.
+enum AdminRole {
+  FULL
+  PARTNERS_BENEFITS
+}
+
 model AdminUser {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   passwordHash String
   name         String
-  createdAt    DateTime @default(now())
+  role         AdminRole @default(FULL)
+  createdAt    DateTime  @default(now())
   /// Segredo TOTP (2FA, tipo Google Authenticator) — só existe depois que o
   /// próprio usuário confirma o setup escaneando o QR code. totpEnabled só
   /// vira true nesse momento; até lá o secret é "pendente de confirmação".
   totpSecret   String?
-  totpEnabled  Boolean  @default(false)
+  totpEnabled  Boolean   @default(false)
 }
 
 enum ProspectStatus {

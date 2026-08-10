@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 import { content } from "@/lib/content";
 import { computeDiff, invalidateContentCache } from "@/lib/contentOverrides";
 import type { Json } from "@/lib/contentMerge";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** Retorna os padrões (content.ts) e o efetivo (padrões + substituições) para o editor. */
 export async function GET() {
-  if (!(await isAdmin())) {
+  if (!(await isFullAdmin())) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
   if (!prisma) {
@@ -28,7 +28,7 @@ export async function GET() {
 
 /** Recebe a árvore completa editada (pt+en) e salva só a diferença em relação aos padrões. */
 export async function PATCH(req: Request) {
-  if (!(await isAdmin())) {
+  if (!(await isFullAdmin())) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
   if (!prisma) {
@@ -85,7 +85,7 @@ export async function PATCH(req: Request) {
 
 /** Restaura tudo para os padrões (apaga todas as substituições). */
 export async function DELETE() {
-  if (!(await isAdmin())) {
+  if (!(await isFullAdmin())) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
   if (!prisma) {

@@ -52,7 +52,10 @@ export function AdminLoginForm() {
         setStatus("idle");
         return;
       }
-      router.push("/admin/associados");
+      // Conta "Parceiros & Benefícios" (ex.: secretária) só enxerga essa
+      // página — evita mandar pra Pedidos de Associação (dados sigilosos)
+      // e deixar o redirect automático dar de cara com "acesso negado".
+      router.push(json.role === "PARTNERS_BENEFITS" ? "/admin/beneficios" : "/admin/associados");
       router.refresh();
     } catch {
       setError("Não foi possível entrar.");
@@ -78,7 +81,7 @@ export function AdminLoginForm() {
         setStatus("err");
         return;
       }
-      router.push("/admin/associados");
+      router.push(json.role === "PARTNERS_BENEFITS" ? "/admin/beneficios" : "/admin/associados");
       router.refresh();
     } catch {
       setError("Não foi possível confirmar o código.");

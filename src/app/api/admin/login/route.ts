@@ -54,12 +54,12 @@ export async function POST(req: Request) {
     }
 
     const token = await signAdminSession(user.id);
-    const res = NextResponse.json({ ok: true });
+    const res = NextResponse.json({ ok: true, role: user.role });
     res.cookies.set(ADMIN_COOKIE, token, adminCookieOptions);
     return res;
   }
 
-  // Login "mestre" — senha única compartilhada (ADMIN_PASSWORD).
+  // Login "mestre" — senha única compartilhada (ADMIN_PASSWORD). Sempre FULL.
   if (!env.ADMIN_PASSWORD) {
     return NextResponse.json(
       { error: "Login de administrador não configurado (ADMIN_PASSWORD ausente)." },
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
   }
 
   const token = await signAdminSession();
-  const res = NextResponse.json({ ok: true });
+  const res = NextResponse.json({ ok: true, role: "FULL" });
   res.cookies.set(ADMIN_COOKIE, token, adminCookieOptions);
   return res;
 }

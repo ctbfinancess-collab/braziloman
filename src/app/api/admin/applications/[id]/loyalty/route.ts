@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 import { getActionById, LOYALTY_CUSTOM_ACTION_ID, type LoyaltyActionId } from "@/lib/loyalty";
 import { awardLoyaltyPoints } from "@/lib/loyaltyServer";
 
@@ -16,7 +16,7 @@ const awardSchema = z.object({
 
 /** Admin concede pontos manualmente a um associado (ação do catálogo ou avulsa). */
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const { id } = await params;

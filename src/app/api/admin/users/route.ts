@@ -2,18 +2,18 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const users = await prisma.adminUser.findMany({
     orderBy: { createdAt: "asc" },
-    select: { id: true, name: true, email: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, createdAt: true },
   });
   return NextResponse.json({ users });
 }
@@ -22,10 +22,11 @@ const createSchema = z.object({
   name: z.string().min(1).max(120),
   email: z.string().email().max(200),
   password: z.string().min(6).max(200),
+  role: z.enum(["FULL", "PARTNERS_BENEFITS"]).optional(),
 });
 
 export async function POST(req: Request) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   let body: unknown;
@@ -43,8 +44,8 @@ export async function POST(req: Request) {
 
   const passwordHash = await bcrypt.hash(parsed.data.password, 10);
   const user = await prisma.adminUser.create({
-    data: { name: parsed.data.name, email, passwordHash },
-    select: { id: true, name: true, email: true, createdAt: true },
+    data: { name: parsed.data.name, email, passwordHash, role: parsed.data.role ?? "FULL" },
+    select: { id: true, name: true, email: true, role: true, createdAt: true },
   });
   return NextResponse.json({ ok: true, user });
 }

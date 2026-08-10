@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const notices = await prisma.chamberNotice.findMany({ orderBy: { createdAt: "desc" } });
@@ -22,7 +22,7 @@ const createSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   let body: unknown;

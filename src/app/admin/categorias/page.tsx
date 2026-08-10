@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { verifyAdminSession, ADMIN_COOKIE } from "@/lib/session";
+import { requireFullAdmin } from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Icon } from "@/components/Icons";
@@ -22,10 +20,7 @@ function formatRange(tier: LoyaltyTier): string {
 }
 
 export default async function AdminCategoriasPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_COOKIE)?.value;
-  const session = token ? await verifyAdminSession(token) : null;
-  if (!session) redirect("/admin/login");
+  await requireFullAdmin();
 
   const rows = prisma
     ? await prisma.membershipApplication.findMany({

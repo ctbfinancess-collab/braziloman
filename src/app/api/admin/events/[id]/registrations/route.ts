@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Lista os inscritos de um evento/missão (admin). */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const { id: eventId } = await params;
@@ -28,7 +28,7 @@ const updateSchema = z.object({
 
 /** Admin confirma/cancela a inscrição de um associado. */
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
 
   const { id: eventId } = await params;

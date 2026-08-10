@@ -12,9 +12,9 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   if (session.sub && prisma) {
-    const user = await prisma.adminUser.findUnique({ where: { id: session.sub }, select: { name: true, email: true } });
-    if (user) return NextResponse.json({ name: user.name, email: user.email });
+    const user = await prisma.adminUser.findUnique({ where: { id: session.sub }, select: { name: true, email: true, role: true } });
+    if (user) return NextResponse.json({ name: user.name, email: user.email, role: user.role });
   }
 
-  return NextResponse.json({ name: null, email: null });
+  return NextResponse.json({ name: null, email: null, role: "FULL" });
 }

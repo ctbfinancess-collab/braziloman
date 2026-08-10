@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { isAdmin } from "@/lib/adminAuth";
+import { isFullAdmin } from "@/lib/adminAuth";
 import { generateComplianceSummary, isAiSummaryEnabled } from "@/lib/aiCompliance";
 import type { PersonalData, CompanyData, BusinessProfile, ComplianceAnswer } from "@/lib/candidateSchemas";
 
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 /** Gera (ou regenera) o resumo de compliance por IA de uma candidatura. */
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  if (!(await isFullAdmin())) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   if (!prisma) return NextResponse.json({ error: "Banco de dados indisponível" }, { status: 503 });
   if (!isAiSummaryEnabled()) {
     return NextResponse.json({ error: "Resumo por IA não configurado (ANTHROPIC_API_KEY)" }, { status: 503 });

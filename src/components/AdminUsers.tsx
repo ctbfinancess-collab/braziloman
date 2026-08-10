@@ -5,9 +5,14 @@ import { useRouter } from "next/navigation";
 import { AdminLayout } from "./AdminLayout";
 import { Icon } from "./Icons";
 
-type AdminUserRow = { id: string; name: string; email: string; createdAt: string };
-type FormState = { name: string; email: string; password: string };
-const EMPTY_FORM: FormState = { name: "", email: "", password: "" };
+type AdminRole = "FULL" | "PARTNERS_BENEFITS";
+type AdminUserRow = { id: string; name: string; email: string; role: AdminRole; createdAt: string };
+type FormState = { name: string; email: string; password: string; role: AdminRole };
+const EMPTY_FORM: FormState = { name: "", email: "", password: "", role: "FULL" };
+const ROLE_LABELS: Record<AdminRole, string> = {
+  FULL: "Administrador completo",
+  PARTNERS_BENEFITS: "Secretária — só Parceiros & Benefícios",
+};
 
 /** Autenticação em duas etapas (2FA) da conta que está logada AGORA — não
  *  é gerenciável por outra pessoa, cada um ativa a própria (precisa escanear
@@ -272,6 +277,16 @@ export function AdminUsers() {
               <input type="password" required minLength={6} maxLength={200} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
             </label>
             <p className="cp-chips-label" style={{ marginTop: -10 }}>Mínimo de 6 caracteres.</p>
+            <label>
+              Nível de acesso
+              <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as AdminRole })}>
+                <option value="FULL">{ROLE_LABELS.FULL}</option>
+                <option value="PARTNERS_BENEFITS">{ROLE_LABELS.PARTNERS_BENEFITS}</option>
+              </select>
+            </label>
+            <p className="cp-chips-label" style={{ marginTop: -10 }}>
+              &ldquo;Secretária&rdquo; só enxerga a tela de Parceiros & Benefícios (parceiros, benefícios, categorias, captação) — não vê pedidos de associação, usuários nem o resto do painel.
+            </p>
             <div style={{ display: "flex", gap: 10 }}>
               <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Criando…" : "Criar usuário"}</button>
               <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancelar</button>
@@ -292,6 +307,7 @@ export function AdminUsers() {
               <thead>
                 <tr>
                   <th>Usuário</th>
+                  <th>Nível de acesso</th>
                   <th>Criado em</th>
                   <th>Ações</th>
                 </tr>
@@ -307,6 +323,9 @@ export function AdminUsers() {
                           <small>{u.email}</small>
                         </span>
                       </div>
+                    </td>
+                    <td>
+                      <span className={`admin-badge tone-${u.role === "FULL" ? "positive" : "neutral"}`}>{ROLE_LABELS[u.role]}</span>
                     </td>
                     <td>{new Date(u.createdAt).toLocaleDateString("pt-BR")}</td>
                     <td>

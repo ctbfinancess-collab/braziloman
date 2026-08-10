@@ -43,7 +43,7 @@ export function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [me, setMe] = useState<{ name: string | null; email: string | null } | null>(null);
+  const [me, setMe] = useState<{ name: string | null; email: string | null; role?: "FULL" | "PARTNERS_BENEFITS" } | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,6 +58,9 @@ export function AdminLayout({
   const avatarInitials = me?.name
     ? me.name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()
     : "AD";
+  // Conta "Parceiros & Benefícios" (ex.: secretária) só enxerga essa página —
+  // o resto do menu nem aparece, pra não sugerir telas que ela não pode abrir.
+  const navItems = me?.role === "PARTNERS_BENEFITS" ? NAV_ITEMS.filter((item) => item.key === "beneficios") : NAV_ITEMS;
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -77,7 +80,7 @@ export function AdminLayout({
         </Link>
         <p className="admin-sidebar-eyebrow">Administração</p>
         <nav className="admin-sidebar-nav">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
