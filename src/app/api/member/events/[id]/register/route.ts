@@ -23,6 +23,13 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   const { id: eventId } = await params;
   const event = await prisma.chamberEvent.findUnique({ where: { id: eventId } });
   if (!event) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
+  // Evento pago não passa por aqui — usa /checkout, que só cria a inscrição
+  // depois que o Stripe confirma o pagamento (ver /api/webhooks/stripe).
+  // Checagem no servidor mesmo que a tela já esconda o botão certo, pra
+  // nunca dar pra "furar" a cobrança chamando a API direto.
+  if (event.priceCents && event.priceCents > 0) {
+    return NextResponse.json({ error: "Este evento é pago — use o link de pagamento." }, { status: 400 });
+  }
 
   const registration = await prisma.eventRegistration.upsert({
     where: { eventId_applicationId: { eventId, applicationId } },

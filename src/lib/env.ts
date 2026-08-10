@@ -32,6 +32,15 @@ const schema = z.object({
   // (APIs & Services > Credentials > OAuth client ID > Web application).
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
+  // Pagamentos (Stripe) — anuidade de associado e inscrição paga em
+  // eventos/missões. Sem STRIPE_SECRET_KEY, os botões de pagamento ficam
+  // escondidos e os fluxos seguem 100% manuais, como já eram antes.
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  // Assinatura do webhook (Developers > Webhooks > sua URL > "Signing secret")
+  // — confirma que o evento realmente veio do Stripe antes de marcar algo
+  // como pago. Ver /api/webhooks/stripe.
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -52,3 +61,4 @@ export const hasDocumentStorage = Boolean(
 );
 export const hasAiSummary = Boolean(env.ANTHROPIC_API_KEY);
 export const hasGoogleLogin = Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET);
+export const hasStripe = Boolean(env.STRIPE_SECRET_KEY);

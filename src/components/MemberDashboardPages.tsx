@@ -507,6 +507,18 @@ function EventCard({ ev }: { ev: EventListItem }) {
   async function onToggle() {
     setLoading(true);
     try {
+      // Evento pago: gera o link do Stripe e sai da página — a inscrição em
+      // si só nasce depois que o pagamento é confirmado (webhook).
+      if (!registered && ev.priceCents) {
+        const res = await fetch(`/api/member/events/${ev.id}/checkout`, { method: "POST" });
+        const json = await res.json();
+        if (res.ok && json.url) {
+          window.location.href = json.url;
+          return;
+        }
+        alert(json.error || t.paymentError);
+        return;
+      }
       const res = await fetch(`/api/member/events/${ev.id}/register`, { method: registered ? "DELETE" : "POST" });
       if (res.ok) setRegistered((v) => !v);
     } finally {

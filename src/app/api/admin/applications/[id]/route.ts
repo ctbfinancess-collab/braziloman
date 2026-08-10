@@ -10,6 +10,7 @@ import {
   sendApprovedPendingPaymentEmail,
 } from "@/lib/email";
 import { awardBecomeMemberPoints } from "@/lib/loyaltyServer";
+import { createMembershipCheckoutSession } from "@/lib/paymentsServer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -108,7 +109,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const updated = await prisma.membershipApplication.update({
       where: { id },
       data: parsed.data,
-      select: { id: true, status: true, name: true, email: true, membershipCategory: true },
+      select: { id: true, status: true, name: true, email: true, membershipCategory: true, annualContribution: true },
     });
 
     const statusChanged = parsed.data.status && parsed.data.status !== before.status;
@@ -117,7 +118,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         if (updated.status === "INFO_REQUESTED") {
           await sendInfoRequestedEmail(updated.email, updated.name, parsed.data.complianceNotes || "Consulte seu painel para mais detalhes.");
         } else if (updated.status === "APPROVED_PENDING_PAYMENT") {
-          await sendApprovedPendingPaymentEmail(updated.email, updated.name, updated.membershipCategory || "a definir");
+          // Gera o link de pagamento (Stripe) na hora — se não tiver valor
+          // definido ou o Stripe não estiver configurado, o e-mail cai pro
+          // texto antigo ("nossa equipe vai entrar em contato").
+          const checkoutUrl = await createMembershipCheckoutSession(updated.id).catch((err) => {
+            console.error("[admin/applications] erro ao criar checkout do Stripe:", err);
+            return null;
+          });
+          await sendApprovedPendingPaymentEmail(updated.email, updated.name, updated.membershipCategory || "a definir", checkoutUrl);
         } else if (updated.status === "ACTIVE" || (updated.status === "APPROVED" && before.status !== "APPROVED")) {
           await sendWelcomeEmail(updated.email, updated.name);
         }

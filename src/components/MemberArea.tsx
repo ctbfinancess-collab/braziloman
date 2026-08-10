@@ -381,6 +381,42 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   SUSPENDED: "Associação suspensa",
 };
 
+/** Botão "Pagar agora" — gera um link de pagamento (Stripe) novo na hora e
+ *  redireciona pra lá. Existe pro caso do link que veio no e-mail de
+ *  aprovação já ter expirado (sessões do Stripe valem só 24h) ou a pessoa
+ *  simplesmente ter apagado o e-mail. */
+function PayMembershipButton() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onClick() {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/member/membership/checkout", { method: "POST" });
+      const json = await res.json();
+      if (res.ok && json.url) {
+        window.location.href = json.url;
+        return;
+      }
+      setError(json.error || "Não foi possível gerar o link de pagamento.");
+    } catch {
+      setError("Não foi possível gerar o link de pagamento.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={{ marginTop: 4 }}>
+      <button type="button" className="btn btn-primary" onClick={onClick} disabled={loading}>
+        {loading ? "Gerando link…" : "Pagar contribuição anual"}
+      </button>
+      {error && <p className="form-note err" style={{ marginTop: 8 }}>{error}</p>}
+    </div>
+  );
+}
+
 /** Tela exibida quando a candidatura não está mais editável, mas também ainda não é associado ativo. */
 const STATUS_TONE: Partial<Record<ApplicationStatus, "positive" | "warning" | "negative">> = {
   CONDITIONALLY_APPROVED: "positive",
@@ -405,7 +441,7 @@ export function MemberStatusScreen({ member }: { member: MemberData }) {
   const messages: Partial<Record<ApplicationStatus, string>> = {
     UNDER_REVIEW: "Sua candidatura está em análise de compliance pela nossa equipe. Avisaremos por e-mail assim que houver uma atualização.",
     CONDITIONALLY_APPROVED: "Sua candidatura foi aprovada com condições. Nossa equipe vai entrar em contato com os próximos passos.",
-    APPROVED_PENDING_PAYMENT: "Sua candidatura foi aprovada! Falta finalizar sua associação com o pagamento da contribuição anual — nossa equipe vai entrar em contato para combinar a forma de pagamento.",
+    APPROVED_PENDING_PAYMENT: "Sua candidatura foi aprovada! Falta finalizar sua associação com o pagamento da contribuição anual — enviamos o link por e-mail, ou você pode pagar direto por aqui.",
     REJECTED: "Sua candidatura não foi aprovada neste momento. Se tiver dúvidas, entre em contato conosco.",
     SUSPENDED: "Sua associação está suspensa no momento. Entre em contato com a Câmara para mais informações.",
     PENDING: "Sua candidatura está em análise.",
@@ -455,6 +491,8 @@ export function MemberStatusScreen({ member }: { member: MemberData }) {
             )}
           </div>
         )}
+
+        {member.status === "APPROVED_PENDING_PAYMENT" && <PayMembershipButton />}
 
         <div className="status-features">
           {t.features.map((f) => (

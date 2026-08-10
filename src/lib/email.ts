@@ -237,13 +237,24 @@ export async function sendInfoRequestedEmail(to: string, name: string, notes: st
 }
 
 /** E-mail: enviado quando a Diretoria aprova a candidatura (falta finalizar/pagar). */
-export async function sendApprovedPendingPaymentEmail(to: string, name: string, category: string) {
+export async function sendApprovedPendingPaymentEmail(
+  to: string,
+  name: string,
+  category: string,
+  checkoutUrl?: string | null
+) {
   if (!resend) return;
   const html = layout(
     "Sua candidatura foi aprovada pela Câmara de Comércio Brasil–Omã.",
     `${heading(`Parabéns, ${name}!`)}
      ${paragraph(`Sua candidatura foi <strong>aprovada</strong> pela Diretoria da Câmara de Comércio Brasil–Omã, na categoria <strong>${category}</strong>.`)}
-     ${paragraph("Falta só um passo: finalizar sua associação escolhendo a forma de pagamento da contribuição anual. Nossa equipe vai entrar em contato para concluir essa etapa com você.")}
+     ${
+       checkoutUrl
+         ? `${paragraph("Falta só um passo: finalizar sua associação com o pagamento da contribuição anual. É rápido e seguro — processado pelo Stripe.")}
+            ${button("Pagar contribuição anual", checkoutUrl)}
+            ${paragraph('<span style="color:#857c6b; font-size:13px;">Prefere ver o valor antes ou pagar depois? O botão continua disponível a qualquer momento no seu painel.</span>')}`
+         : `${paragraph("Falta só um passo: finalizar sua associação escolhendo a forma de pagamento da contribuição anual. Nossa equipe vai entrar em contato para concluir essa etapa com você.")}`
+     }
      ${button("Acessar meu painel", `${SITE_URL}/membro/painel`)}`
   );
   await resend.emails.send({

@@ -68,7 +68,18 @@ model MembershipApplication {
   riskLevel          String?
   complianceNotes    String?
   membershipCategory String?
+  /// Em REAIS inteiros (não centavos) — o formulário admin já trabalha assim
+  /// ("Contribuição anual (R$)"). Multiplicar por 100 na hora de mandar pro
+  /// Stripe (que sempre espera o valor na menor unidade da moeda).
   annualContribution Int?
+
+  /// Preenchido quando o Checkout Session da anuidade é criado — permite
+  /// reaproveitar o mesmo link em vez de gerar um novo a cada clique em
+  /// "Pagar agora", e serve de referência pro webhook do Stripe.
+  stripeCheckoutSessionId String?
+  /// Confirmado pelo webhook do Stripe (checkout.session.completed) — nunca
+  /// setado direto pelo admin, é a prova de que o dinheiro caiu de verdade.
+  paidAt                  DateTime?
 
   /// Resumo de triagem gerado por IA (Claude) a partir dos dados da candidatura —
   /// apoia a análise humana, nunca decide sozinho. Gerado automaticamente no
@@ -194,6 +205,11 @@ model EventRegistration {
   applicationId String
   application   MembershipApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   status        RegistrationStatus    @default(CONFIRMED)
+  /// Preenchido só pra eventos pagos (ver ChamberEvent.priceCents) — a linha
+  /// de EventRegistration em si só é criada DEPOIS que o webhook do Stripe
+  /// confirma o pagamento (nunca fica um registro "pendente" solto). Nulo
+  /// para eventos gratuitos, inscritos direto sem passar pelo Stripe.
+  stripeCheckoutSessionId String?
   createdAt     DateTime              @default(now())
   updatedAt     DateTime              @updatedAt
 
