@@ -22,6 +22,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: "conteudo", label: "Conteúdo do site", href: "/admin/conteudo", icon: "folder" },
   { key: "relatorios", label: "Relatórios", href: "/admin/relatorios", icon: "chart" },
   { key: "usuarios", label: "Usuários", href: "/admin/usuarios", icon: "user" },
+  { key: "conta", label: "Minha Conta", href: "/admin/conta", icon: "shieldcheck" },
 ];
 
 /** Layout compartilhado do painel admin — sidebar escura + barra superior,
@@ -60,7 +61,8 @@ export function AdminLayout({
     : "AD";
   // Conta "Parceiros & Benefícios" (ex.: secretária) só enxerga essa página —
   // o resto do menu nem aparece, pra não sugerir telas que ela não pode abrir.
-  const navItems = me?.role === "PARTNERS_BENEFITS" ? NAV_ITEMS.filter((item) => item.key === "beneficios") : NAV_ITEMS;
+  const navItems =
+    me?.role === "PARTNERS_BENEFITS" ? NAV_ITEMS.filter((item) => item.key === "beneficios" || item.key === "conta") : NAV_ITEMS;
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });

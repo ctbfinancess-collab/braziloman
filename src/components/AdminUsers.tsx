@@ -7,8 +7,8 @@ import { Icon } from "./Icons";
 
 type AdminRole = "FULL" | "PARTNERS_BENEFITS";
 type AdminUserRow = { id: string; name: string; email: string; role: AdminRole; createdAt: string };
-type FormState = { name: string; email: string; password: string; role: AdminRole };
-const EMPTY_FORM: FormState = { name: "", email: "", password: "", role: "FULL" };
+type FormState = { id: string | null; name: string; email: string; password: string; role: AdminRole };
+const EMPTY_FORM: FormState = { id: null, name: "", email: "", password: "", role: "FULL" };
 const ROLE_LABELS: Record<AdminRole, string> = {
   FULL: "Administrador completo",
   PARTNERS_BENEFITS: "Secretária — só Parceiros & Benefícios",
@@ -18,7 +18,7 @@ const ROLE_LABELS: Record<AdminRole, string> = {
  *  é gerenciável por outra pessoa, cada um ativa a própria (precisa escanear
  *  o QR code com o próprio celular). Some inteiramente pra quem entrou com
  *  a senha mestre, já que 2FA só existe pra contas individuais. */
-function MyTwoFactorCard() {
+export function MyTwoFactorCard() {
   const [state, setState] = useState<"loading" | "unavailable" | "disabled" | "enabling" | "enabled">("loading");
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
@@ -214,20 +214,29 @@ export function AdminUsers() {
     load();
   }, [load]);
 
+  function openEdit(u: AdminUserRow) {
+    setError("");
+    setForm({ id: u.id, name: u.name, email: u.email, password: "", role: u.role });
+  }
+
   async function onSave(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!form) return;
     setSaving(true);
     setError("");
     try {
-      const res = await fetch("/api/admin/users", {
-        method: "POST",
+      const editing = Boolean(form.id);
+      const payload = editing
+        ? { name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
+        : { name: form.name, email: form.email, password: form.password, role: form.role };
+      const res = await fetch(editing ? `/api/admin/users/${form.id}` : "/api/admin/users", {
+        method: editing ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json.error || "Não foi possível criar o usuário.");
+        setError(json.error || "Não foi possível salvar o usuário.");
         return;
       }
       setForm(null);
@@ -263,7 +272,7 @@ export function AdminUsers() {
 
         {form && (
           <form className="contact-form mp-form" onSubmit={onSave} style={{ marginBottom: 40, maxWidth: 480 }}>
-            <h3 className="mp-form-title">Novo usuário</h3>
+            <h3 className="mp-form-title">{form.id ? "Editar usuário" : "Novo usuário"}</h3>
             <label>
               Nome
               <input type="text" required maxLength={120} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -273,8 +282,16 @@ export function AdminUsers() {
               <input type="email" required maxLength={200} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             </label>
             <label>
-              Senha
-              <input type="password" required minLength={6} maxLength={200} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+              {form.id ? "Nova senha (opcional)" : "Senha"}
+              <input
+                type="password"
+                required={!form.id}
+                minLength={6}
+                maxLength={200}
+                placeholder={form.id ? "Deixe em branco pra manter a senha atual" : undefined}
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
             </label>
             <p className="cp-chips-label" style={{ marginTop: -10 }}>Mínimo de 6 caracteres.</p>
             <label>
@@ -288,7 +305,7 @@ export function AdminUsers() {
               &ldquo;Secretária&rdquo; só enxerga a tela de Parceiros & Benefícios (parceiros, benefícios, categorias, captação) — não vê pedidos de associação, usuários nem o resto do painel.
             </p>
             <div style={{ display: "flex", gap: 10 }}>
-              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Criando…" : "Criar usuário"}</button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Salvando…" : form.id ? "Salvar" : "Criar usuário"}</button>
               <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancelar</button>
             </div>
           </form>
@@ -329,6 +346,7 @@ export function AdminUsers() {
                     </td>
                     <td>{new Date(u.createdAt).toLocaleDateString("pt-BR")}</td>
                     <td>
+                      <button type="button" className="btn btn-ghost" onClick={() => openEdit(u)}>Editar</button>{" "}
                       <button type="button" className="btn btn-ghost" onClick={() => onDelete(u.id)}>Remover</button>
                     </td>
                   </tr>
