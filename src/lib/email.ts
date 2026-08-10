@@ -462,11 +462,14 @@ export async function sendPartnerProposalBatch(
   // inscrição"/"pare de receber") — frase assim é um dos sinais mais fortes
   // que faz o Gmail jogar pra aba Promoções em vez da Principal. Fecha como
   // uma correspondência comercial de verdade, uma pessoa pra outra.
-  const closing = paragraph(
+  const whatsappLink = '<a href="https://wa.me/5561999529219" style="color:#96712c; text-decoration:none; font-weight:bold;">+55 61 99952-9219</a>';
+  const closing = `${paragraph(
     lang === "en"
-      ? "We're happy to answer any questions — just reply to this email. Best regards, <strong>Brazil–Oman Chamber of Commerce</strong>."
-      : "Ficamos à disposição para qualquer dúvida — é só responder este e-mail. Atenciosamente, <strong>Câmara de Comércio Brasil–Omã</strong>."
-  );
+      ? `We're happy to answer any questions — just reply to this email or reach us on WhatsApp: ${whatsappLink}. Best regards, <strong>Brazil–Oman Chamber of Commerce</strong>.`
+      : `Ficamos à disposição para qualquer dúvida — é só responder este e-mail ou falar com a gente pelo WhatsApp: ${whatsappLink}. Atenciosamente, <strong>Câmara de Comércio Brasil–Omã</strong>.`
+  )}<p style="font-family: Arial, sans-serif; color:#857c6b; font-size:12px; margin:0 0 16px;">${
+    lang === "en" ? "Company ID (CNPJ)" : "CNPJ"
+  }: 68.398.637/0001-11</p>`;
 
   function buildHtml(companyName: string): string {
     const body =
