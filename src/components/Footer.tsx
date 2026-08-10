@@ -79,6 +79,10 @@ export default function Footer() {
           <span>© 2026 Câmara de Comércio Brasil–Omã. {d.footer.rights}</span>
           <span>“União e Prosperidade”</span>
         </div>
+        <div className="footer-legal">
+          <Link href="/politica-de-privacidade">{d.footer.privacyPolicyLink}</Link>
+          <Link href="/termos-de-uso">{d.footer.termsLink}</Link>
+        </div>
         <div className="footer-credit">
           <a href="https://supernovafilms.ae" target="_blank" rel="noopener noreferrer">Site by Supernova Films.ae</a>
         </div>

@@ -917,6 +917,9 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .footer-col a, .footer-col p { display: block; color: var(--footer-muted); font-size: 0.9rem; margin-bottom: 10px; }
 .footer-col a:hover { color: var(--footer-gold-light); }
 .footer-bottom { border-top: 1px solid var(--footer-border); margin-top: 40px; padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--footer-dim); font-size: 0.8rem; }
+.footer-legal { display: flex; justify-content: center; gap: 18px; margin-top: 14px; }
+.footer-legal a { color: var(--footer-dim); font-size: 0.76rem; }
+.footer-legal a:hover { color: var(--footer-gold-light); }
 .footer-credit { text-align: center; margin-top: 16px; }
 .footer-credit a { color: var(--footer-dim); font-size: 0.74rem; letter-spacing: 0.02em; }
 .footer-credit a:hover { color: var(--footer-gold-light); }

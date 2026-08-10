@@ -12,12 +12,20 @@
     "lint": "eslint",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "cap:sync": "cap sync",
+    "cap:assets": "capacitor-assets generate --assetPath capacitor-assets-src --iconBackgroundColor '#1a1408' --iconBackgroundColorDark '#1a1408' --splashBackgroundColor '#1a1408' --splashBackgroundColorDark '#1a1408'",
+    "cap:android": "cap open android",
+    "cap:ios": "cap open ios"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
     "@aws-sdk/client-s3": "^3.1097.0",
     "@aws-sdk/s3-request-presigner": "^3.1097.0",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
     "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0",
     "bcryptjs": "^3.0.3",
@@ -36,6 +44,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@tailwindcss/postcss": "^4",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^20",

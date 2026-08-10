@@ -1101,6 +1101,41 @@ export const content = {
       inactiveText: "Os benefícios exclusivos estão disponíveis para associados ativos da Câmara.",
       inactiveButton: "Regularizar minha associação",
     },
+    legalPages: {
+      privacyPolicy: {
+        title: "Política de Privacidade",
+        intro: "Esta Política de Privacidade descreve como a Câmara de Comércio Brasil–Omã coleta, usa, armazena e protege os dados pessoais de visitantes, candidatos e associados que utilizam nosso site e aplicativo, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).",
+        sections: [
+          { h: "Quem somos", p: "A Câmara de Comércio Brasil–Omã (CNPJ 68.398.637/0001-11) é a controladora dos dados pessoais tratados por meio deste site e aplicativo. Dúvidas sobre esta política podem ser enviadas para contact@brasilomanchamber.org." },
+          { h: "Quais dados coletamos", p: "Coletamos os dados que você mesmo nos fornece ao preencher o pré-cadastro e o Portal do Candidato (nome, e-mail, telefone, dados da empresa, documentos societários e demais informações do questionário de compliance), ao entrar em contato conosco, e ao criar/acessar sua conta na Área do Associado. Também coletamos automaticamente dados técnicos de navegação (cookies de sessão, necessários pro login funcionar) quando você acessa o site ou o aplicativo." },
+          { h: "Como usamos seus dados", p: "Usamos seus dados para: analisar e processar pedidos de associação; administrar sua conta e a relação associativa; autenticar seu acesso à Área do Associado e ao painel administrativo; enviar comunicados institucionais, notificações de status e e-mails transacionais (confirmações, redefinição de senha, benefícios); e cumprir obrigações legais e de compliance da Câmara." },
+          { h: "Compartilhamento com terceiros", p: "Não vendemos seus dados pessoais. Compartilhamos dados apenas com prestadores de serviço estritamente necessários pro funcionamento do site/app: envio de e-mails transacionais (Resend), armazenamento de imagens e documentos (Cloudflare R2) e, quando você opta por entrar com sua conta Google, o próprio Google como provedor de autenticação. Esses prestadores têm acesso limitado aos dados necessários pra prestar o serviço contratado, sob obrigação de confidencialidade." },
+          { h: "Cookies e sessão", p: "Usamos cookies estritamente necessários pra manter sua sessão autenticada (associado ou administrador) — não usamos cookies de rastreamento publicitário ou de terceiros pra fins de marketing." },
+          { h: "Segurança", p: "Senhas são armazenadas com hash criptográfico (nunca em texto puro), sessões são autenticadas por tokens assinados, e o acesso a dados sensíveis do processo de associação é restrito a administradores autorizados. Contas administrativas contam com autenticação em duas etapas (2FA) opcional." },
+          { h: "Retenção de dados", p: "Mantemos seus dados pelo tempo necessário para as finalidades descritas nesta política e para cumprimento de obrigações legais e regulatórias aplicáveis à Câmara, podendo ser retidos por prazo adicional quando exigido por lei." },
+          { h: "Seus direitos como titular de dados", p: "Nos termos da LGPD, você pode solicitar a qualquer momento: confirmação da existência de tratamento, acesso aos seus dados, correção de dados incompletos ou desatualizados, anonimização/eliminação de dados desnecessários, portabilidade e informação sobre o compartilhamento com terceiros. Solicitações podem ser feitas por contact@brasilomanchamber.org." },
+          { h: "Alterações nesta política", p: "Esta política pode ser atualizada periodicamente para refletir mudanças em nossas práticas ou na legislação aplicável. A versão vigente estará sempre disponível nesta página." },
+        ],
+        footer: "Última atualização: agosto de 2026 — Câmara de Comércio Brasil–Omã.",
+      },
+      termsOfUse: {
+        title: "Termos de Uso",
+        intro: "Estes Termos de Uso regem o acesso e uso do site brasilomanchamber.org e do aplicativo oficial da Câmara de Comércio Brasil–Omã. Ao acessar ou usar o site/app, você concorda com estes termos.",
+        sections: [
+          { h: "Aceitação dos termos", p: "O uso deste site e aplicativo implica concordância integral com estes Termos de Uso e com nossa Política de Privacidade. Se você não concorda, não deve utilizar nossos serviços." },
+          { h: "Quem pode usar", p: "O site é de acesso público. A Área do Associado é restrita a candidatos com pedido de associação em andamento e a associados com associação ativa ou aprovada, mediante login com e-mail e senha (ou conta Google, quando habilitado)." },
+          { h: "Sua conta", p: "Você é responsável por manter a confidencialidade da sua senha e por todas as atividades realizadas na sua conta. Informe imediatamente a Câmara em caso de uso não autorizado. As informações fornecidas no cadastro e no Portal do Candidato devem ser verdadeiras, completas e mantidas atualizadas." },
+          { h: "Processo de associação", p: "O envio de um pedido de associação não garante aprovação. Toda candidatura passa por análise de compliance da Diretoria Executiva, que pode aprovar, recusar ou solicitar esclarecimentos adicionais, conforme a Política de Admissão de Associados da Câmara." },
+          { h: "Benefícios e parceiros", p: "Os benefícios oferecidos por empresas parceiras (Member Privileges) são de responsabilidade de cada parceiro — a Câmara atua como intermediária na divulgação, mas não garante disponibilidade, prazo ou condições específicas de cada oferta, que podem mudar sem aviso prévio." },
+          { h: "Conduta do usuário", p: "É vedado usar o site/app para fins ilícitos, tentar acessar áreas restritas sem autorização, interferir no funcionamento do serviço, ou enviar informações falsas no processo de associação." },
+          { h: "Propriedade intelectual", p: "Marca, logotipo, textos, imagens e demais conteúdos do site e aplicativo pertencem à Câmara de Comércio Brasil–Omã ou são usados sob licença, sendo vedada a reprodução sem autorização prévia." },
+          { h: "Disponibilidade do serviço", p: "Fazemos o possível para manter o site e o aplicativo disponíveis e funcionando corretamente, mas não garantimos disponibilidade ininterrupta e podemos realizar manutenções, atualizações ou suspender o serviço temporariamente quando necessário." },
+          { h: "Alterações nestes termos", p: "Podemos atualizar estes Termos periodicamente. O uso continuado do site/app após uma alteração implica aceitação dos novos termos." },
+          { h: "Legislação aplicável", p: "Estes Termos são regidos pelas leis da República Federativa do Brasil, com foro eleito em Brasília/DF para dirimir eventuais controvérsias." },
+        ],
+        footer: "Última atualização: agosto de 2026 — Câmara de Comércio Brasil–Omã.",
+      },
+    },
     memberArea: {
       login: {
         eyebrow: "Área do Membro",
@@ -1389,6 +1424,8 @@ export const content = {
       branchLabel: "Sucursal",
       branchAddress: "Rua 240, nº 360, salas 07 e 08, Edifício Time Square, esquina com a segunda avenida, Itapema, Santa Catarina",
       rights: "Todos os direitos reservados.",
+      privacyPolicyLink: "Política de Privacidade",
+      termsLink: "Termos de Uso",
       social: [
         { icon: "instagram", label: "Instagram", url: "https://www.instagram.com/camaradecomerciobrasiloman" },
         { icon: "facebook", label: "Facebook", url: "" },
@@ -2493,6 +2530,41 @@ export const content = {
       inactiveText: "Exclusive benefits are available to active Chamber members.",
       inactiveButton: "Regularize my membership",
     },
+    legalPages: {
+      privacyPolicy: {
+        title: "Privacy Policy",
+        intro: "This Privacy Policy describes how the Brazil–Oman Chamber of Commerce collects, uses, stores and protects the personal data of visitors, applicants and members who use our website and app, in accordance with Brazil's General Data Protection Law (Law No. 13,709/2018 — LGPD).",
+        sections: [
+          { h: "Who we are", p: "The Brazil–Oman Chamber of Commerce (Brazilian company ID / CNPJ 68.398.637/0001-11) is the data controller for personal data processed through this website and app. Questions about this policy can be sent to contact@brasilomanchamber.org." },
+          { h: "What data we collect", p: "We collect the data you provide yourself when filling out the pre-registration and Candidate Portal (name, email, phone, company data, corporate documents and other compliance questionnaire information), when contacting us, and when creating/accessing your Member Area account. We also automatically collect technical browsing data (session cookies, required for login to work) when you access the site or app." },
+          { h: "How we use your data", p: "We use your data to: review and process membership applications; manage your account and membership relationship; authenticate your access to the Member Area and admin panel; send institutional notices, status updates and transactional emails (confirmations, password resets, benefits); and comply with the Chamber's legal and compliance obligations." },
+          { h: "Sharing with third parties", p: "We do not sell your personal data. We share data only with service providers strictly necessary for the site/app to function: transactional email delivery (Resend), image and document storage (Cloudflare R2) and, when you choose to sign in with Google, Google itself as the authentication provider. These providers only have access to the data needed to deliver their contracted service, under confidentiality obligations." },
+          { h: "Cookies and session", p: "We use strictly necessary cookies to keep your session authenticated (member or administrator) — we do not use advertising or third-party tracking cookies for marketing purposes." },
+          { h: "Security", p: "Passwords are stored with cryptographic hashing (never in plain text), sessions are authenticated with signed tokens, and access to sensitive membership-application data is restricted to authorized administrators. Admin accounts have optional two-factor authentication (2FA)." },
+          { h: "Data retention", p: "We keep your data for as long as necessary for the purposes described in this policy and to comply with legal and regulatory obligations applicable to the Chamber, and may retain it for an additional period when required by law." },
+          { h: "Your rights as a data subject", p: "Under the LGPD, you may request at any time: confirmation of processing, access to your data, correction of incomplete or outdated data, anonymization/deletion of unnecessary data, portability, and information about sharing with third parties. Requests can be made to contact@brasilomanchamber.org." },
+          { h: "Changes to this policy", p: "This policy may be updated periodically to reflect changes in our practices or in applicable law. The current version will always be available on this page." },
+        ],
+        footer: "Last updated: August 2026 — Brazil–Oman Chamber of Commerce.",
+      },
+      termsOfUse: {
+        title: "Terms of Use",
+        intro: "These Terms of Use govern access to and use of the brasilomanchamber.org website and the Brazil–Oman Chamber of Commerce's official app. By accessing or using the site/app, you agree to these terms.",
+        sections: [
+          { h: "Acceptance of terms", p: "Use of this website and app implies full agreement with these Terms of Use and our Privacy Policy. If you do not agree, you should not use our services." },
+          { h: "Who can use it", p: "The website is publicly accessible. The Member Area is restricted to applicants with an ongoing membership application and to members with active or approved membership, via login with email and password (or Google account, when enabled)." },
+          { h: "Your account", p: "You are responsible for keeping your password confidential and for all activity on your account. Notify the Chamber immediately of any unauthorized use. Information provided during registration and in the Candidate Portal must be truthful, complete and kept up to date." },
+          { h: "Membership process", p: "Submitting a membership application does not guarantee approval. Every application goes through compliance review by the Executive Board, which may approve, reject or request additional clarification, in accordance with the Chamber's Membership Admission Policy." },
+          { h: "Benefits and partners", p: "Benefits offered by partner companies (Member Privileges) are each partner's responsibility — the Chamber acts as an intermediary in promoting them, but does not guarantee the availability, timing or specific conditions of any offer, which may change without notice." },
+          { h: "User conduct", p: "You may not use the site/app for unlawful purposes, attempt to access restricted areas without authorization, interfere with the service's operation, or submit false information during the membership process." },
+          { h: "Intellectual property", p: "The brand, logo, text, images and other content on the site and app belong to the Brazil–Oman Chamber of Commerce or are used under license; reproduction without prior authorization is prohibited." },
+          { h: "Service availability", p: "We do our best to keep the website and app available and functioning correctly, but we do not guarantee uninterrupted availability and may perform maintenance, updates, or temporarily suspend the service when necessary." },
+          { h: "Changes to these terms", p: "We may update these Terms periodically. Continued use of the site/app after a change constitutes acceptance of the new terms." },
+          { h: "Governing law", p: "These Terms are governed by the laws of the Federative Republic of Brazil, with the courts of Brasília/DF having jurisdiction over any disputes." },
+        ],
+        footer: "Last updated: August 2026 — Brazil–Oman Chamber of Commerce.",
+      },
+    },
     memberArea: {
       login: {
         eyebrow: "Member Area",
@@ -2781,6 +2853,8 @@ export const content = {
       branchLabel: "Branch office",
       branchAddress: "Rua 240, 360, suites 07 and 08, Time Square Building, corner of the second avenue, Itapema, Santa Catarina, Brazil",
       rights: "All rights reserved.",
+      privacyPolicyLink: "Privacy Policy",
+      termsLink: "Terms of Use",
       social: [
         { icon: "instagram", label: "Instagram", url: "https://www.instagram.com/camaradecomerciobrasiloman" },
         { icon: "facebook", label: "Facebook", url: "" },

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Câmara Brasil–Omã</string>
+    <string name="title_activity_main">Câmara Brasil–Omã</string>
+    <string name="package_name">org.brasilomanchamber.app</string>
+    <string name="custom_url_scheme">org.brasilomanchamber.app</string>
+</resources>
