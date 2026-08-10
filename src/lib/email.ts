@@ -43,6 +43,8 @@ function layout(previewText: string, bodyHtml: string): string {
                 <div style="height:1px; background: linear-gradient(90deg, #96712c, transparent); margin-bottom:18px;"></div>
                 <div style="font-family: Arial, sans-serif; color:#857c6b; font-size: 12px; line-height:1.6;">
                   Câmara de Comércio Brasil–Omã · <a href="${SITE_URL}" style="color:#96712c; text-decoration:none;">brasilomanchamber.org</a>
+                  <br />
+                  <strong style="color:#6f5320;">CNPJ: 68.398.637/0001-11</strong>
                 </div>
               </td>
             </tr>
@@ -463,13 +465,11 @@ export async function sendPartnerProposalBatch(
   // que faz o Gmail jogar pra aba Promoções em vez da Principal. Fecha como
   // uma correspondência comercial de verdade, uma pessoa pra outra.
   const whatsappLink = '<a href="https://wa.me/5561999529219" style="color:#96712c; text-decoration:none; font-weight:bold;">+55 61 99952-9219</a>';
-  const closing = `${paragraph(
+  const closing = paragraph(
     lang === "en"
       ? `We're happy to answer any questions — just reply to this email or reach us on WhatsApp: ${whatsappLink}. Best regards, <strong>Brazil–Oman Chamber of Commerce</strong>.`
       : `Ficamos à disposição para qualquer dúvida — é só responder este e-mail ou falar com a gente pelo WhatsApp: ${whatsappLink}. Atenciosamente, <strong>Câmara de Comércio Brasil–Omã</strong>.`
-  )}<p style="font-family: Arial, sans-serif; color:#857c6b; font-size:12px; margin:0 0 16px;">${
-    lang === "en" ? "Company ID (CNPJ)" : "CNPJ"
-  }: 68.398.637/0001-11</p>`;
+  );
 
   function buildHtml(companyName: string): string {
     const body =
