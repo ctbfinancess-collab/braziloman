@@ -125,6 +125,8 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       { pt: "Prioridade em rodadas de negócios e agendas empresariais*", en: "Priority in business roundtables and business agendas*" },
       { pt: "Prioridade de inscrição em missões empresariais internacionais*", en: "Priority registration for international business missions*" },
       { pt: "Acesso prioritário a encontros estratégicos promovidos pela Câmara*", en: "Priority access to strategic gatherings promoted by the Chamber*" },
+      { pt: "International Trade Desk Brasil–Omã", en: "Brazil–Oman International Trade Desk" },
+      { pt: "Mastermind Estratégico Brasil–Omã", en: "Brazil–Oman Strategic Mastermind" },
     ],
   },
 ];
