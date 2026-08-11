@@ -8,7 +8,7 @@ import { useI18n } from "@/lib/i18n";
  *  aqui num layout de leitura corrida, sem cards/timeline. Recebe a chave
  *  (não o objeto pronto) pra poder ficar "use client" sozinho, deixando a
  *  page.tsx como server component com metadata normal. */
-export function LegalPage({ docKey }: { docKey: "privacyPolicy" | "termsOfUse" }) {
+export function LegalPage({ docKey }: { docKey: "privacyPolicy" | "termsOfUse" | "membershipContract" }) {
   const { d, lang } = useI18n();
   const doc = d.legalPages[docKey];
   return (

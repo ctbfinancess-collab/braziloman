@@ -388,12 +388,21 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 function PayMembershipButton() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [accepted, setAccepted] = useState(false);
 
   async function onClick() {
+    if (!accepted) {
+      setError("Você precisa aceitar o Contrato de Associação para continuar.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/member/membership/checkout", { method: "POST" });
+      const res = await fetch("/api/member/membership/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ acceptedTerms: accepted }),
+      });
       const json = await res.json();
       if (res.ok && json.url) {
         window.location.href = json.url;
@@ -409,7 +418,17 @@ function PayMembershipButton() {
 
   return (
     <div style={{ marginTop: 4 }}>
-      <button type="button" className="btn btn-primary" onClick={onClick} disabled={loading}>
+      <label className="wiz-check" style={{ maxWidth: 460 }}>
+        <input type="checkbox" checked={accepted} onChange={(e) => { setAccepted(e.target.checked); if (e.target.checked) setError(""); }} />
+        <span>
+          Li e aceito o{" "}
+          <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+            Contrato de Associação
+          </a>
+          , incluindo os termos de cobrança, renovação e cancelamento da anuidade.
+        </span>
+      </label>
+      <button type="button" className="btn btn-primary" onClick={onClick} disabled={loading || !accepted}>
         {loading ? "Gerando link…" : "Pagar contribuição anual"}
       </button>
       {error && <p className="form-note err" style={{ marginTop: 8 }}>{error}</p>}

@@ -83,6 +83,16 @@ model MembershipApplication {
   /// setado direto pelo admin, é a prova de que o dinheiro caiu de verdade.
   paidAt                  DateTime?
 
+  /// Aceite do Contrato de Associação (termos da anuidade/pagamento) — feito
+  /// obrigatoriamente antes de gerar qualquer Checkout Session, seja pelo
+  /// fluxo "Escolha seu plano" seja pelo botão "Pagar contribuição anual"
+  /// (valor negociado pelo admin). Não tem relação com `declarations` (Etapa
+  /// 6 do cadastro) — é um documento específico do vínculo pago, com prova
+  /// de versão + IP no momento do clique.
+  contractAcceptedAt      DateTime?
+  contractAcceptedVersion String?
+  contractAcceptedIp      String?
+
   /// Resumo de triagem gerado por IA (Claude) a partir dos dados da candidatura —
   /// apoia a análise humana, nunca decide sozinho. Gerado automaticamente no
   /// envio final e pode ser atualizado manualmente pelo admin.

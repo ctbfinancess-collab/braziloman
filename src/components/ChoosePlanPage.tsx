@@ -13,15 +13,24 @@ export function ChoosePlanPage({ name }: { name: string }) {
   const { lang } = useI18n();
   const [loadingPlan, setLoadingPlan] = useState<MembershipPlanId | null>(null);
   const [error, setError] = useState("");
+  const [accepted, setAccepted] = useState(false);
 
   async function onChoose(planId: MembershipPlanId) {
+    if (!accepted) {
+      setError(
+        lang === "pt"
+          ? "Você precisa aceitar o Contrato de Associação para continuar."
+          : "You need to accept the Membership Agreement to continue."
+      );
+      return;
+    }
     setLoadingPlan(planId);
     setError("");
     try {
       const res = await fetch("/api/member/membership/select-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, acceptedTerms: accepted }),
       });
       const json = await res.json();
       if (res.ok && json.url) {
@@ -48,6 +57,29 @@ export function ChoosePlanPage({ name }: { name: string }) {
             : `Congratulations, ${name}! Your application was approved. Choose your membership plan below and finish with payment — securely processed by Stripe.`}
         </p>
 
+        <div style={{ maxWidth: 620, margin: "0 auto 32px" }}>
+          <label className="wiz-check">
+            <input type="checkbox" checked={accepted} onChange={(e) => { setAccepted(e.target.checked); if (e.target.checked) setError(""); }} />
+            {lang === "pt" ? (
+              <span>
+                Li e aceito o{" "}
+                <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+                  Contrato de Associação
+                </a>
+                , incluindo os termos de cobrança, renovação e cancelamento da anuidade.
+              </span>
+            ) : (
+              <span>
+                I have read and accept the{" "}
+                <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+                  Membership Agreement
+                </a>
+                , including its dues billing, renewal and cancellation terms.
+              </span>
+            )}
+          </label>
+        </div>
+
         {error && <p className="form-note err center" style={{ maxWidth: 480, margin: "0 auto 24px" }}>{error}</p>}
 
         <div className="plan-grid">
@@ -69,7 +101,7 @@ export function ChoosePlanPage({ name }: { name: string }) {
               <button
                 type="button"
                 className="btn btn-primary plan-card-btn"
-                disabled={loadingPlan !== null}
+                disabled={loadingPlan !== null || !accepted}
                 onClick={() => onChoose(plan.id)}
               >
                 {loadingPlan === plan.id

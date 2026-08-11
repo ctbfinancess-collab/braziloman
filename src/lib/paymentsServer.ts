@@ -2,6 +2,25 @@ import { stripe } from "./stripe";
 import { prisma } from "./prisma";
 import { SITE_URL } from "./email";
 import { getMembershipPlan, type MembershipPlanId } from "./membershipPlans";
+import { MEMBERSHIP_CONTRACT_VERSION } from "./membershipContract";
+
+/**
+ * Registra o aceite do Contrato de Associação (ver /contrato-associacao),
+ * exigido antes de qualquer Checkout Session de anuidade — tanto no fluxo
+ * "Escolha seu plano" quanto no botão "Pagar contribuição anual" (valor
+ * negociado). `updateMany` com o `where` abaixo faz o registro ser
+ * idempotente por versão: se o associado já aceitou a versão vigente do
+ * contrato, a data original do aceite é preservada (não é sobrescrita a
+ * cada nova tentativa de pagamento); se o contrato mudou de versão desde o
+ * último aceite, um novo registro é gravado.
+ */
+export async function recordContractAcceptance(applicationId: string, ip: string | null): Promise<void> {
+  if (!prisma) return;
+  await prisma.membershipApplication.updateMany({
+    where: { id: applicationId, contractAcceptedVersion: { not: MEMBERSHIP_CONTRACT_VERSION } },
+    data: { contractAcceptedAt: new Date(), contractAcceptedVersion: MEMBERSHIP_CONTRACT_VERSION, contractAcceptedIp: ip },
+  });
+}
 
 /**
  * Cria (ou reaproveita) o Checkout Session da anuidade de um associado
