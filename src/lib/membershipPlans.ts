@@ -41,9 +41,13 @@ export type MembershipPlan = {
   inheritsLabel: { pt: string; en: string } | null;
   /** Só os benefícios exclusivos/adicionais deste plano. */
   benefits: MembershipPlanBenefit[];
-  /** Legenda do placeholder de imagem institucional no topo do card
-   *  (área ainda sem foto real — ver ChoosePlanPage). */
+  /** Legenda do placeholder de imagem institucional no topo do card —
+   *  usada como `title`/`alt`, e como texto do próprio placeholder enquanto
+   *  `imageSrc` for null (ver ChoosePlanPage). */
   imageHint: { pt: string; en: string };
+  /** Caminho da foto real em /public, quando já tiver uma (ver
+   *  public/images/plans/). null = mostra o placeholder com ícone. */
+  imageSrc: string | null;
 };
 
 /** Quantos benefícios de cada plano ficam visíveis de cara na tela de
@@ -64,6 +68,7 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
     },
     inheritsLabel: null,
     imageHint: { pt: "Networking e conexão Brasil–Omã", en: "Brazil–Oman networking and connection" },
+    imageSrc: null,
     benefits: [
       { pt: "Certificado e credencial digital de associado", en: "Digital member certificate and credential" },
       { pt: "Networking empresarial Brasil–Omã", en: "Brazil–Oman business networking" },
@@ -85,7 +90,8 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       en: "For companies pursuing business, internationalization and an active presence between Brazil and Oman.",
     },
     inheritsLabel: { pt: "Inclui todos os benefícios do Empresarial, mais:", en: "Includes everything in Business, plus:" },
-    imageHint: { pt: "Negócios e internacionalização", en: "Business and internationalization" },
+    imageHint: { pt: "Networking Brasil–Omã", en: "Brazil–Oman networking" },
+    imageSrc: "/images/plans/corporativo.jpg",
     benefits: [
       { pt: "Consultoria inicial de internacionalização", en: "Initial internationalization consulting" },
       { pt: "Orientação para abertura e estabelecimento de empresas em Brasil ou Omã", en: "Guidance for setting up and establishing companies in Brazil or Oman" },
@@ -108,6 +114,7 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
     },
     inheritsLabel: { pt: "Inclui todos os benefícios do Corporativo, mais:", en: "Includes everything in Corporate, plus:" },
     imageHint: { pt: "Expansão internacional / Omã", en: "International expansion / Oman" },
+    imageSrc: null,
     benefits: [
       { pt: "Business Support Brasil–Omã personalizado", en: "Personalized Brazil–Oman Business Support" },
       { pt: "Diagnóstico estratégico para entrada ou expansão no mercado", en: "Strategic diagnostic for market entry or expansion" },

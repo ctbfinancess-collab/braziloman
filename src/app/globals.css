@@ -2078,6 +2078,10 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
   background: repeating-linear-gradient(45deg, rgba(201, 162, 90, 0.06) 0 2px, transparent 2px 11px);
 }
 .plan-card-image svg { width: 32px; height: 32px; opacity: 0.6; position: relative; }
+/* Foto real (imageSrc definido) — sem o padrão diagonal do placeholder por
+   cima, e sem o degradê de fundo (o Image com fill já cobre tudo). */
+.plan-card-image.has-photo::after { display: none; }
+.plan-card-image.has-photo { background: var(--border); }
 .plan-card-tagline { color: var(--fg-dim); font-size: 0.84rem; line-height: 1.5; margin: 0 0 18px; min-height: 42px; }
 .plan-card-price { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--fg); margin: 0 0 14px; }
 .plan-card-price span { font-family: var(--font-body); font-weight: 400; font-size: 0.9rem; color: var(--fg-dim); margin-left: 4px; }

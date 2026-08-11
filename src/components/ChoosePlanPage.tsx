@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
 import { MEMBERSHIP_PLANS, MEMBERSHIP_PLANS_NOTICE, VISIBLE_BENEFITS_COUNT, type MembershipPlanId } from "@/lib/membershipPlans";
@@ -108,10 +109,23 @@ export function ChoosePlanPage({ initialAccepted }: { initialAccepted: boolean }
             <div className="plan-card" key={plan.id}>
               <p className="plan-card-name">{plan.name}</p>
 
-              {/* Placeholder elegante — vira foto institucional real assim que
-                  a Câmara enviar as três imagens (ver imageHint no catálogo). */}
-              <div className="plan-card-image" title={lang === "pt" ? plan.imageHint.pt : plan.imageHint.en}>
-                <Icon name={PLAN_PLACEHOLDER_ICON[plan.id]} />
+              {/* Foto real quando já tiver uma (imageSrc); senão, placeholder
+                  elegante com ícone até a Câmara enviar (ver membershipPlans.ts). */}
+              <div
+                className={`plan-card-image${plan.imageSrc ? " has-photo" : ""}`}
+                title={lang === "pt" ? plan.imageHint.pt : plan.imageHint.en}
+              >
+                {plan.imageSrc ? (
+                  <Image
+                    src={plan.imageSrc}
+                    alt={lang === "pt" ? plan.imageHint.pt : plan.imageHint.en}
+                    fill
+                    sizes="(max-width: 700px) 100vw, 340px"
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  <Icon name={PLAN_PLACEHOLDER_ICON[plan.id]} />
+                )}
               </div>
 
               <p className="plan-card-tagline">{lang === "pt" ? plan.tagline.pt : plan.tagline.en}</p>
