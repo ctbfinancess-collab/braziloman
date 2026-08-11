@@ -237,24 +237,44 @@ export async function sendInfoRequestedEmail(to: string, name: string, notes: st
 }
 
 /** E-mail: enviado quando a Diretoria aprova a candidatura (falta finalizar/pagar). */
+/** E-mail padrão de aprovação — o associado ainda NÃO tem categoria/valor
+ *  definidos, então primeiro escolhe um dos 3 planos fixos (ver
+ *  lib/membershipPlans.ts) antes de ir pro pagamento. */
+export async function sendApprovedChoosePlanEmail(to: string, name: string) {
+  if (!resend) return;
+  const html = layout(
+    "Sua associação foi aprovada — escolha seu plano.",
+    `${heading("Sua associação foi aprovada")}
+     ${paragraph(`Sua candidatura à Câmara de Comércio Brasil–Omã foi aprovada, ${name}. Para concluir sua associação, escolha abaixo o seu plano de associação e finalize o pagamento da contribuição anual.`)}
+     ${button("Escolher meu plano", `${SITE_URL}/membro/escolher-plano`)}
+     ${paragraph('<span style="color:#857c6b; font-size:13px;">Já concluiu o pagamento? Acesse sua área do associado para acompanhar sua associação, benefícios e documentos.</span>')}
+     ${button("Acessar área do associado", `${SITE_URL}/membro/painel`)}`
+  );
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Sua associação foi aprovada",
+    html,
+  });
+}
+
+/** E-mail de aprovação com valor JÁ negociado à mão pelo admin (caso
+ *  especial — a maioria passa por sendApprovedChoosePlanEmail acima). Vai
+ *  direto pro pagamento, sem passar pela tela de escolha de plano. */
 export async function sendApprovedPendingPaymentEmail(
   to: string,
   name: string,
   category: string,
-  checkoutUrl?: string | null
+  checkoutUrl: string
 ) {
   if (!resend) return;
   const html = layout(
     "Sua candidatura foi aprovada pela Câmara de Comércio Brasil–Omã.",
     `${heading(`Parabéns, ${name}!`)}
      ${paragraph(`Sua candidatura foi <strong>aprovada</strong> pela Diretoria da Câmara de Comércio Brasil–Omã, na categoria <strong>${category}</strong>.`)}
-     ${
-       checkoutUrl
-         ? `${paragraph("Falta só um passo: finalizar sua associação com o pagamento da contribuição anual. É rápido e seguro — processado pelo Stripe.")}
-            ${button("Pagar contribuição anual", checkoutUrl)}
-            ${paragraph('<span style="color:#857c6b; font-size:13px;">Prefere ver o valor antes ou pagar depois? O botão continua disponível a qualquer momento no seu painel.</span>')}`
-         : `${paragraph("Falta só um passo: finalizar sua associação escolhendo a forma de pagamento da contribuição anual. Nossa equipe vai entrar em contato para concluir essa etapa com você.")}`
-     }
+     ${paragraph("Falta só um passo: finalizar sua associação com o pagamento da contribuição anual. É rápido e seguro — processado pelo Stripe.")}
+     ${button("Pagar contribuição anual", checkoutUrl)}
+     ${paragraph('<span style="color:#857c6b; font-size:13px;">Prefere pagar depois? O botão continua disponível a qualquer momento no seu painel.</span>')}
      ${button("Acessar meu painel", `${SITE_URL}/membro/painel`)}`
   );
   await resend.emails.send({

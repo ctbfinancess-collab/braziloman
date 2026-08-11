@@ -68,9 +68,11 @@ model MembershipApplication {
   riskLevel          String?
   complianceNotes    String?
   membershipCategory String?
-  /// Em REAIS inteiros (não centavos) — o formulário admin já trabalha assim
-  /// ("Contribuição anual (R$)"). Multiplicar por 100 na hora de mandar pro
-  /// Stripe (que sempre espera o valor na menor unidade da moeda).
+  /// Em USD inteiros (não centavos) — moeda de cobrança da Câmara. Multiplicar
+  /// por 100 na hora de mandar pro Stripe (que sempre espera a menor unidade
+  /// da moeda). Normalmente preenchido automaticamente ao escolher um dos 3
+  /// planos fixos (ver lib/membershipPlans.ts); o admin ainda pode digitar um
+  /// valor à mão pra um caso negociado especificamente.
   annualContribution Int?
 
   /// Preenchido quando o Checkout Session da anuidade é criado — permite

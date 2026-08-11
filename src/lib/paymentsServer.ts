@@ -1,16 +1,18 @@
 import { stripe } from "./stripe";
 import { prisma } from "./prisma";
 import { SITE_URL } from "./email";
+import { getMembershipPlan, type MembershipPlanId } from "./membershipPlans";
 
 /**
  * Cria (ou reaproveita) o Checkout Session da anuidade de um associado
- * aprovado. Chamado automaticamente quando o admin marca a candidatura como
- * "Aprovado — aguardando pagamento", e também sob demanda pelo próprio
- * associado (botão "Pagar agora" no painel, caso o link do e-mail já tenha
- * expirado — sessões do Stripe valem 24h).
+ * aprovado, a partir do que já está gravado em `membershipCategory` /
+ * `annualContribution`. Dois jeitos desses campos chegarem preenchidos:
+ * 1) o admin define um valor negociado à mão ao aprovar (caso especial);
+ * 2) o próprio associado escolhe um dos 3 planos fixos em /membro/escolher-plano
+ *    (ver selectMembershipPlan abaixo, que preenche os campos e chama esta função).
  *
- * `annualContribution` é guardado em REAIS inteiros (não centavos) — ver
- * comentário no schema. O Stripe sempre espera a menor unidade da moeda,
+ * `annualContribution` é guardado em USD inteiros (não centavos) — é a moeda
+ * de cobrança da Câmara. O Stripe sempre espera a menor unidade da moeda,
  * por isso o × 100 aqui.
  */
 export async function createMembershipCheckoutSession(applicationId: string): Promise<string | null> {
@@ -31,7 +33,7 @@ export async function createMembershipCheckoutSession(applicationId: string): Pr
     line_items: [
       {
         price_data: {
-          currency: "brl",
+          currency: "usd",
           unit_amount: Math.round(application.annualContribution * 100),
           product_data: {
             name: `Anuidade de associado — ${application.membershipCategory || "Câmara de Comércio Brasil–Omã"}`,
@@ -52,6 +54,39 @@ export async function createMembershipCheckoutSession(applicationId: string): Pr
   });
 
   return session.url;
+}
+
+/**
+ * Fluxo "Escolha seu plano": grava a categoria + preço do plano escolhido
+ * (catálogo fixo em lib/membershipPlans.ts) na candidatura e, em seguida,
+ * gera o Checkout Session — mesma função de cima, agora com os campos já
+ * preenchidos.
+ */
+export async function selectMembershipPlan(
+  applicationId: string,
+  planId: MembershipPlanId
+): Promise<{ url: string } | { error: string }> {
+  if (!prisma) return { error: "Pagamento não configurado." };
+  const plan = getMembershipPlan(planId);
+  if (!plan) return { error: "Plano inválido." };
+
+  const application = await prisma.membershipApplication.findUnique({
+    where: { id: applicationId },
+    select: { status: true },
+  });
+  if (!application) return { error: "Associado não encontrado." };
+  if (application.status !== "APPROVED_PENDING_PAYMENT") {
+    return { error: "Sua candidatura não está aguardando pagamento no momento." };
+  }
+
+  await prisma.membershipApplication.update({
+    where: { id: applicationId },
+    data: { membershipCategory: plan.name, annualContribution: plan.priceUsd },
+  });
+
+  const url = await createMembershipCheckoutSession(applicationId);
+  if (!url) return { error: "Não foi possível gerar o link de pagamento." };
+  return { url };
 }
 
 /**

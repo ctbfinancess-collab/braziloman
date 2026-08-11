@@ -963,7 +963,7 @@ export function AdminApplicationDetail({ id }: { id: string }) {
               </select>
             </label>
             <label className="wiz-field">
-              Contribuição anual (R$) — entre 1.000 e 1.000.000
+              Contribuição anual (US$) — entre 1.000 e 1.000.000 · deixe em branco pra deixar o associado escolher um dos 3 planos
               <input
                 type="number"
                 min={1000}

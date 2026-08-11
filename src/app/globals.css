@@ -2042,6 +2042,27 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .benefit-card-btn svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
 .benefit-card-btn:hover:not(:disabled) svg { transform: translateX(3px); }
 
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 26px;
+  box-shadow: 0 1px 3px rgba(92, 68, 24, 0.07);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.plan-card:hover { transform: translateY(-4px); box-shadow: 0 18px 32px rgba(92, 68, 24, 0.16); border-color: var(--border-strong); }
+.plan-card-name { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--gold-light); margin: 0 0 6px; }
+.plan-card-tagline { color: var(--fg-dim); font-size: 0.84rem; line-height: 1.5; margin: 0 0 18px; min-height: 42px; }
+.plan-card-price { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--fg); margin: 0 0 22px; }
+.plan-card-price span { font-family: var(--font-body); font-weight: 400; font-size: 0.9rem; color: var(--fg-dim); margin-left: 4px; }
+.plan-card-benefits { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.plan-card-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.88rem; color: var(--fg-muted); line-height: 1.4; }
+.plan-card-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--gold); }
+.plan-card-btn { width: 100%; justify-content: center; }
+
 .benefit-modal-overlay {
   position: fixed; inset: 0; z-index: 200; background: rgba(10, 8, 4, 0.7);
   display: flex; align-items: center; justify-content: center; padding: 24px; overflow-y: auto;

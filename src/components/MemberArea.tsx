@@ -485,14 +485,25 @@ export function MemberStatusScreen({ member }: { member: MemberData }) {
                 <span className="status-card-icon small"><Icon name="creditcard" /></span>
                 <div>
                   <p className="cp-chips-label">{t.contributionLabel}</p>
-                  <p className="status-card-row-value">R$ {member.annualContribution.toLocaleString("pt-BR")}</p>
+                  <p className="status-card-row-value">US$ {member.annualContribution.toLocaleString("en-US")}</p>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {member.status === "APPROVED_PENDING_PAYMENT" && <PayMembershipButton />}
+        {member.status === "APPROVED_PENDING_PAYMENT" &&
+          (member.annualContribution ? (
+            // Admin já negociou um valor específico à mão — paga direto.
+            <PayMembershipButton />
+          ) : (
+            // Caminho padrão: primeiro escolhe um dos 3 planos fixos.
+            <div style={{ marginTop: 4 }}>
+              <Link href="/membro/escolher-plano" className="btn btn-primary">
+                Escolher meu plano
+              </Link>
+            </div>
+          ))}
 
         <div className="status-features">
           {t.features.map((f) => (

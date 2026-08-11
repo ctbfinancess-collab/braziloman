@@ -8,6 +8,7 @@ import {
   sendWelcomeEmail,
   sendInfoRequestedEmail,
   sendApprovedPendingPaymentEmail,
+  sendApprovedChoosePlanEmail,
 } from "@/lib/email";
 import { awardBecomeMemberPoints } from "@/lib/loyaltyServer";
 import { createMembershipCheckoutSession } from "@/lib/paymentsServer";
@@ -118,14 +119,23 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         if (updated.status === "INFO_REQUESTED") {
           await sendInfoRequestedEmail(updated.email, updated.name, parsed.data.complianceNotes || "Consulte seu painel para mais detalhes.");
         } else if (updated.status === "APPROVED_PENDING_PAYMENT") {
-          // Gera o link de pagamento (Stripe) na hora — se não tiver valor
-          // definido ou o Stripe não estiver configurado, o e-mail cai pro
-          // texto antigo ("nossa equipe vai entrar em contato").
-          const checkoutUrl = await createMembershipCheckoutSession(updated.id).catch((err) => {
-            console.error("[admin/applications] erro ao criar checkout do Stripe:", err);
-            return null;
-          });
-          await sendApprovedPendingPaymentEmail(updated.email, updated.name, updated.membershipCategory || "a definir", checkoutUrl);
+          // Se o admin já digitou um valor negociado à mão (annualContribution),
+          // gera o link de pagamento direto. Senão — o caminho padrão — manda
+          // pra tela "Escolha seu plano" (associado decide entre os 3 planos
+          // fixos, ver lib/membershipPlans.ts).
+          if (updated.annualContribution) {
+            const checkoutUrl = await createMembershipCheckoutSession(updated.id).catch((err) => {
+              console.error("[admin/applications] erro ao criar checkout do Stripe:", err);
+              return null;
+            });
+            if (checkoutUrl) {
+              await sendApprovedPendingPaymentEmail(updated.email, updated.name, updated.membershipCategory || "a definir", checkoutUrl);
+            } else {
+              await sendApprovedChoosePlanEmail(updated.email, updated.name);
+            }
+          } else {
+            await sendApprovedChoosePlanEmail(updated.email, updated.name);
+          }
         } else if (updated.status === "ACTIVE" || (updated.status === "APPROVED" && before.status !== "APPROVED")) {
           await sendWelcomeEmail(updated.email, updated.name);
         }
