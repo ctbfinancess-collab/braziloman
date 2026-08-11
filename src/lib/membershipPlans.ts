@@ -67,8 +67,8 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       en: "For companies looking to start and expand their connections in the Brazil–Oman ecosystem.",
     },
     inheritsLabel: null,
-    imageHint: { pt: "Networking e conexão Brasil–Omã", en: "Brazil–Oman networking and connection" },
-    imageSrc: null,
+    imageHint: { pt: "Rodada de negócios Brasil–Omã", en: "Brazil–Oman business roundtable" },
+    imageSrc: "/images/plans/empresarial.jpg",
     benefits: [
       { pt: "Certificado e credencial digital de associado", en: "Digital member certificate and credential" },
       { pt: "Networking empresarial Brasil–Omã", en: "Brazil–Oman business networking" },
