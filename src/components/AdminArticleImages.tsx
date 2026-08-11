@@ -10,7 +10,8 @@ type Node = string | number | boolean | null | Node[] | { [key: string]: Node };
  *  Missões", já que é a tela que a secretaria já usa no dia a dia. Salva
  *  sozinho assim que a imagem termina de subir (sem precisar lembrar de
  *  clicar em "Salvar" depois — foi exatamente o passo que ficava esquecido
- *  usando o editor completo). */
+ *  usando o editor completo) — e atualiza tanto a foto do artigo quanto a
+ *  miniatura correspondente na lista de Notícias, num só upload. */
 const ARTICLES: { key: string; label: string; page: string }[] = [
   { key: "missaoArticle", label: "Notícia — Missão Empresarial", page: "/noticias/missao-empresarial" },
   { key: "rodadaNegociosArticle", label: "Notícia — Rodada de Negócios", page: "/noticias/rodada-negocios" },
@@ -54,9 +55,9 @@ function ArticleImageField({ articleKey, label, page }: { articleKey: string; la
       if (!uploadRes.ok) throw new Error(uploadJson.error || "Falha no upload");
       const url = uploadJson.url as string;
 
-      // 2) Busca o conteúdo efetivo atual da seção (padrão + edições já salvas),
-      //    troca só a imagem, e salva de volta — mesma seção pra pt e en, já
-      //    que a imagem não varia por idioma.
+      // 2) Busca o conteúdo efetivo atual (padrão + edições já salvas), troca
+      //    só a imagem, e salva de volta — mesma seção pra pt e en, já que a
+      //    imagem não varia por idioma.
       const contentRes = await fetch("/api/admin/content");
       const contentJson = await contentRes.json();
       const effectivePt = deepMerge(contentJson.defaults.pt, contentJson.overrides.pt) as Record<string, Node>;
@@ -70,6 +71,29 @@ function ArticleImageField({ articleKey, label, page }: { articleKey: string; la
         body: JSON.stringify({ section: articleKey, pt: nextPt, en: nextEn }),
       });
       if (!saveRes.ok) throw new Error("Falha ao salvar");
+
+      // 3) A miniatura na lista de Notícias (/noticias) é um campo separado
+      //    (news.items[].image, não articleKey.image) — sem isso, o artigo
+      //    fica com a foto nova mas a lista continua com a antiga (foi
+      //    exatamente essa a confusão de "2 cards antigos" já relatada).
+      //    Atualiza junto, casando pelo link da notícia.
+      const newsPt = effectivePt.news as { items?: Record<string, Node>[] } | undefined;
+      const newsEn = effectiveEn.news as { items?: Record<string, Node>[] } | undefined;
+      if (newsPt?.items && newsEn?.items) {
+        const nextNewsPt = {
+          ...newsPt,
+          items: newsPt.items.map((it) => (it.link === page ? { ...it, image: url } : it)),
+        };
+        const nextNewsEn = {
+          ...newsEn,
+          items: newsEn.items.map((it) => (it.link === page ? { ...it, image: url } : it)),
+        };
+        await fetch("/api/admin/content", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ section: "news", pt: nextNewsPt, en: nextNewsEn }),
+        });
+      }
 
       setImageUrl(url);
       setStatus("saved");
