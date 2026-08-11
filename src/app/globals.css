@@ -1812,7 +1812,7 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .tier-estrategico .pricing-name { color: #5f5f60; }
 .pricing-desc { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px; min-height: 44px; }
 .pricing-starting { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-dim); margin: 0; }
-.pricing-price { font-family: var(--font-display); font-size: 2.1rem; color: var(--fg); margin: 4px 0 24px; }
+.pricing-price { font-family: var(--font-display); font-weight: 700; font-size: 2.1rem; color: var(--fg); margin: 4px 0 24px; }
 .pricing-price span { font-size: 0.85rem; font-family: var(--font-body); color: var(--fg-dim); font-weight: 400; margin-left: 4px; }
 /* Wrap flex:1 (herdado + benefícios visíveis + "ver todos") — mesmo padrão
    de .plan-card-benefits-wrap em /membro/escolher-plano, garante que o
