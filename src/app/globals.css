@@ -1804,9 +1804,9 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
 .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; }
 .pricing-name { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 8px; }
-.tier-gold .pricing-name { color: var(--gold); }
-.tier-black .pricing-name { color: #1a1408; }
-.tier-platinum .pricing-name { color: #5f5f60; }
+.tier-empresarial .pricing-name { color: var(--gold); }
+.tier-corporativo .pricing-name { color: #1a1408; }
+.tier-estrategico .pricing-name { color: #5f5f60; }
 .pricing-desc { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 0 20px; min-height: 44px; }
 .pricing-starting { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-dim); margin: 0; }
 .pricing-price { font-family: var(--font-display); font-size: 2.1rem; color: var(--fg); margin: 4px 0 24px; }
@@ -1815,9 +1815,9 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: var(--fg-muted); }
 .pricing-features li svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
 .pricing-cta { justify-content: center; width: 100%; }
-.tier-gold .pricing-cta { background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color: #1a1408; }
-.tier-black .pricing-cta { background: #0a0908; color: #f4f1ea; border-color: #0a0908; }
-.tier-platinum .pricing-cta { background: linear-gradient(135deg, #b8b8bc, #6d6d70); color: #fff; }
+.tier-empresarial .pricing-cta { background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color: #1a1408; }
+.tier-corporativo .pricing-cta { background: #0a0908; color: #f4f1ea; border-color: #0a0908; }
+.tier-estrategico .pricing-cta { background: linear-gradient(135deg, #b8b8bc, #6d6d70); color: #fff; }
 .pricing-cta:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
 /* ---------- banda de 4 ícones (Rede Global etc.) ---------- */
