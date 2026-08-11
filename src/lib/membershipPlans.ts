@@ -113,8 +113,8 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       en: "For companies that need strategic support for their expansion and bilateral operations.",
     },
     inheritsLabel: { pt: "Inclui todos os benefícios do Corporativo, mais:", en: "Includes everything in Corporate, plus:" },
-    imageHint: { pt: "Expansão internacional / Omã", en: "International expansion / Oman" },
-    imageSrc: null,
+    imageHint: { pt: "Reunião executiva de alto nível", en: "High-level executive meeting" },
+    imageSrc: "/images/plans/estrategico.jpg",
     benefits: [
       { pt: "Business Support Brasil–Omã personalizado", en: "Personalized Brazil–Oman Business Support" },
       { pt: "Diagnóstico estratégico para entrada ou expansão no mercado", en: "Strategic diagnostic for market entry or expansion" },
