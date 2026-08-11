@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { AdminLayout } from "./AdminLayout";
+import { AdminArticleImages } from "./AdminArticleImages";
 import { Icon } from "./Icons";
 
 type EventKind = "EVENTO" | "MISSAO";
@@ -223,6 +224,8 @@ export function AdminEvents() {
       actions={<button type="button" className="btn btn-primary" onClick={openNew}><Icon name="plus" /> Novo</button>}
     >
         {error && <p className="form-note err">{error}</p>}
+
+        <AdminArticleImages />
 
         {form && (
           <form className="contact-form mp-form" onSubmit={onSave} style={{ marginBottom: 40, maxWidth: 560 }}>
