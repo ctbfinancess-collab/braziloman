@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
-import { MEMBERSHIP_PLANS, VISIBLE_BENEFITS_COUNT, type MembershipPlanId } from "@/lib/membershipPlans";
+import { MEMBERSHIP_PLANS, MEMBERSHIP_PLANS_NOTICE, VISIBLE_BENEFITS_COUNT, type MembershipPlanId } from "@/lib/membershipPlans";
 
 export function Hero() {
   const { d } = useI18n();
@@ -609,6 +609,13 @@ export function MembershipPricing() {
               </div>
             );
           })}
+        </div>
+
+        <div className="plan-notice">
+          <p className="plan-notice-title">{lang === "pt" ? MEMBERSHIP_PLANS_NOTICE.title.pt : MEMBERSHIP_PLANS_NOTICE.title.en}</p>
+          {MEMBERSHIP_PLANS_NOTICE.paragraphs.map((p) => (
+            <p className="plan-notice-text" key={p.pt}>{lang === "pt" ? p.pt : p.en}</p>
+          ))}
         </div>
       </div>
     </section>
