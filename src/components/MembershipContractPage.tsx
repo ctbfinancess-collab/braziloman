@@ -26,6 +26,19 @@ export function MembershipContractPage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Quando essa aba não tem uma página anterior no histórico (ex: link que
+  // abriu numa aba nova antes de deixarmos de usar target="_blank", ou o
+  // associado digitou a URL direto), `router.back()` não tem pra onde ir e
+  // fica sem fazer nada — history.length <= 1 detecta esse caso e manda pro
+  // painel, que já sabe reconstruir a tela certa a partir do status real.
+  function goBack() {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/membro/painel");
+    }
+  }
+
   async function onAcceptAndBack() {
     if (!checked) return;
     setLoading(true);
@@ -35,12 +48,16 @@ export function MembershipContractPage({
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
         setError(json.error || (lang === "pt" ? "Não foi possível registrar o aceite." : "Could not record acceptance."));
-        setLoading(false);
         return;
       }
-      router.back();
+      goBack();
     } catch {
       setError(lang === "pt" ? "Não foi possível registrar o aceite." : "Could not record acceptance.");
+    } finally {
+      // Sempre desliga o "Salvando…", mesmo quando a navegação deu certo —
+      // sem isso, se `goBack()` não desmontar o componente na hora (ex: sem
+      // histórico, indo pro fallback), o botão ficava preso carregando pra
+      // sempre.
       setLoading(false);
     }
   }
@@ -48,7 +65,7 @@ export function MembershipContractPage({
   return (
     <>
       <div className="container" style={{ maxWidth: 760, paddingTop: 32 }}>
-        <button type="button" className="btn btn-ghost" onClick={() => router.back()}>
+        <button type="button" className="btn btn-ghost" onClick={goBack}>
           ← {lang === "pt" ? "Voltar" : "Back"}
         </button>
       </div>
