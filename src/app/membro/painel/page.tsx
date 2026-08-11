@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { verifyMemberSession, MEMBER_COOKIE } from "@/lib/session";
+import { MEMBERSHIP_CONTRACT_VERSION } from "@/lib/membershipContract";
 import { MemberStatusScreen } from "@/components/MemberArea";
 import { CandidatePortal } from "@/components/CandidatePortal";
 
@@ -26,6 +27,7 @@ const memberSelect = {
   createdAt: true,
   membershipCategory: true,
   annualContribution: true,
+  contractAcceptedVersion: true,
   memberNumber: true,
   memberSince: true,
   pointsTotal: true,
@@ -58,11 +60,13 @@ export default async function MemberPanelPage() {
     redirect("/membro/painel/inicio");
   }
 
+  const { contractAcceptedVersion, ...applicationRest } = application;
   const member = {
-    ...application,
+    ...applicationRest,
     createdAt: application.createdAt.toISOString(),
     memberSince: application.memberSince ? application.memberSince.toISOString() : null,
     loyaltyTransactions: application.loyaltyTransactions.map((t) => ({ ...t, createdAt: t.createdAt.toISOString() })),
+    contractAccepted: contractAcceptedVersion === MEMBERSHIP_CONTRACT_VERSION,
   };
 
   return <MemberStatusScreen member={member} />;

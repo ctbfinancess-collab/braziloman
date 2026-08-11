@@ -9,11 +9,11 @@ import { MEMBERSHIP_PLANS, type MembershipPlanId } from "@/lib/membershipPlans";
  *  pagamento. Catálogo fixo (lib/membershipPlans.ts): três categorias com
  *  preço em USD, sem nenhuma relação com o Programa de Fidelidade
  *  (Gold/Black/Platinum são só de pontos, ver lib/loyalty.ts). */
-export function ChoosePlanPage({ name }: { name: string }) {
+export function ChoosePlanPage({ name, initialAccepted }: { name: string; initialAccepted: boolean }) {
   const { lang } = useI18n();
   const [loadingPlan, setLoadingPlan] = useState<MembershipPlanId | null>(null);
   const [error, setError] = useState("");
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(initialAccepted);
 
   async function onChoose(planId: MembershipPlanId) {
     if (!accepted) {
@@ -63,7 +63,7 @@ export function ChoosePlanPage({ name }: { name: string }) {
             {lang === "pt" ? (
               <span>
                 Li e aceito o{" "}
-                <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+                <a href="/contrato-associacao" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
                   Contrato de Associação
                 </a>
                 , incluindo os termos de cobrança, renovação e cancelamento da anuidade.
@@ -71,7 +71,7 @@ export function ChoosePlanPage({ name }: { name: string }) {
             ) : (
               <span>
                 I have read and accept the{" "}
-                <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+                <a href="/contrato-associacao" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
                   Membership Agreement
                 </a>
                 , including its dues billing, renewal and cancellation terms.

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { verifyMemberSession, MEMBER_COOKIE } from "@/lib/session";
+import { MEMBERSHIP_CONTRACT_VERSION } from "@/lib/membershipContract";
 import { ChoosePlanPage } from "@/components/ChoosePlanPage";
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default async function EscolherPlanoPage() {
   const application = prisma
     ? await prisma.membershipApplication.findUnique({
         where: { id: session.sub },
-        select: { name: true, status: true, membershipCategory: true, annualContribution: true },
+        select: { name: true, status: true, membershipCategory: true, annualContribution: true, contractAcceptedVersion: true },
       })
     : null;
   if (!application) redirect("/membro/login");
@@ -35,5 +36,6 @@ export default async function EscolherPlanoPage() {
     redirect("/membro/painel");
   }
 
-  return <ChoosePlanPage name={application.name} />;
+  const initialAccepted = application.contractAcceptedVersion === MEMBERSHIP_CONTRACT_VERSION;
+  return <ChoosePlanPage name={application.name} initialAccepted={initialAccepted} />;
 }

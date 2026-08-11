@@ -365,6 +365,11 @@ export type MemberData = {
   memberSince: string | null;
   pointsTotal: number;
   loyaltyTransactions: LoyaltyTransactionData[];
+  /** Já aceitou a versão vigente do Contrato de Associação (ver
+   *  lib/membershipContract.ts) — computado no server component a partir de
+   *  contractAcceptedVersion, pra pré-marcar a caixinha do PayMembershipButton
+   *  quando o aceite já foi feito (ex: pela própria página do contrato). */
+  contractAccepted?: boolean;
 };
 
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
@@ -385,10 +390,10 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
  *  redireciona pra lá. Existe pro caso do link que veio no e-mail de
  *  aprovação já ter expirado (sessões do Stripe valem só 24h) ou a pessoa
  *  simplesmente ter apagado o e-mail. */
-function PayMembershipButton() {
+function PayMembershipButton({ initialAccepted }: { initialAccepted: boolean }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(initialAccepted);
 
   async function onClick() {
     if (!accepted) {
@@ -422,7 +427,7 @@ function PayMembershipButton() {
         <input type="checkbox" checked={accepted} onChange={(e) => { setAccepted(e.target.checked); if (e.target.checked) setError(""); }} />
         <span>
           Li e aceito o{" "}
-          <a href="/contrato-associacao" target="_blank" rel="noopener noreferrer" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
+          <a href="/contrato-associacao" style={{ color: "var(--gold-light)", textDecoration: "underline" }}>
             Contrato de Associação
           </a>
           , incluindo os termos de cobrança, renovação e cancelamento da anuidade.
@@ -514,7 +519,7 @@ export function MemberStatusScreen({ member }: { member: MemberData }) {
         {member.status === "APPROVED_PENDING_PAYMENT" &&
           (member.annualContribution ? (
             // Admin já negociou um valor específico à mão — paga direto.
-            <PayMembershipButton />
+            <PayMembershipButton initialAccepted={Boolean(member.contractAccepted)} />
           ) : (
             // Caminho padrão: primeiro escolhe um dos 3 planos fixos.
             <div style={{ marginTop: 4 }}>
