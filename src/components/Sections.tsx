@@ -539,6 +539,15 @@ export function MembershipPricing() {
         <div className="pricing-grid">
           {d.membership.pricing.tiers.map((t) => (
             <div className={`pricing-card tier-${t.tier.toLowerCase()}`} key={t.tier}>
+              <div className="pricing-card-image">
+                <Image
+                  src={`/images/plans/${t.tier.toLowerCase()}.jpg`}
+                  alt={t.name}
+                  fill
+                  sizes="(max-width: 700px) 100vw, 340px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <p className="pricing-name">{t.name}</p>
               <p className="pricing-desc">{t.description}</p>
               <p className="pricing-starting">{d.membership.pricing.startingAt}</p>

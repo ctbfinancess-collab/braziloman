@@ -1803,6 +1803,9 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 /* ---------- Cards de preço ---------- */
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
 .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 32px; display: flex; flex-direction: column; }
+/* Mesma foto institucional já usada em /membro/escolher-plano (ver
+   ChoosePlanPage/.plan-card-image) — sangra até a borda do card. */
+.pricing-card-image { position: relative; margin: -32px -32px 20px; height: 116px; border-radius: 10px 10px 0 0; overflow: hidden; background: var(--border); }
 .pricing-name { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 8px; }
 .tier-empresarial .pricing-name { color: var(--gold); }
 .tier-corporativo .pricing-name { color: #1a1408; }
