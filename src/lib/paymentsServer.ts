@@ -16,8 +16,15 @@ import { MEMBERSHIP_CONTRACT_VERSION } from "./membershipContract";
  */
 export async function recordContractAcceptance(applicationId: string, ip: string | null): Promise<void> {
   if (!prisma) return;
+  // `contractAcceptedVersion: { not: VERSION }` sozinho NÃO bate quando o
+  // valor é NULL (semântica de NULL do SQL: `NULL <> 'x'` é desconhecido,
+  // não verdadeiro) — por isso o OR explícito com `null` abaixo, senão o
+  // primeiro aceite de todos nunca seria gravado.
   await prisma.membershipApplication.updateMany({
-    where: { id: applicationId, contractAcceptedVersion: { not: MEMBERSHIP_CONTRACT_VERSION } },
+    where: {
+      id: applicationId,
+      OR: [{ contractAcceptedVersion: null }, { contractAcceptedVersion: { not: MEMBERSHIP_CONTRACT_VERSION } }],
+    },
     data: { contractAcceptedAt: new Date(), contractAcceptedVersion: MEMBERSHIP_CONTRACT_VERSION, contractAcceptedIp: ip },
   });
 }
