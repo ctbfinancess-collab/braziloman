@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
-import { MEMBERSHIP_PLANS, type MembershipPlanId } from "@/lib/membershipPlans";
+import { MEMBERSHIP_PLANS, MEMBERSHIP_PLANS_NOTICE, type MembershipPlanId } from "@/lib/membershipPlans";
+
+/** Ícone do placeholder de imagem institucional de cada plano — provisório,
+ *  até a Câmara enviar as três fotos reais (ver imageHint em membershipPlans.ts). */
+const PLAN_PLACEHOLDER_ICON: Record<MembershipPlanId, string> = {
+  empresarial: "handshake",
+  corporativo: "globetech",
+  estrategico: "plane",
+};
 
 /** Página "Escolha seu plano" — passo entre a aprovação da candidatura e o
  *  pagamento. Catálogo fixo (lib/membershipPlans.ts): três categorias com
@@ -86,11 +94,21 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
           {MEMBERSHIP_PLANS.map((plan) => (
             <div className="plan-card" key={plan.id}>
               <p className="plan-card-name">{plan.name}</p>
+
+              {/* Placeholder elegante — vira foto institucional real assim que
+                  a Câmara enviar as três imagens (ver imageHint no catálogo). */}
+              <div className="plan-card-image" title={lang === "pt" ? plan.imageHint.pt : plan.imageHint.en}>
+                <Icon name={PLAN_PLACEHOLDER_ICON[plan.id]} />
+              </div>
+
               <p className="plan-card-tagline">{lang === "pt" ? plan.tagline.pt : plan.tagline.en}</p>
               <p className="plan-card-price">
                 US$ {plan.priceUsd.toLocaleString("en-US")}
                 <span>/{lang === "pt" ? "ano" : "year"}</span>
               </p>
+              {plan.inheritsLabel && (
+                <p className="plan-card-inherits">{lang === "pt" ? plan.inheritsLabel.pt : plan.inheritsLabel.en}</p>
+              )}
               <ul className="plan-card-benefits">
                 {plan.benefits.map((b) => (
                   <li key={b.pt}>
@@ -106,9 +124,18 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
               >
                 {loadingPlan === plan.id
                   ? lang === "pt" ? "Gerando pagamento…" : "Generating payment…"
-                  : lang === "pt" ? "Continuar para pagamento" : "Continue to payment"}
+                  : lang === "pt"
+                    ? `Escolher ${plan.shortLabel.pt}`
+                    : `Choose ${plan.shortLabel.en}`}
               </button>
             </div>
+          ))}
+        </div>
+
+        <div className="plan-notice">
+          <p className="plan-notice-title">{lang === "pt" ? MEMBERSHIP_PLANS_NOTICE.title.pt : MEMBERSHIP_PLANS_NOTICE.title.en}</p>
+          {MEMBERSHIP_PLANS_NOTICE.paragraphs.map((p) => (
+            <p className="plan-notice-text" key={p.pt}>{lang === "pt" ? p.pt : p.en}</p>
           ))}
         </div>
       </div>

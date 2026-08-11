@@ -2054,14 +2054,43 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 .plan-card:hover { transform: translateY(-4px); box-shadow: 0 18px 32px rgba(92, 68, 24, 0.16); border-color: var(--border-strong); }
-.plan-card-name { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--gold-light); margin: 0 0 6px; }
+.plan-card-name { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--gold-light); margin: 0 0 14px; }
+/* Placeholder da imagem institucional (ainda sem foto real — ver imageHint
+   em lib/membershipPlans.ts) — sangra até a borda do card, mesmo raio do
+   topo. Vira uma <img style={{ objectFit: "cover" }}> quando as três fotos
+   definitivas chegarem, sem precisar mexer no resto do layout. */
+.plan-card-image {
+  margin: 0 -26px 18px;
+  height: 104px;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(135deg, rgba(201, 162, 90, 0.18), rgba(201, 162, 90, 0.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  position: relative;
+  overflow: hidden;
+}
+.plan-card-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(201, 162, 90, 0.06) 0 2px, transparent 2px 11px);
+}
+.plan-card-image svg { width: 32px; height: 32px; opacity: 0.6; position: relative; }
 .plan-card-tagline { color: var(--fg-dim); font-size: 0.84rem; line-height: 1.5; margin: 0 0 18px; min-height: 42px; }
-.plan-card-price { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--fg); margin: 0 0 22px; }
+.plan-card-price { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--fg); margin: 0 0 14px; }
 .plan-card-price span { font-family: var(--font-body); font-weight: 400; font-size: 0.9rem; color: var(--fg-dim); margin-left: 4px; }
+.plan-card-inherits { font-size: 0.76rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 12px; }
 .plan-card-benefits { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 11px; flex: 1; }
 .plan-card-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.88rem; color: var(--fg-muted); line-height: 1.4; }
 .plan-card-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--gold); }
 .plan-card-btn { width: 100%; justify-content: center; }
+
+.plan-notice { max-width: 1000px; margin: 36px auto 0; padding: 22px 26px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.plan-notice-title { font-family: var(--font-display); font-weight: 700; font-size: 0.92rem; color: var(--gold-light); margin: 0 0 10px; }
+.plan-notice-text { font-size: 0.8rem; color: var(--fg-dim); line-height: 1.65; margin: 0 0 10px; }
+.plan-notice-text:last-child { margin-bottom: 0; }
 
 .benefit-modal-overlay {
   position: fixed; inset: 0; z-index: 200; background: rgba(10, 8, 4, 0.7);
