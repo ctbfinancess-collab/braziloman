@@ -17,7 +17,7 @@ const PLAN_PLACEHOLDER_ICON: Record<MembershipPlanId, string> = {
  *  pagamento. Catálogo fixo (lib/membershipPlans.ts): três categorias com
  *  preço em USD, sem nenhuma relação com o Programa de Fidelidade
  *  (Gold/Black/Platinum são só de pontos, ver lib/loyalty.ts). */
-export function ChoosePlanPage({ name, initialAccepted }: { name: string; initialAccepted: boolean }) {
+export function ChoosePlanPage({ initialAccepted }: { initialAccepted: boolean }) {
   const { lang } = useI18n();
   const [loadingPlan, setLoadingPlan] = useState<MembershipPlanId | null>(null);
   const [error, setError] = useState("");
@@ -72,15 +72,10 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
             : "Connect your company to the Brazil–Oman business ecosystem"}
         </h1>
         <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead center" style={{ maxWidth: 660, margin: "0 auto 14px" }}>
+        <p className="section-lead center" style={{ maxWidth: 660, margin: "0 auto 40px" }}>
           {lang === "pt"
             ? "Três categorias de associação, com diferentes níveis de suporte para empresas que desejam desenvolver negócios, estabelecer operações e ampliar sua presença entre os dois países."
             : "Three membership categories, with different levels of support for companies looking to grow business, establish operations and expand their presence between the two countries."}
-        </p>
-        <p className="section-lead center" style={{ maxWidth: 620, margin: "0 auto 40px", fontSize: "0.88rem" }}>
-          {lang === "pt"
-            ? `Parabéns, ${name}! Sua candidatura foi aprovada — finalize com o pagamento, processado com segurança pelo Stripe.`
-            : `Congratulations, ${name}! Your application was approved — finish with payment, securely processed by Stripe.`}
         </p>
 
         <div style={{ maxWidth: 620, margin: "0 auto 32px" }}>

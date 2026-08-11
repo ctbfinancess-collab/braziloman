@@ -20,7 +20,7 @@ export default async function EscolherPlanoPage() {
   const application = prisma
     ? await prisma.membershipApplication.findUnique({
         where: { id: session.sub },
-        select: { name: true, status: true, membershipCategory: true, annualContribution: true, contractAcceptedVersion: true },
+        select: { status: true, membershipCategory: true, annualContribution: true, contractAcceptedVersion: true },
       })
     : null;
   if (!application) redirect("/membro/login");
@@ -37,5 +37,5 @@ export default async function EscolherPlanoPage() {
   }
 
   const initialAccepted = application.contractAcceptedVersion === MEMBERSHIP_CONTRACT_VERSION;
-  return <ChoosePlanPage name={application.name} initialAccepted={initialAccepted} />;
+  return <ChoosePlanPage initialAccepted={initialAccepted} />;
 }
