@@ -2081,10 +2081,22 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .plan-card-tagline { color: var(--fg-dim); font-size: 0.84rem; line-height: 1.5; margin: 0 0 18px; min-height: 42px; }
 .plan-card-price { font-family: var(--font-display); font-weight: 700; font-size: 2rem; color: var(--fg); margin: 0 0 14px; }
 .plan-card-price span { font-family: var(--font-body); font-weight: 400; font-size: 0.9rem; color: var(--fg-dim); margin-left: 4px; }
-.plan-card-inherits { font-size: 0.76rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 12px; }
-.plan-card-benefits { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.plan-card-inherits { font-size: 0.82rem; font-weight: 600; color: var(--fg-dim); font-style: italic; margin: 0 0 12px; }
+.plan-card-benefits-wrap { flex: 1; display: flex; flex-direction: column; margin-bottom: 18px; }
+.plan-card-benefits { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
 .plan-card-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.88rem; color: var(--fg-muted); line-height: 1.4; }
 .plan-card-benefits li svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; color: var(--gold); }
+/* "Ver todos os benefícios" — expande/recolhe suavemente sem recarregar a
+   página nem abrir modal (puro estado de React, ver ChoosePlanPage). */
+.plan-card-benefits-collapse { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease; }
+.plan-card-benefits-collapse .plan-card-benefits { padding-top: 11px; }
+.plan-card-benefits-collapse.is-open { max-height: 600px; opacity: 1; }
+.plan-card-toggle {
+  align-self: flex-start;
+  background: none; border: none; padding: 10px 0 0; margin-top: auto;
+  color: var(--gold-light); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.plan-card-toggle:hover { text-decoration: underline; }
 .plan-card-btn { width: 100%; justify-content: center; }
 
 .plan-notice { max-width: 1000px; margin: 36px auto 0; padding: 22px 26px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }

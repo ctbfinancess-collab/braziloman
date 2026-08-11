@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
-import { MEMBERSHIP_PLANS, MEMBERSHIP_PLANS_NOTICE, type MembershipPlanId } from "@/lib/membershipPlans";
+import { MEMBERSHIP_PLANS, MEMBERSHIP_PLANS_NOTICE, VISIBLE_BENEFITS_COUNT, type MembershipPlanId } from "@/lib/membershipPlans";
 
 /** Ícone do placeholder de imagem institucional de cada plano — provisório,
  *  até a Câmara enviar as três fotos reais (ver imageHint em membershipPlans.ts). */
@@ -22,6 +22,13 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
   const [loadingPlan, setLoadingPlan] = useState<MembershipPlanId | null>(null);
   const [error, setError] = useState("");
   const [accepted, setAccepted] = useState(initialAccepted);
+  // Cada card expande/recolhe os benefícios "extras" sozinho, sem recarregar
+  // a página nem abrir modal — chave é o id do plano.
+  const [expanded, setExpanded] = useState<Record<MembershipPlanId, boolean>>({
+    empresarial: false,
+    corporativo: false,
+    estrategico: false,
+  });
 
   async function onChoose(planId: MembershipPlanId) {
     if (!accepted) {
@@ -56,13 +63,24 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
   return (
     <section className="section">
       <div className="container reveal">
-        <p className="section-eyebrow center">{lang === "pt" ? "Concluir associação" : "Complete your membership"}</p>
-        <h1 className="section-title center">{lang === "pt" ? "Escolha seu plano" : "Choose your plan"}</h1>
-        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
-        <p className="section-lead center" style={{ maxWidth: 620, margin: "0 auto 40px" }}>
+        <p className="section-eyebrow center">
+          {lang === "pt" ? "Escolha sua categoria de associação" : "Choose your membership category"}
+        </p>
+        <h1 className="section-title center">
           {lang === "pt"
-            ? `Parabéns, ${name}! Sua candidatura foi aprovada. Escolha abaixo o plano de associação e finalize com o pagamento — processado com segurança pelo Stripe.`
-            : `Congratulations, ${name}! Your application was approved. Choose your membership plan below and finish with payment — securely processed by Stripe.`}
+            ? "Conecte sua empresa ao ecossistema de negócios Brasil–Omã"
+            : "Connect your company to the Brazil–Oman business ecosystem"}
+        </h1>
+        <span className="about-flourish mp-flourish-center" aria-hidden="true" />
+        <p className="section-lead center" style={{ maxWidth: 660, margin: "0 auto 14px" }}>
+          {lang === "pt"
+            ? "Três categorias de associação, com diferentes níveis de suporte para empresas que desejam desenvolver negócios, estabelecer operações e ampliar sua presença entre os dois países."
+            : "Three membership categories, with different levels of support for companies looking to grow business, establish operations and expand their presence between the two countries."}
+        </p>
+        <p className="section-lead center" style={{ maxWidth: 620, margin: "0 auto 40px", fontSize: "0.88rem" }}>
+          {lang === "pt"
+            ? `Parabéns, ${name}! Sua candidatura foi aprovada — finalize com o pagamento, processado com segurança pelo Stripe.`
+            : `Congratulations, ${name}! Your application was approved — finish with payment, securely processed by Stripe.`}
         </p>
 
         <div style={{ maxWidth: 620, margin: "0 auto 32px" }}>
@@ -109,13 +127,44 @@ export function ChoosePlanPage({ name, initialAccepted }: { name: string; initia
               {plan.inheritsLabel && (
                 <p className="plan-card-inherits">{lang === "pt" ? plan.inheritsLabel.pt : plan.inheritsLabel.en}</p>
               )}
-              <ul className="plan-card-benefits">
-                {plan.benefits.map((b) => (
-                  <li key={b.pt}>
-                    <Icon name="check" /> {lang === "pt" ? b.pt : b.en}
-                  </li>
-                ))}
-              </ul>
+              {(() => {
+                const visible = plan.benefits.slice(0, VISIBLE_BENEFITS_COUNT);
+                const hidden = plan.benefits.slice(VISIBLE_BENEFITS_COUNT);
+                const isOpen = expanded[plan.id];
+                return (
+                  <div className="plan-card-benefits-wrap">
+                    <ul className="plan-card-benefits">
+                      {visible.map((b) => (
+                        <li key={b.pt}>
+                          <Icon name="check" /> {lang === "pt" ? b.pt : b.en}
+                        </li>
+                      ))}
+                    </ul>
+                    {hidden.length > 0 && (
+                      <>
+                        <div className={`plan-card-benefits-collapse${isOpen ? " is-open" : ""}`}>
+                          <ul className="plan-card-benefits">
+                            {hidden.map((b) => (
+                              <li key={b.pt}>
+                                <Icon name="check" /> {lang === "pt" ? b.pt : b.en}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <button
+                          type="button"
+                          className="plan-card-toggle"
+                          onClick={() => setExpanded((prev) => ({ ...prev, [plan.id]: !prev[plan.id] }))}
+                        >
+                          {isOpen
+                            ? (lang === "pt" ? "Ocultar benefícios ↑" : "Hide benefits ↑")
+                            : (lang === "pt" ? "Ver todos os benefícios ↓" : "See all benefits ↓")}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                );
+              })()}
               <button
                 type="button"
                 className="btn btn-primary plan-card-btn"

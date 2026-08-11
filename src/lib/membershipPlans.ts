@@ -10,11 +10,16 @@
  * pras faixas do Programa de Fidelidade em lib/loyalty.ts.
  *
  * Cada plano lista só os benefícios EXCLUSIVOS dele (não repete os do plano
- * anterior) — a UI (ChoosePlanPage) mostra `inheritsLabel` ("Tudo do
- * Empresarial +") antes da lista pra deixar claro que é cumulativo.
- * Benefícios marcados com "*" dependem de disponibilidade/custos à parte —
- * ver o aviso "Informações importantes" abaixo dos cards, também definido
- * aqui pra não duplicar o texto em dois lugares.
+ * anterior) — a UI (ChoosePlanPage) mostra `inheritsLabel` ("Inclui todos os
+ * benefícios do Empresarial, mais:") antes da lista pra deixar claro que é
+ * cumulativo. Benefícios marcados com "*" dependem de disponibilidade/custos
+ * à parte — ver o aviso "Informações importantes" abaixo dos cards, também
+ * definido aqui pra não duplicar o texto em dois lugares.
+ *
+ * ORDEM importa: a UI mostra só os 4 primeiros de cada `benefits` de cara
+ * (os mais "concretos"/tangíveis primeiro) e esconde o resto atrás de "Ver
+ * todos os benefícios" — os 4 primeiros aqui foram escolhidos de propósito
+ * pra serem o resumo mais forte de cada categoria.
  */
 
 export type MembershipPlanId = "empresarial" | "corporativo" | "estrategico";
@@ -41,6 +46,12 @@ export type MembershipPlan = {
   imageHint: { pt: string; en: string };
 };
 
+/** Quantos benefícios de cada plano ficam visíveis de cara na tela de
+ *  escolha — o resto fica atrás do "Ver todos os benefícios" (ver
+ *  ChoosePlanPage). Os 4 primeiros de cada `benefits` abaixo foram
+ *  ordenados de propósito pra serem esse resumo. */
+export const VISIBLE_BENEFITS_COUNT = 4;
+
 export const MEMBERSHIP_PLANS: MembershipPlan[] = [
   {
     id: "empresarial",
@@ -55,12 +66,12 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
     imageHint: { pt: "Networking e conexão Brasil–Omã", en: "Brazil–Oman networking and connection" },
     benefits: [
       { pt: "Certificado e credencial digital de associado", en: "Digital member certificate and credential" },
-      { pt: "Acesso à Área do Associado", en: "Access to the Member Area" },
-      { pt: "Conteúdos e oportunidades exclusivas", en: "Exclusive content and opportunities" },
       { pt: "Networking empresarial Brasil–Omã", en: "Brazil–Oman business networking" },
+      { pt: "Conteúdos e oportunidades exclusivas", en: "Exclusive content and opportunities" },
+      { pt: "Orientação inicial sobre negócios e estabelecimento em Brasil ou Omã", en: "Initial guidance on doing business and establishing a presence in Brazil or Oman" },
+      { pt: "Acesso à Área do Associado", en: "Access to the Member Area" },
       { pt: "Convites para eventos e iniciativas da Câmara*", en: "Invitations to Chamber events and initiatives*" },
       { pt: "Condições especiais com parceiros da Câmara", en: "Special conditions with Chamber partners" },
-      { pt: "Orientação inicial sobre negócios e estabelecimento em Brasil ou Omã", en: "Initial guidance on doing business and establishing a presence in Brazil or Oman" },
       { pt: "Orientação sobre procedimentos empresariais, documentais e consulares", en: "Guidance on business, documentation and consular procedures" },
     ],
   },
@@ -73,7 +84,7 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       pt: "Para empresas que buscam negócios, internacionalização e presença ativa entre Brasil e Omã.",
       en: "For companies pursuing business, internationalization and an active presence between Brazil and Oman.",
     },
-    inheritsLabel: { pt: "Tudo do Empresarial +", en: "Everything in Business +" },
+    inheritsLabel: { pt: "Inclui todos os benefícios do Empresarial, mais:", en: "Includes everything in Business, plus:" },
     imageHint: { pt: "Negócios e internacionalização", en: "Business and internationalization" },
     benefits: [
       { pt: "Consultoria inicial de internacionalização", en: "Initial internationalization consulting" },
@@ -95,7 +106,7 @@ export const MEMBERSHIP_PLANS: MembershipPlan[] = [
       pt: "Para empresas que necessitam de acompanhamento estratégico em sua expansão e atuação bilateral.",
       en: "For companies that need strategic support for their expansion and bilateral operations.",
     },
-    inheritsLabel: { pt: "Tudo do Corporativo +", en: "Everything in Corporate +" },
+    inheritsLabel: { pt: "Inclui todos os benefícios do Corporativo, mais:", en: "Includes everything in Corporate, plus:" },
     imageHint: { pt: "Expansão internacional / Omã", en: "International expansion / Oman" },
     benefits: [
       { pt: "Business Support Brasil–Omã personalizado", en: "Personalized Brazil–Oman Business Support" },
