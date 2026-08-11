@@ -1814,9 +1814,23 @@ a.partner-card:hover { border-color: var(--gold); transform: translateY(-3px); }
 .pricing-starting { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-dim); margin: 0; }
 .pricing-price { font-family: var(--font-display); font-size: 2.1rem; color: var(--fg); margin: 4px 0 24px; }
 .pricing-price span { font-size: 0.85rem; font-family: var(--font-body); color: var(--fg-dim); font-weight: 400; margin-left: 4px; }
-.pricing-features { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 14px; flex: 1; }
+/* Wrap flex:1 (herdado + benefícios visíveis + "ver todos") — mesmo padrão
+   de .plan-card-benefits-wrap em /membro/escolher-plano, garante que o
+   botão fique alinhado na base mesmo com listas de tamanhos diferentes. */
+.pricing-features-wrap { flex: 1; display: flex; flex-direction: column; margin-bottom: 18px; }
+.pricing-inherits { font-size: 0.82rem; font-weight: 600; color: var(--fg-dim); font-style: italic; margin: 0 0 12px; }
+.pricing-features { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
 .pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; color: var(--fg-muted); }
 .pricing-features li svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+.pricing-features-collapse { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease; }
+.pricing-features-collapse .pricing-features { padding-top: 14px; }
+.pricing-features-collapse.is-open { max-height: 600px; opacity: 1; }
+.pricing-toggle {
+  align-self: flex-start;
+  background: none; border: none; padding: 10px 0 0; margin-top: auto;
+  color: var(--gold-light); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.pricing-toggle:hover { text-decoration: underline; }
 .pricing-cta { justify-content: center; width: 100%; }
 .tier-empresarial .pricing-cta { background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep)); color: #1a1408; }
 .tier-corporativo .pricing-cta { background: #0a0908; color: #f4f1ea; border-color: #0a0908; }

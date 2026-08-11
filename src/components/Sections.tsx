@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./Icons";
+import { MEMBERSHIP_PLANS, VISIBLE_BENEFITS_COUNT, type MembershipPlanId } from "@/lib/membershipPlans";
 
 export function Hero() {
   const { d } = useI18n();
@@ -531,42 +532,83 @@ export function MembershipLevels() {
   );
 }
 
+/** Tabela de preços da página pública /associe-se — puxa do mesmo catálogo
+ *  usado na tela real de pagamento (/membro/escolher-plano, ver
+ *  ChoosePlanPage.tsx), em vez de duplicar o texto em content.ts, pra nunca
+ *  mais ficar dessincronizada quando um plano mudar. */
 export function MembershipPricing() {
-  const { d } = useI18n();
+  const { d, lang } = useI18n();
+  const [expanded, setExpanded] = useState<Record<MembershipPlanId, boolean>>({
+    empresarial: false,
+    corporativo: false,
+    estrategico: false,
+  });
   return (
     <section className="section membership-pricing">
       <div className="container reveal">
         <div className="pricing-grid">
-          {d.membership.pricing.tiers.map((t) => (
-            <div className={`pricing-card tier-${t.tier.toLowerCase()}`} key={t.tier}>
-              <div className="pricing-card-image">
-                <Image
-                  src={`/images/plans/${t.tier.toLowerCase()}.jpg`}
-                  alt={t.name}
-                  fill
-                  sizes="(max-width: 700px) 100vw, 340px"
-                  style={{ objectFit: "cover" }}
-                />
+          {MEMBERSHIP_PLANS.map((plan) => {
+            const visible = plan.benefits.slice(0, VISIBLE_BENEFITS_COUNT);
+            const hidden = plan.benefits.slice(VISIBLE_BENEFITS_COUNT);
+            const isOpen = expanded[plan.id];
+            return (
+              <div className={`pricing-card tier-${plan.id}`} key={plan.id}>
+                <div className="pricing-card-image">
+                  <Image
+                    src={plan.imageSrc ?? `/images/plans/${plan.id}.jpg`}
+                    alt={lang === "pt" ? plan.imageHint.pt : plan.imageHint.en}
+                    fill
+                    sizes="(max-width: 700px) 100vw, 340px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                <p className="pricing-name">{plan.name}</p>
+                <p className="pricing-desc">{lang === "pt" ? plan.tagline.pt : plan.tagline.en}</p>
+                <p className="pricing-starting">{d.membership.pricing.startingAt}</p>
+                <p className="pricing-price">
+                  {d.membership.pricing.currency} {plan.priceUsd.toLocaleString("en-US")}
+                  <span>{d.membership.pricing.perYear}</span>
+                </p>
+                <div className="pricing-features-wrap">
+                  {plan.inheritsLabel && (
+                    <p className="pricing-inherits">{lang === "pt" ? plan.inheritsLabel.pt : plan.inheritsLabel.en}</p>
+                  )}
+                  <ul className="pricing-features">
+                    {visible.map((b) => (
+                      <li key={b.pt}>
+                        <Icon name="check" /> {lang === "pt" ? b.pt : b.en}
+                      </li>
+                    ))}
+                  </ul>
+                  {hidden.length > 0 && (
+                    <>
+                      <div className={`pricing-features-collapse${isOpen ? " is-open" : ""}`}>
+                        <ul className="pricing-features">
+                          {hidden.map((b) => (
+                            <li key={b.pt}>
+                              <Icon name="check" /> {lang === "pt" ? b.pt : b.en}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <button
+                        type="button"
+                        className="pricing-toggle"
+                        onClick={() => setExpanded((prev) => ({ ...prev, [plan.id]: !prev[plan.id] }))}
+                      >
+                        {isOpen
+                          ? (lang === "pt" ? "Ocultar benefícios ↑" : "Hide benefits ↑")
+                          : (lang === "pt" ? "Ver todos os benefícios ↓" : "See all benefits ↓")}
+                      </button>
+                    </>
+                  )}
+                </div>
+                <a href="/associe-se#mp-form" className="btn pricing-cta">
+                  {lang === "pt" ? `Escolher ${plan.shortLabel.pt}` : `Choose ${plan.shortLabel.en}`} <Icon name="arrowright" />
+                </a>
               </div>
-              <p className="pricing-name">{t.name}</p>
-              <p className="pricing-desc">{t.description}</p>
-              <p className="pricing-starting">{d.membership.pricing.startingAt}</p>
-              <p className="pricing-price">
-                {d.membership.pricing.currency} {t.price.toLocaleString("en-US")}
-                <span>{d.membership.pricing.perYear}</span>
-              </p>
-              <ul className="pricing-features">
-                {t.features.map((f) => (
-                  <li key={f}>
-                    <Icon name="check" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <a href="/associe-se#mp-form" className="btn pricing-cta">
-                {t.cta} <Icon name="arrowright" />
-              </a>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
